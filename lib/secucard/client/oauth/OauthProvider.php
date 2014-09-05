@@ -56,21 +56,21 @@ class OauthProvider implements SubscriberInterface
     protected $refreshToken;
 
     /**
-     * Url with path to send there auth_requests
+     * Path to send there auth_requests
      * @var unknown_type
      */
-    protected $auth_url;
+    protected $auth_path;
 
     /**
      * Constructor
-     * @param string $auth_url
+     * @param string $auth_path
      * @param GuzzleHttp\Client $client
      * @param ClientCredentials $clientCredentials
      * @param GrantTypeInterface $grantTypeCredentials
      */
-    public function __construct($auth_url, Client $client, ClientCredentials $clientCredentials, GrantTypeInterface $grantTypeCredentials)
+    public function __construct($auth_path, Client $client, ClientCredentials $clientCredentials, GrantTypeInterface $grantTypeCredentials)
     {
-        $this->auth_url = $auth_url;
+        $this->auth_path = $auth_path;
         $this->client = $client;
         $this->clientCredentials = $clientCredentials;
         $this->grantTypeCredentials = $grantTypeCredentials;
@@ -182,7 +182,7 @@ class OauthProvider implements SubscriberInterface
         $this->clientCredentials->addParameters($params);
         $grantTypeCredentials->addParameters($params);
 
-        $response = $this->client->post($this->auth_url, array('body'=>$params));
+        $response = $this->client->post($this->auth_path, array('body'=>$params));
         $tokenData = $response->json();
 
         // Process the returned data, both expired_in and refresh_token are optional parameters

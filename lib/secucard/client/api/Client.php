@@ -10,6 +10,8 @@ use secucard\client\oauth\GrantType\PasswordCredentials;
 use secucard\client\oauth\GrantType\RefreshToken;
 use secucard\client\oauth\OauthProvider;
 
+use GuzzleHttp\Collection;
+
 /**
  * Secucard Api Client
  * Uses GuzzleHttp client library
@@ -35,37 +37,50 @@ class Client
      */
     const VERSION = '0.0.1';
 
-    // TODO create configuration:
-    // TODO debugging
-    public $host = 'core-dev4.secupay-ag.de';
-    public $protocol = 'https://';
-
     /**
      * Constructor
      * @param array $options - options to correctly initialize Guzzle Client
      */
-    public function __construct($options)
+    public function __construct(array $config)
     {
-        $this->client = new \GuzzleHttp\Client($options);
+
+        // array of base configuration
+        $default = array(
+            'base_url'=>'https://connect.secucard.com',
+            'auth_path'=>'/oauth/token');
+
+        // The following fields are required when creating the client
+        $required = array(
+            'base_url',
+            'auth_path',
+            'client_id',
+            'client_secret',
+            'username',
+            'password',
+        );
+
+        // Merge in default settings and validate the config
+        $config = Collection::fromConfig($config, $default, $required);
+
+        // Create a new Secucard client
+        $this->client = new \GuzzleHttp\Client($config->toArray());
+
+        // Ensure that the OauthProvider is attached to the client
+        $this->setAuthorization($config);
     }
 
     /**
      * Public function to set Authorization on client
-     *
-     * @param string $path --- TODO get default path from configuration
-     * @param string $client_id
-     * @param string $client_secret
-     * @param string $username
-     * @param string $password
+     * @param Collection $config
      */
-    public function setAuthorization($path, $client_id, $client_secret, $username, $password)
+    private function setAuthorization(Collection $config)
     {
         // create credentials
-        $client_credentials = new ClientCredentials($client_id, $client_secret);
-        $password_credentials = new PasswordCredentials($username, $password);
+        $client_credentials = new ClientCredentials($config['client_id'], $config['client_secret']);
+        $password_credentials = new PasswordCredentials($config['username'], $config['password']);
 
         // create OAuthProvider
-        $oauthProvider = new OauthProvider($this->protocol . $this->host . $path, $this->client, $client_credentials, $password_credentials);
+        $oauthProvider = new OauthProvider($config['auth_path'], $this->client, $client_credentials, $password_credentials);
         // assign OAuthProvider to guzzle client
         $this->client->getEmitter()->attach($oauthProvider);
     }
@@ -113,14 +128,13 @@ class Client
      */
     public function get($path, $options)
     {
-        $response = $this->client->get($this->protocol . $this->host . $path, ['auth'=>'oauth', 'debug'=>true]);
+        $response = $this->client->get($path, ['auth'=>'oauth', 'debug'=>true]);
         if (!$response) {
             return false;
         }
 
         return $response;
     }
-
 
     /**
      * POST json request method
