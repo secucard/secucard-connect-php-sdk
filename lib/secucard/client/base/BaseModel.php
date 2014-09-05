@@ -7,7 +7,7 @@ namespace secucard\client\base;
 
 /**
  * Class that should be used as parent class of every Data model
- * Class does not implement lazy loading
+ * Class does not implement lazy loading, so it cannot carry relations
  *
  * @author Jakub Elias <j.elias@secupay.ag>
  */
@@ -23,22 +23,11 @@ abstract class BaseModel
     const DATA_TYPE_NUMBER = 'number';
     const DATA_TYPE_STRING = 'string';
 
-    const RELATION_HAS_ONE = 'has_one';
-    const RELATION_HAS_MANY = 'has_many';
-
-    // todo
-
     /**
      * Array where attributes for current object are defined
      * @var array
      */
     protected $_attribute_defs = array();
-
-    /**
-     * Array where relations for current object are defined
-     * @var array
-     */
-    protected $_relations = array();
 
     /**
      * Associative array of values for attributes of current object
@@ -61,26 +50,33 @@ abstract class BaseModel
     /**
      * Constructor
      */
-    public function __construct()
+    public function __construct($client = null)
     {
         $this->setAttributes($this->_attribute_defs);
-        $this->setRelations($this->_relations);
     }
 
     /**
-     * Initialization function
-     * @param mixed $data
+     * Initialization function to set value for attributes
+     * @param array $values
+     * @param boolean $initialized default false
+     * @throws \BadMethodCallException
+     * @return boolean
      */
-    public function init($data = array())
+    public function initValues($values, $initialized = false)
     {
-        if (is_string($data)) {
-            $data = array('id'=>$data);
-        }
-        if (!is_array($data)) {
-            $data = array();
+        if ($this->initialized) {
+            throw new \BadMethodCallException('Cannot set attributes on already initialized object');
         }
 
-        // Create object instance from attributes
+        foreach ($values as $attr_name => $value) {
+            // we need here to call the magic setter for descendant class
+            $this->setAttribute($attr_name, $value);
+        }
+        $this->initialized = $initialized;
+
+        return true;
+
+        /* Create object instance from attributes
         foreach ($this->_attribute_defs as $name => $definition) {
             if (isset($definition['options']['id'])) {
                 $this->_id_column = $name;
@@ -88,6 +84,7 @@ abstract class BaseModel
                     $this->id = $data['id'];
                 }
             }
+
         }
         if ($this->_relations) {
             foreach ($this->_relations as $name => $def) {
@@ -99,16 +96,17 @@ abstract class BaseModel
                         $child = new $class_name($this->client);
                         // TODO do we need relations backwards
                         //$child->add_relationship($this, $name);
-                        $this->set_attribute($name, $child);
+                        $this->setAttribute($name, $child);
                     } elseif ($def['type'] == self::RELATION_HAS_MANY) {
 
                         // We need to create collection of the right type
                         // TODO implement correctly!
-                        //$this->set_attribute($name, $collection);
+                        //$this->setAttribute($name, $collection);
                     }
                 }
             }
         }
+        return true;*/
     }
 
     /**
@@ -119,9 +117,9 @@ abstract class BaseModel
     public function __set($name, $value)
     {
         if ($name == 'id' && !empty($this->_id_column)) {
-            return $this->set_attribute($this->_id_column, $value);
+            return $this->setAttribute($this->_id_column, $value);
         }
-        return $this->set_attribute($name, $value);
+        return $this->setAttribute($name, $value);
     }
 
     /**
@@ -133,11 +131,11 @@ abstract class BaseModel
         if ($name == 'id' && !empty($this->_id_column)) {
             return empty($this->_attributes[$this->_id_column]) ? null : $this->_attributes[$this->_id_column];
         }
-        if ($this->has_attribute_value($name)) {
+        if ($this->hasAttributeValue($name)) {
             // Create DateTime object if necessary
-            if ($this->has_attribute($name) && ($this->_attribute_defs[$name]['type'] == 'datetime' || $this->_attribute_defs[$name]['type'] == 'date')) {
-                $tz = new DateTimeZone('UTC');
-                return DateTime::createFromFormat($this->date_format_for_property($name), $this->_attributes[$name], $tz);
+            if ($this->hasAttribute($name) && in_array($this->_attribute_defs[$name]['type'], array(self::DATA_TYPE_DATETIME, self::DATA_TYPE_DATE))) {
+                $timezone = new DateTimeZone('UTC');
+                return DateTime::createFromFormat($this->getDateFormatForAttribute($name), $this->_attributes[$name], $timezone);
             }
 
             return $this->_attributes[$name];
@@ -167,7 +165,7 @@ abstract class BaseModel
      */
     public function __toString()
     {
-        return print_r($this->as_json(false), true);
+        return print_r(json_encode($this->_attributes), true);
     }
 
     /**
@@ -175,9 +173,9 @@ abstract class BaseModel
      * @param string $name
      * @return string $format
      */
-    public function date_format_for_property($name)
+    public function getDateFormatForAttribute($name)
     {
-        if (!$this->has_attribute($name)) {
+        if (!$this->hasAttribute($name)) {
             return '';
         }
         if ($this->_attribute_defs[$name]['type'] == self::DATA_TYPE_DATETIME) {
@@ -192,51 +190,68 @@ abstract class BaseModel
      * Function to set attribute value
      * @param string $name
      * @param mixed $value
-     * @throws DataIntegrityError
+     * @throws Exception
+     * @return boolean
      */
-    protected function set_attribute($name, $value)
+    protected function setAttribute($name, $value)
     {
-        if ($this->has_attribute($name)) {
-            $definition = $this->_attribute_defs[$name];
-            switch($definition['type']) {
-                case self::DATA_TYPE_NUMBER:
-                    $this->_attributes[$name] = $value ? (int)$value : null;
-                    break;
-                case self::DATA_TYPE_BOOLEAN:
-                    $this->_attributes[$name] = null;
-                    if ($value === true || $value === false) {
-                        $this->_attributes[$name] = $value;
-                    } elseif ($value) {
-                        $this->_attributes[$name] = in_array(trim(strtolower($value)), array('true', 1, 'yes'));
-                    }
-                    break;
-                case self::DATA_TYPE_FLOAT:
-                    $this->_attributes[$name] = $value ? floatval($value) : null;
-                    break;
-                case self::DATA_TYPE_DATETIME:
-                case self::DATA_TYPE_DATE:
-                    if (is_a($value, 'DateTime')) {
-                        $this->_attributes[$name] = $value->format($this->date_format_for_property($name));
-                    } else {
-                        $this->_attributes[$name] = $value;
-                    }
-                    break;
-                case self::DATA_TYPE_STRING:
-                    $this->_attributes[$name] = $value ? (string)$value : null;
-                    break;
-                // TODO :
-                case self::RELATION_HAS_ONE:
-                    $this->_attributes[$name] = array();
-                    break;
-                case 'hash':
-                    $this->_attributes[$name] = $value ? (array)$value : array();
-                    break;
-                default:
-                    $this->_attributes[$name] = $value;
-            }
-            return true;
+        if (!$this->hasAttribute($name)) {
+            throw new \Exception("Attribute '{$name}' cannot be assigned. Attribute doesn't exist");
         }
-        throw new \Exception("Attribute '{$name}' cannot be assigned. Attibute doesn't exist.");
+
+        $definition = $this->_attribute_defs[$name];
+        switch ($definition['type']) {
+            case self::DATA_TYPE_NUMBER:
+                $this->_attributes[$name] = $value ? (int)$value : null;
+                break;
+            case self::DATA_TYPE_BOOLEAN:
+                $this->_attributes[$name] = null;
+                if ($value === true || $value === false) {
+                    $this->_attributes[$name] = $value;
+                } elseif ($value) {
+                    $this->_attributes[$name] = in_array(trim(strtolower($value)), array('true', 1, 'yes'));
+                }
+                break;
+            case self::DATA_TYPE_FLOAT:
+                $this->_attributes[$name] = $value ? floatval($value) : null;
+                break;
+            case self::DATA_TYPE_DATETIME:
+            case self::DATA_TYPE_DATE:
+                if (is_a($value, 'DateTime')) {
+                    $this->_attributes[$name] = $value->format($this->date_format_for_property($name));
+                } else {
+                    $this->_attributes[$name] = $value;
+                }
+                break;
+            case self::DATA_TYPE_STRING:
+                $this->_attributes[$name] = $value ? (string)$value : null;
+                break;
+            default:
+                $this->_attributes[$name] = $value;
+        }
+        return true;
+    }
+
+    /**
+     * Set Attributes for current model
+     * @param array $attributes
+     * @throws \BadMethodCallException
+     * @return boolean
+     */
+    protected function setAttributes($attributes)
+    {
+        if ($this->initialized) {
+            throw new \BadMethodCallException('Cannot set attributes definition for already initialized object');
+        }
+
+        foreach ($attributes as $attr_name => $def) {
+            $this->_attribute_defs[$attr_name] = $def;
+            if (!empty($def['options']) && !empty($def['options']['id'])) {
+                $this->_id_column = $attr_name;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -250,134 +265,41 @@ abstract class BaseModel
         return $path;
     }
 
-    public function has_attribute_value($name)
+    /**
+     * Function to return true, if attribute with $name is set
+     * @param string $name
+     * @retun bool true|false
+     */
+    public function hasAttributeValue($name)
     {
         return array_key_exists($name, $this->_attributes);
     }
 
-    public function has_attribute($name)
+    /**
+     * Function to return true, if current object has defined attribute for $name
+     * @param string $name
+     * @return bool true|false
+     */
+    public function hasAttribute($name)
     {
         return array_key_exists($name, $this->_attribute_defs);
     }
 
-    public function has_relationship($name)
-    {
-        return array_key_exists($name, $this->__relationships);
-    }
-
     /**
-     * Set Attributes for current model
-     * @param array $attributes
-     */
-    protected function setAttributes($attributes)
-    {
-        foreach ($attributes as $attr => $def) {
-            $this->_attribute_defs[$attr] = $def;
-        }
-    }
-
-    public function setAttributesData($data, $initialized = false)
-    {
-        if ($this->initialized) {
-            throw new \BadMethodCallException('Cannot set attributes on already initialized object');
-        }
-
-        foreach ($data as $attr_name => $value) {
-            $this->set_attribute($attr_name, $value);
-        }
-        $this->initialized = $initialized;
-    }
-
-    /**
-     * Set relations for current model
-     * @param array $relations
-     */
-    protected function setRelations($relations)
-    {
-        $this->_relations = $relations;
-    }
-
-    /**
-     * Function to initialize object attribute values from array
-     * @param array $params
-     * @return bool true on success
-     */
-    public function initializeAttributesFromArray($params)
-    {
-        if ($this->initialized) {
-            throw new \Exception('Object already initialized, cannot initialize only subfields from array');
-        }
-
-        // TODO where should be a way to recognize if we are accessing field that has not yet been loaded
-        foreach($params as $atr => $value) {
-            $this->set_attribute($atr, $value);
-        }
-
-        return true;
-    }
-
-    /**
-     * TODO this function probably can be needed when saving the MainModel and related objects
-     * but not implemented correctly now
+     * Function to get the attributes for current object as json
      *
-     * @param unknown_type $encoded
-     * @return multitype:NULL multitype: unknown multitype:NULL  |NULL
+     * @param bool $return_encoded
+     * @return string|array
      */
-    public function as_json($encoded = true)
+    public function as_json($return_encoded = true)
     {
         $result = array();
         foreach ($this->_attribute_defs as $name => $definition) {
-            if (!$this->has_relationship($name) && $this->has_attribute_value($name) && !is_null($this->_attributes[$name])) {
+            if (!$this->hasRelation($name) && $this->hasAttributeValue($name) && !is_null($this->_attributes[$name])) {
                 $result[$name] = $this->_attributes[$name];
             }
         }
-        foreach ($this->__relationships as $name => $type) {
-            if ($type == self::RELATION_HAS_ONE) {
-                $target_name = $name;
-                if (!empty($this->_attribute_defs[$name]['options']['json_target'])) {
-                    $target_name = $this->_attribute_defs[$name]['options']['json_target'];
-                }
 
-                if ($this->has_attribute_value($name)) {
-                    if (!empty($this->_attribute_defs[$name]['options']['json_value'])) {
-                        $result[$target_name] = $this->_attributes[$name]->{$this->_attribute_defs[$name]['options']['json_value']};
-                    } elseif (is_a($this->_attributes[$name], 'BaseCollection')) {
-                        foreach ($this->_attributes[$name] as $field) {
-                            $key = '';// TODO set key correctly
-                            $list[$key] = $field->as_json(false);
-                        }
-                        $result[$name] = $list;
-                    } else {
-                        $child = $this->_attributes[$name]->as_json(false);
-                        if ($child) {
-                            $result[$target_name] = $child;
-                        }
-                    }
-                }
-            } elseif ($type == self::RELATION_HAS_MANY) {
-                if ($this->has_attribute_value($name)) {
-                    $list = array();
-                    foreach ($this->_attributes[$name] as $item) {
-                        if (!empty($this->_attribute_defs[$name]['options']['json_value'])) {
-                            $list[] = $item->{$this->_attribute_defs[$name]['options']['json_value']};
-                        } else {
-                            $list[] = $item->as_json(false);
-                        }
-                    }
-                    if ($list) {
-                        if (!empty($this->_attribute_defs[$name]['options']['json_target'])) {
-                            $result[$this->_attribute_defs[$name]['options']['json_target']] = $list;
-                        } else {
-                            $result[$name] = $list;
-                        }
-                    }
-                }
-            }
-        }
-
-        if ($result) {
-            return $encoded ? json_encode($result) : $result;
-        }
-        return null;
+        return $return_encoded ? json_encode($result) : $result;
     }
 }

@@ -16,7 +16,7 @@ class Accounts extends MainModel
 {
     protected $_attribute_defs = array(
         'object'=>array('type'=>BaseModel::DATA_TYPE_STRING),
-        'id'=>array('type'=>BaseModel::DATA_TYPE_STRING, 'id'=>true, 'options'=>array()),
+        'id'=>array('type'=>BaseModel::DATA_TYPE_STRING, 'options'=>array('id'=>true)),
         'iban'=>array('type'=>BaseModel::DATA_TYPE_STRING),
         'bic'=>array('type'=>BaseModel::DATA_TYPE_STRING),
         'forename'=>array('type'=>BaseModel::DATA_TYPE_STRING),

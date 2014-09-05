@@ -83,7 +83,7 @@ class BaseCollection implements \ArrayAccess, \Countable, \Iterator
      */
     public function parseResponse($response)
     {
-        if (!is_array($response)) {
+        if (is_object($response)) {
             $response = (array)$response;
         }
         if (isset($response['count'])) {
@@ -103,7 +103,8 @@ class BaseCollection implements \ArrayAccess, \Countable, \Iterator
 
         foreach ($response['data'] as $item) {
             $current_item = new $item_class($this->client);
-            $current_item->setAttributesData($item);
+            // set initialized flag for item to true (we expect all data to be available in the server response)
+            $current_item->initValues($item, true);
             // add current_item to $this->_items array
             $this->_items[] = $current_item;
         }
@@ -112,6 +113,29 @@ class BaseCollection implements \ArrayAccess, \Countable, \Iterator
         if ($this->count != count($response['data'])) {
             $this->reached_end = true;
         }
+    }
+
+    /**
+     * Function to add items to collection
+     *
+     * @param array $data
+     */
+    public function loadFromArray($data)
+    {
+        if (empty($data) || !is_array($data)) {
+            return;
+        }
+
+        $item_class = $this->item_type;
+
+        foreach ($data as $item) {
+            $current_item = new $item_class($this->client);
+            $current_item->initValues($item);
+            // add current_item to $this->_items array
+            $this->_items[] = $current_item;
+        }
+        // set correct count
+        //$this->count = count($this->_items);
     }
 
     /**
@@ -285,7 +309,7 @@ class BaseCollection implements \ArrayAccess, \Countable, \Iterator
       */
      private function loadNextScroll()
      {
-         echo 'trying to load next scroll!!!';
+         var_dump('trying to load next scroll!!!');
          if ($this->reached_end || !$this->scroll_id) {
              return false;
          }

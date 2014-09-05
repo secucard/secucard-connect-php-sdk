@@ -23,7 +23,6 @@ class AccountsTest extends \PHPUnit_Framework_TestCase
 
     public function testGetList()
     {
-
         $list = $this->client->general->accounts->getList(array('blabla'=>'uff'));
         // test also the BaseCollection for iterating:
         foreach ($list as $key => $value)
@@ -40,7 +39,7 @@ class AccountsTest extends \PHPUnit_Framework_TestCase
 
     public function testGetItem()
     {
-        $account = 'not implemented yet';//$this->client->general->accounts->get(1);
+        $account = $this->client->general->accounts->get('acc_577091');
 
         $this->assertFalse(empty($account));
     }

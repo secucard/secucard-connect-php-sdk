@@ -14,7 +14,7 @@ use secucard\client\base\BaseModel;
 class Address extends BaseModel
 {
     protected $_attribute_defs = array(
-        'id'=>array('type'=>BaseModel::DATA_TYPE_NUMBER, 'id'=>true, 'options'=>array()),
+        'id'=>array('type'=>BaseModel::DATA_TYPE_STRING, 'options'=>array('id'=>true)),
         'a'=>array('type'=>BaseModel::DATA_TYPE_STRING),
         'b'=>array('type'=>BaseModel::DATA_TYPE_STRING),
         'c'=>array('type'=>BaseModel::DATA_TYPE_STRING),
