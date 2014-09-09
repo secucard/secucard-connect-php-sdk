@@ -9,6 +9,9 @@ use secucard\client\oauth\GrantType\ClientCredentials;
 use secucard\client\oauth\GrantType\PasswordCredentials;
 use secucard\client\oauth\GrantType\RefreshToken;
 use secucard\client\oauth\OauthProvider;
+use secucard\client\log\Logger;
+use secucard\client\log\GuzzleSubscriber;
+use Psr\Log\LoggerInterface;
 
 use GuzzleHttp\Collection;
 
@@ -32,6 +35,12 @@ class Client
     protected $category_map;
 
     /**
+     * Logger used for logging
+     * @var that implements LoggerInterface
+     */
+    public $logger;
+
+    /**
      * Api version
      * @var string
      */
@@ -40,10 +49,10 @@ class Client
     /**
      * Constructor
      * @param array $options - options to correctly initialize Guzzle Client
+     * @param $logger - pass here LoggerInterface or GuzzleSubscriber object to use for logging
      */
-    public function __construct(array $config)
+    public function __construct(array $config, $logger = null)
     {
-
         // array of base configuration
         $default = array(
             'base_url'=>'https://connect.secucard.com',
@@ -64,6 +73,18 @@ class Client
 
         // Create a new Secucard client
         $this->client = new \GuzzleHttp\Client($config->toArray());
+
+        if ($logger instanceof GuzzleSubscriber) {
+            // add subscriber to guzzle
+            $this->logger = $logger->getLogger();
+            $this->client->getEmitter()->attach($logger);
+        } elseif ($logger instanceof LoggerInterface) {
+            // initialize logger with a logger parameter
+            $this->logger = $logger;
+        } else {
+            // initialize default logger - with logging disabled
+            $this->logger = new Logger(null, false);
+        }
 
         // Ensure that the OauthProvider is attached to the client
         $this->setAuthorization($config);
@@ -128,12 +149,28 @@ class Client
      */
     public function get($path, $options)
     {
-        $response = $this->client->get($path, ['auth'=>'oauth', 'debug'=>true]);
+        $options = array_merge(['auth'=>'oauth', 'debug'=>true], $options);
+        $response = $this->client->get($path, $options);
         if (!$response) {
             return false;
         }
 
         return $response;
+    }
+
+    /**
+     * DELETE function
+     * used to update data for model
+     */
+    public function delete($path, $data, $options)
+    {
+        $options = array_merge(['auth'=>'oauth', 'data'=>$data], $options);
+        $response = $this->client->delete($path, $options);
+        if (!$response) {
+            return false;
+        }
+
+        return json_decode($response, TRUE);
     }
 
     /**
@@ -146,7 +183,8 @@ class Client
      */
     public function post($path, $data, $options)
     {
-        $response = $this->client->post($this->protocol . $this->host . $path, ['auth'=>'oauth', 'json'=>$data, 'debug'=>true]);
+        $options = array_merge(['auth'=>'oauth', 'json'=>$data, 'debug'=>true], $options);
+        $response = $this->client->post($path, $options);
         if (!$response) {
             return false;
         }
@@ -164,11 +202,28 @@ class Client
      */
     public function postUrlEncoded($path, $data, $options)
     {
-        $response = $this->client->post($this->protocol . $this->host . $path, ['body' => $data ,'debug'=>true]);
+        $options = array_merge(['auth'=>'oauth', 'body' => $data ,'debug'=>true], $options);
+        $response = $this->client->post($path, $options);
         if (!$response) {
             return false;
         }
 
         return json_decode($response, TRUE);
     }
+
+    /**
+     * PUT function
+     * used to update data for model
+     */
+    public function put($path, $data, $options)
+    {
+        $options = array_merge(['auth'=>'oauth', 'body' => $data ,'debug'=>true], $options);
+        $response = $this->client->put($path, $options);
+        if (!$response) {
+            return false;
+        }
+
+        return json_decode($response, TRUE);
+    }
+
 }

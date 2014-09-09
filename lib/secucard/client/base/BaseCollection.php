@@ -167,15 +167,23 @@ class BaseCollection implements \ArrayAccess, \Countable, \Iterator
     }
 
     /**
+     * Function that returns Url path for current model
+     * @return string
+     */
+    public function getUrlPath()
+    {
+        return str_replace('\\', '/', substr($this->item_type, strlen('secucard\\models\\')));
+    }
+
+    /**
      * Function to load items for $options
      * @param array $options
      */
     public function loadItems($options)
     {
-        $path = str_replace('\\', '/', substr($this->item_type, strlen('secucard\\models\\')));
+        $path = $this->getUrlPath();
 
-        // TODO FIX ME , correclt the path inside constructor of GuzzleHttp\Client
-        $response = $this->client->get('/app.core.connector/api/v2/' . $path, array('query'=>$options));
+        $response = $this->client->get($path, array('query'=>$options));
         $this->parseResponse($response->json());
     }
 
@@ -309,7 +317,7 @@ class BaseCollection implements \ArrayAccess, \Countable, \Iterator
       */
      private function loadNextScroll()
      {
-         var_dump('trying to load next scroll!!!');
+         $this->client->logger->info('trying to load next scroll');
          if ($this->reached_end || !$this->scroll_id) {
              return false;
          }

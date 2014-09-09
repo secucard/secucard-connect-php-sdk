@@ -68,6 +68,24 @@ abstract class MainModel extends BaseModel
     }
 
     /**
+     * Override this function if model can be deleted
+     * @return bool
+     */
+    public function isRemovable()
+    {
+        return false;
+    }
+
+    /**
+     * Override this function if model can be updated
+     * @return bool
+     */
+    public function isUpdatable()
+    {
+        return false;
+    }
+
+    /**
      * Magic getter
      * @param string $name
      */
@@ -82,7 +100,7 @@ abstract class MainModel extends BaseModel
             }
         }
         if (isset($this->_relations[$name])) {
-            // return the relation!
+            // return the related object
             return $this->getRelated($name);
         }
 
@@ -147,7 +165,6 @@ abstract class MainModel extends BaseModel
      */
     public function get($id)
     {
-        // todo implement method to get object by its id!
         if (empty($id)) {
             throw new \Exception('cannot load object with empty id');
         }
@@ -165,27 +182,70 @@ abstract class MainModel extends BaseModel
     }
 
     /**
+     * Function to delete the model identified by id
+     * @param string $id default null
+     * @throws \Exception
+     * @return bool
+     */
+    public function delete($id = null)
+    {
+        if (!$this->isRemovable()) {
+            $this->client->logger->warning('Trying to delete model ' . get_class($this) . ' but it is not removable');
+            return false;
+        }
+        // TODO move the static path of path to some configuration
+        $path = '/app.core.connector/api/v2/' . $this->getCurrentModelUrlPath() . '/';
+        if (empty($id)) {
+            if (!$this->initialized || empty($this->_attributes[$this->_id_column])) {
+                throw new \Exception('cannot delete object with empty primary key value');
+            }
+            $path .=  $this->_attributes[$this->_id_column];
+        } else {
+            $path .= $id;
+        }
+
+        $options = array();
+
+        $response = $this->client->delete($path, $options);
+        return $response;
+    }
+
+    /**
      * Function to save object
      * It can update existing or create new object
-     * SAVE function in future
+     *
      * @return bool true on success
      */
     public function save()
     {
-        // TODO not implemented correctly
-        if ($this->initialized) {
-            // Update object
-            // call api somehow
-            // probably static api?
+        $path = '/app.core.connector/api/v2/' . $this->getCurrentModelUrlPath() . '/';
 
+        // check if we should update object
+        if (!empty($this->_id_column) && !empty($this->_attributes[$this->_id_column])) {
+            // update the existing record
+            if (!$this->initialized) {
+                throw new \Exception('Trying to save not initialized item');
+            }
+
+            if (!$this->isUpdatable()) {
+                $this->client->logger->warning('Trying to update model ' . get_class($this) . ' but it is not updatable!');
+                return false;
+            }
+
+            $path .= $this->_attributes[$this->_id_column];
+            var_dump($this->_attributes);
+            $response = $this->client->put($path, $this->_attributes, array());
+            // TODO check response and process it
             return true;
         }
+        // add new object
 
-        // call create api function
-        // pass object there
-        // TODO initialize response correctly
-        $response = array();
+        $response = $this->client->post($path, $this->_attributes, array());
+        // TODO get the object id from response
+        // following value is not correct:
         $this->_attributes[$this->_id_column] = $response[$this->_id_column];
+        // or initialize object from the response.. there can be some field values fixed
+        // TODO
         return true;
 
     }
@@ -212,8 +272,7 @@ abstract class MainModel extends BaseModel
         }
         $relation_def = $this->_relations[$name];
 
-        // TODO add logging!!
-        //$this->log('lazy loading '. get_class($this).'.'. $name);
+        $this->client->logger->info('lazy loading '. get_class($this).'.'. $name);
 
         if ($refresh) {
             unset($this->_related[$name]);
@@ -323,7 +382,7 @@ abstract class MainModel extends BaseModel
         $options = array();
 
         // TODO fix
-        $response = $this->client->get('/app.core.connector/api/v2/' . $path . '/' . $id, array('query'=>$options));
+        $response = $this->client->get($path . '/' . $id, array('query'=>$options));
         return  $response->json();
     }
 
