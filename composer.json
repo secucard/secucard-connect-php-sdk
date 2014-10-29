@@ -1,5 +1,5 @@
 {
-    "name": "secucard/secucard-connect-php-client-lib ",
+    "name": "secucard/secucard-connect-php-client-lib",
     "description": "secucard.connect client library",
     "require": {
         "php": ">=5.3.0",
