@@ -2,13 +2,13 @@
 
 namespace secucard\client\storage;
 
-class DummyStorage implements StorageInterface {
+class FileStorage extends DummyStorage {
     
-    protected $storage;
-    
-    public function __construct() {
+    public function __construct($file) {
         // init dummy storage var
         $this->storage = array();
+        
+        $this->file = $file;
     }
     
     /**
@@ -18,9 +18,12 @@ class DummyStorage implements StorageInterface {
      * @return mixed
      */
     public function get($key) {
+        $this->load();
+        
         if (isset($this->storage[$key])) {
             return $this->storage[$key];
         }
+        
         return false;
     }
 
@@ -32,8 +35,9 @@ class DummyStorage implements StorageInterface {
      * @return void
      */
     public function set($key, $value) {
+        $this->load();
         $this->storage[$key] = $value;
-        return true;
+        return $this->save();
     }
 
     /**
@@ -43,7 +47,9 @@ class DummyStorage implements StorageInterface {
      * @return void
      */
     public function delete($key) {
+        $this->load();
         unset($this->storage[$key]);
+        return $this->save();
     }
 
     /**
@@ -52,6 +58,23 @@ class DummyStorage implements StorageInterface {
      * @return void
      */
     public function deleteAll() {
+        $this->load();
         $this->storage = array();
+        return $this->save();
+    }
+    
+    
+    private function load() {
+        $data = @file_get_contents($this->file);
+        if ($data) {
+            $this->storage = json_decode($data, TRUE);
+            return true;
+        }
+        
+    }
+    
+    private function save() {
+        file_put_contents($this->file, json_encode($this->storage));
+        return true;
     }
 } 

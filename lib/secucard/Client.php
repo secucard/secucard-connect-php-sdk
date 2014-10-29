@@ -123,10 +123,17 @@ class Client
     {
         // create credentials
         $client_credentials = new ClientCredentials($this->config['client_id'], $this->config['client_secret']);
-        //$password_credentials = new PasswordCredentials($config['username'], $config['password']);
+        
+        // default to client_credentials
+        $credentials = $client_credentials;
+        
+        if (isset($this->config['auth']['type']) && $this->config['auth']['type']  == 'password') {
+            $credentials = new PasswordCredentials($this->config['auth']['username'], $this->config['auth']['password']);
+        }
+        
 
         // create OAuthProvider
-        $oauthProvider = new OauthProvider($this->config['auth_path'], $this->client, $client_credentials, $client_credentials);
+        $oauthProvider = new OauthProvider($this->config['auth_path'], $this->client, $this->storage, $client_credentials, $credentials);
         // assign OAuthProvider to guzzle client
         $this->client->getEmitter()->attach($oauthProvider);
     }

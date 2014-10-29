@@ -8,12 +8,14 @@ namespace secucard\client\oauth;
 use secucard\client\oauth\GrantType\GrantTypeInterface;
 use secucard\client\oauth\GrantType\ClientCredentials;
 use secucard\client\oauth\GrantType\RefreshTokenCredentials;
+use secucard\client\storage\StorageInterface;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Event\RequestEvents;
 use GuzzleHttp\Event\SubscriberInterface;
 use GuzzleHttp\Event\BeforeEvent;
 use GuzzleHttp\Event\ErrorEvent;
+use secucard\client\storage\DummyStorage;
 
 /**
  * OauthProvider class that is adding Access tokens to requests
@@ -30,6 +32,8 @@ class OauthProvider implements SubscriberInterface
      */
     protected $client;
 
+    protected $storage;
+    
     /**
      * The client credentials to acquire access tokens
      * @var ClientCredentials
@@ -65,15 +69,20 @@ class OauthProvider implements SubscriberInterface
      * Constructor
      * @param string $auth_path
      * @param GuzzleHttp\Client $client
+     * @param StorageInterface $storage
      * @param ClientCredentials $clientCredentials
      * @param GrantTypeInterface $grantTypeCredentials
      */
-    public function __construct($auth_path, Client $client, ClientCredentials $clientCredentials, GrantTypeInterface $grantTypeCredentials)
+    public function __construct($auth_path, Client $client, StorageInterface $storage, ClientCredentials $clientCredentials, GrantTypeInterface $grantTypeCredentials)
     {
         $this->auth_path = $auth_path;
         $this->client = $client;
+        $this->storage = $storage;
         $this->clientCredentials = $clientCredentials;
         $this->grantTypeCredentials = $grantTypeCredentials;
+        
+        $this->refreshToken = $this->storage->get('refresh_token');
+        $this->accessToken = $this->storage->get('access_token');
     }
 
     /**
@@ -151,7 +160,7 @@ class OauthProvider implements SubscriberInterface
      */
     public function getAccessToken()
     {
-        if (isset($this->accessToken['expires_in']) && $this->accessToken['expires_in'] < time()) {
+        if (isset($this->accessToken['expires_in']) && $this->accessToken['expires_in'] > time()) {
             // The access token has expired
             $this->updateToken(new \secucard\client\oauth\GrantType\RefreshTokenCredentials($this->refreshToken));
         }
@@ -183,6 +192,9 @@ class OauthProvider implements SubscriberInterface
         $grantTypeCredentials->addParameters($params);
 
         $response = $this->client->post($this->auth_path, array('body'=>$params));
+        
+        // Add check for successfull response
+        
         $tokenData = $response->json();
 
         // Process the returned data, both expired_in and refresh_token are optional parameters
@@ -190,8 +202,17 @@ class OauthProvider implements SubscriberInterface
         if (isset($tokenData['expires_in'])) {
             $this->accessToken['expires_in'] = time() + $tokenData['expires_in'];
         }
+        
+        // Save access token to storage
+        $this->storage->set('access_token', $this->accessToken);
+        
         if (isset($tokenData['refresh_token'])) {
             $this->refreshToken = $tokenData['refresh_token'];
+            // Save refresh token to storage
+            $this->storage->set('refresh_token', $this->refreshToken);
+        } else {
+            // Got no refresh token => delete existing from storage
+            $this->storage->delete('refresh_token');
         }
     }
 }
