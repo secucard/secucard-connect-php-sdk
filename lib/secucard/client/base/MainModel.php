@@ -211,6 +211,30 @@ abstract class MainModel extends BaseModel
     }
 
     /**
+     * Function that creates attributes for saving
+     * @return array
+     */
+    public function getUpdateAttributes()
+    {
+        $ret = $this->_attributes;
+
+        foreach ($this->_related as $name => $related) {
+            switch ($this->_relations[$name]['type']) {
+                case MainModel::RELATION_HAS_MANY:
+                    foreach ($related as $related_sub) {
+                         $ret[$name][] = $related_sub->getUpdateAttributes();
+                    }
+                    break;
+                case MainModel::RELATION_HAS_ONE:
+                    $ret[$name] = $related->getUpdateAttributes();
+                    break;
+            }
+        }
+
+        return $ret;
+    }
+
+    /**
      * Function to save object
      * It can update existing or create new object
      *
@@ -234,16 +258,17 @@ abstract class MainModel extends BaseModel
 
             $path .= $this->_attributes[$this->_id_column];
             var_dump($this->_attributes);
-            $response = $this->client->put($path, $this->_attributes, array());
+            $response = $this->client->put($path, $this->getUpdateAttributes(), array());
             // TODO check response and process it
             return true;
         }
         // add new object
 
-        $response = $this->client->post($path, $this->_attributes, array());
+        $response = $this->client->post($path, $this->getUpdateAttributes(), array());
         // TODO get the object id from response
         // following value is not correct:
-        $this->_attributes[$this->_id_column] = $response[$this->_id_column];
+        $response_json = $response->json();
+        $this->_attributes[$this->_id_column] = $response_json[$this->_id_column];
         // or initialize object from the response.. there can be some field values fixed
         // TODO
         return true;

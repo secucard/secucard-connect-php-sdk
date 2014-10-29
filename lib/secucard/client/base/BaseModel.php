@@ -235,6 +235,9 @@ abstract class BaseModel
             case self::DATA_TYPE_STRING:
                 $this->_attributes[$name] = $value ? (string)$value : null;
                 break;
+            case self::DATA_TYPE_URL:
+                $this->_attributes[$name] = $value ? (string)$value : null;
+                break;
             default:
                 $this->_attributes[$name] = $value;
         }
@@ -261,6 +264,15 @@ abstract class BaseModel
         }
 
         return true;
+    }
+
+    /**
+     * Function that creates attributes for saving
+     * @return array
+     */
+    public function getUpdateAttributes()
+    {
+        return $this->_attributes;
     }
 
     /**
@@ -304,7 +316,7 @@ abstract class BaseModel
     {
         $result = array();
         foreach ($this->_attribute_defs as $name => $definition) {
-            if (!$this->hasRelation($name) && $this->hasAttributeValue($name) && !is_null($this->_attributes[$name])) {
+            if ($this->hasAttributeValue($name) && !is_null($this->_attributes[$name])) {
                 $result[$name] = $this->_attributes[$name];
             }
         }
