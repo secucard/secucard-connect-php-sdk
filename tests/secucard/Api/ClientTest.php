@@ -20,7 +20,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $config = array('base_url'=>'https://core-dev4.secupay-ag.de/app.core.connector/api/v2/',
+        $config = array('base_url'=>'https://core-dev7.secupay-ag.de/app.core.connector/api/v2/',
             'auth_path'=>'/app.core.connector/oauth/token',
             'client_id'=>'webapp',
             'client_secret'=>'821fc7042ec0ddf5cc70be9abaa5d6d311db04f4679ab56191038cb6f7f9cb7c',
