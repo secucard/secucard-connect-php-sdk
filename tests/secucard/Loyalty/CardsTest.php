@@ -15,9 +15,10 @@ class CardsTest extends ClientTest
     {
         $list = $this->client->loyalty->cards->getList(array());
 
-        $this->assertFalse(empty($list));
+        $this->assertFalse(empty($list), 'Card list empty');
 
         $temp_account = null;
+        $count_without = 0;
         // test lazy loading for account
         foreach ($list as $card) {
             if (!empty($card->account)) {
@@ -26,12 +27,17 @@ class CardsTest extends ClientTest
                 $tmp = $card->account->display_name;
                 $temp_account = $card->account;
                 $this->assertFalse(empty($card->account->display_name));
+            } else {
+                $count_without++;
             }
         }
 
-        $temp_account->bic = '123456';
-        $save_resp = $temp_account->save();
-        $delete_resp = $temp_account->delete();
+        if ($count_without != count($list)) {
+            $this->assertFalse(empty($temp_account), 'All returned cards have empty account '. print_r($list, true));
+            $temp_account->bic = '123456';
+            $save_resp = $temp_account->save();
+            $delete_resp = $temp_account->delete();
+        }
 
     }
 

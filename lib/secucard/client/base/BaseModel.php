@@ -16,6 +16,7 @@ abstract class BaseModel
     /**
      * Date type constants
      */
+    const DATA_TYPE_ARRAY = 'array';
     const DATA_TYPE_BOOLEAN = 'boolean';
     const DATA_TYPE_DATE = 'date';
     const DATA_TYPE_DATETIME = 'datetime';
@@ -23,7 +24,7 @@ abstract class BaseModel
     const DATA_TYPE_NUMBER = 'number';
     const DATA_TYPE_STRING = 'string';
     const DATA_TYPE_URL = 'url';
-    
+
     /**
      * Array where attributes for current object are defined
      * @var array
@@ -202,8 +203,12 @@ abstract class BaseModel
 
         $definition = $this->_attribute_defs[$name];
         switch ($definition['type']) {
-            case self::DATA_TYPE_NUMBER:
-                $this->_attributes[$name] = $value ? (int)$value : null;
+            case self::DATA_TYPE_ARRAY:
+                if (is_array($value)) {
+                    $this->_attributes[$name] = $value;
+                } else {
+                    $this->_attributes[$name] = array($value);
+                }
                 break;
             case self::DATA_TYPE_BOOLEAN:
                 $this->_attributes[$name] = null;
@@ -223,6 +228,9 @@ abstract class BaseModel
                 } else {
                     $this->_attributes[$name] = $value;
                 }
+                break;
+            case self::DATA_TYPE_NUMBER:
+                $this->_attributes[$name] = $value ? (int)$value : null;
                 break;
             case self::DATA_TYPE_STRING:
                 $this->_attributes[$name] = $value ? (string)$value : null;

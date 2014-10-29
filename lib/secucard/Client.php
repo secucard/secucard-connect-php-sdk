@@ -24,9 +24,9 @@ use GuzzleHttp\Collection;
  */
 class Client
 {
-    
+
     protected $config;
-    
+
     /**
      * GuzzleHttp client
      * @var object GuzzleHttp
@@ -44,9 +44,9 @@ class Client
      * @var that implements LoggerInterface
      */
     public $logger;
-    
+
     public $storage;
-    
+
     /**
      * Api version
      * @var string
@@ -77,18 +77,18 @@ class Client
             'client_id',
             'client_secret'
         );
-        
+
         // Merge in default settings and validate the config
         $this->config = Collection::fromConfig($config, $default, $required);
 
         // debug?
-        if ($config['debug']) {
+        if ($this->config['debug']) {
             // Add HTTP-Requests to log
             $_logger = new GuzzleSubscriber($logger);
         } else {
             $_logger = $logger;
         }
-        
+
         // Create a new Secucard client
         $this->client = new \GuzzleHttp\Client($this->config->toArray());
 
@@ -104,7 +104,7 @@ class Client
             // initialize default logger - with logging disabled
             $this->logger = new Logger(null, false);
         }
-        
+
         // Create storage
         if ($storage instanceof StorageInterface) {
             $this->storage = $storage;
@@ -169,8 +169,8 @@ class Client
         $url = $this->config['base_url'] . $this->config['api_path'] . "/" . $path;
         return $url;
     }
-    
-    
+
+
     /**
      * GET request method
      *
@@ -180,7 +180,7 @@ class Client
      */
     public function get($path, $options)
     {
-        $options = array_merge(['auth'=>'oauth', 'debug'=>true], $options);
+        $options = array_merge(['auth'=>'oauth'], $options);
         $response = $this->client->get($this->buildApiUrl($path), $options);
         if (!$response) {
             return false;
@@ -214,7 +214,7 @@ class Client
      */
     public function post($path, $data, $options)
     {
-        $options = array_merge(['auth'=>'oauth', 'json'=>$data, 'debug'=>true], $options);
+        $options = array_merge(['auth'=>'oauth', 'json'=>$data], $options);
         $response = $this->client->post($this->buildApiUrl($path), $options);
         if (!$response) {
             return false;
@@ -233,7 +233,7 @@ class Client
      */
     public function postUrlEncoded($path, $data, $options)
     {
-        $options = array_merge(['auth'=>'oauth', 'body' => $data ,'debug'=>true], $options);
+        $options = array_merge(['auth'=>'oauth', 'body'=>$data], $options);
         $response = $this->client->post($this->buildApiUrl($path), $options);
         if (!$response) {
             return false;
@@ -248,7 +248,7 @@ class Client
      */
     public function put($path, $data, $options)
     {
-        $options = array_merge(['auth'=>'oauth', 'body' => $data ,'debug'=>true], $options);
+        $options = array_merge(['auth'=>'oauth', 'body'=>$data], $options);
         $response = $this->client->put($this->buildApiUrl($path), $options);
         if (!$response) {
             return false;
