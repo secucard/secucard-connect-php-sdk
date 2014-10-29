@@ -41,7 +41,7 @@ abstract class MainModel extends BaseModel
      * Constructor
      * @param obj $client
      */
-    public function __construct(\secucard\client\api\Client &$client)
+    public function __construct(\secucard\Client &$client)
     {
         $this->client = $client;
         $this->setRelations($this->_relations);
@@ -218,7 +218,7 @@ abstract class MainModel extends BaseModel
      */
     public function save()
     {
-        $path = '/app.core.connector/api/v2/' . $this->getCurrentModelUrlPath() . '/';
+        $path = $this->getCurrentModelUrlPath() . '/';
 
         // check if we should update object
         if (!empty($this->_id_column) && !empty($this->_attributes[$this->_id_column])) {

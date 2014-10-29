@@ -33,7 +33,7 @@ class BaseModelCategory
     /**
      * Constructor
      */
-    public function __construct(\secucard\client\api\Client &$client, $category_name)
+    public function __construct(\secucard\Client &$client, $category_name)
     {
         $this->client = $client;
         $this->category_name = $category_name;

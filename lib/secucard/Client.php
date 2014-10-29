@@ -3,7 +3,7 @@
  * Api Client class
  */
 
-namespace secucard\client\api;
+namespace secucard;
 
 use secucard\client\oauth\GrantType\ClientCredentials;
 use secucard\client\oauth\GrantType\PasswordCredentials;
@@ -12,6 +12,8 @@ use secucard\client\oauth\OauthProvider;
 use secucard\client\log\Logger;
 use secucard\client\log\GuzzleSubscriber;
 use Psr\Log\LoggerInterface;
+use secucard\client\storage\StorageInterface;
+use secucard\client\storage\DummyStorage;
 
 use GuzzleHttp\Collection;
 
@@ -22,6 +24,9 @@ use GuzzleHttp\Collection;
  */
 class Client
 {
+    
+    protected $config;
+    
     /**
      * GuzzleHttp client
      * @var object GuzzleHttp
@@ -39,7 +44,9 @@ class Client
      * @var that implements LoggerInterface
      */
     public $logger;
-
+    
+    public $storage;
+    
     /**
      * Api version
      * @var string
@@ -49,59 +56,77 @@ class Client
     /**
      * Constructor
      * @param array $options - options to correctly initialize Guzzle Client
-     * @param $logger - pass here LoggerInterface or GuzzleSubscriber object to use for logging
+     * @param $logger - pass here LoggerInterface to use for logging
+     * @param $storage - pass here StorageInterface for storing runtime data (like oauth-tokens)
      */
-    public function __construct(array $config, $logger = null)
+    public function __construct(array $config, $logger = null, $storage = null)
     {
         // array of base configuration
         $default = array(
             'base_url'=>'https://connect.secucard.com',
-            'auth_path'=>'/oauth/token');
+            'auth_path'=>'/oauth/token',
+            'api_path'=>'/api/v2',
+            'debug'=>false,
+        );
 
         // The following fields are required when creating the client
         $required = array(
             'base_url',
             'auth_path',
+            'api_path',
             'client_id',
-            'client_secret',
-            'username',
-            'password',
+            'client_secret'
         );
-
+        
         // Merge in default settings and validate the config
-        $config = Collection::fromConfig($config, $default, $required);
+        $this->config = Collection::fromConfig($config, $default, $required);
 
+        // debug?
+        if ($config['debug']) {
+            // Add HTTP-Requests to log
+            $_logger = new GuzzleSubscriber($logger);
+        } else {
+            $_logger = $logger;
+        }
+        
         // Create a new Secucard client
-        $this->client = new \GuzzleHttp\Client($config->toArray());
+        $this->client = new \GuzzleHttp\Client($this->config->toArray());
 
-        if ($logger instanceof GuzzleSubscriber) {
+        // Create logger
+        if ($_logger instanceof GuzzleSubscriber) {
             // add subscriber to guzzle
-            $this->logger = $logger->getLogger();
-            $this->client->getEmitter()->attach($logger);
-        } elseif ($logger instanceof LoggerInterface) {
+            $this->logger = $_logger->getLogger();
+            $this->client->getEmitter()->attach($_logger);
+        } elseif ($_logger instanceof LoggerInterface) {
             // initialize logger with a logger parameter
-            $this->logger = $logger;
+            $this->logger = $_logger;
         } else {
             // initialize default logger - with logging disabled
             $this->logger = new Logger(null, false);
         }
+        
+        // Create storage
+        if ($storage instanceof StorageInterface) {
+            $this->storage = $storage;
+        } else {
+            $this->storage = new DummyStorage();
+        }
 
         // Ensure that the OauthProvider is attached to the client
-        $this->setAuthorization($config);
+        $this->setAuthorization();
     }
 
     /**
      * Public function to set Authorization on client
-     * @param Collection $config
      */
-    private function setAuthorization(Collection $config)
+    private function setAuthorization()
     {
         // create credentials
-        $client_credentials = new ClientCredentials($config['client_id'], $config['client_secret']);
-        $password_credentials = new PasswordCredentials($config['username'], $config['password']);
+        $client_credentials = new ClientCredentials($this->config['client_id'], $this->config['client_secret']);
+        //$password_credentials = new PasswordCredentials($config['username'], $config['password']);
 
         // create OAuthProvider
-        $oauthProvider = new OauthProvider($config['auth_path'], $this->client, $client_credentials, $password_credentials);
+        $oauthProvider = new OauthProvider($this->config['auth_path'], $this->client, $client_credentials, $client_credentials);
         // assign OAuthProvider to guzzle client
         $this->client->getEmitter()->attach($oauthProvider);
     }
@@ -140,6 +165,12 @@ class Client
         throw new \Exception('Invalid category name: ' . $name);
     }
 
+    protected function buildApiUrl($path) {
+        $url = $this->config['base_url'] . $this->config['api_path'] . "/" . $path;
+        return $url;
+    }
+    
+    
     /**
      * GET request method
      *
@@ -150,7 +181,7 @@ class Client
     public function get($path, $options)
     {
         $options = array_merge(['auth'=>'oauth', 'debug'=>true], $options);
-        $response = $this->client->get($path, $options);
+        $response = $this->client->get($this->buildApiUrl($path), $options);
         if (!$response) {
             return false;
         }
@@ -165,7 +196,7 @@ class Client
     public function delete($path, $data, $options)
     {
         $options = array_merge(['auth'=>'oauth', 'data'=>$data], $options);
-        $response = $this->client->delete($path, $options);
+        $response = $this->client->delete($this->buildApiUrl($path), $options);
         if (!$response) {
             return false;
         }
@@ -184,7 +215,7 @@ class Client
     public function post($path, $data, $options)
     {
         $options = array_merge(['auth'=>'oauth', 'json'=>$data, 'debug'=>true], $options);
-        $response = $this->client->post($path, $options);
+        $response = $this->client->post($this->buildApiUrl($path), $options);
         if (!$response) {
             return false;
         }
@@ -203,7 +234,7 @@ class Client
     public function postUrlEncoded($path, $data, $options)
     {
         $options = array_merge(['auth'=>'oauth', 'body' => $data ,'debug'=>true], $options);
-        $response = $this->client->post($path, $options);
+        $response = $this->client->post($this->buildApiUrl($path), $options);
         if (!$response) {
             return false;
         }
@@ -218,7 +249,7 @@ class Client
     public function put($path, $data, $options)
     {
         $options = array_merge(['auth'=>'oauth', 'body' => $data ,'debug'=>true], $options);
-        $response = $this->client->put($path, $options);
+        $response = $this->client->put($this->buildApiUrl($path), $options);
         if (!$response) {
             return false;
         }
