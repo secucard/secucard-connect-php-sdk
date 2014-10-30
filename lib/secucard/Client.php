@@ -46,6 +46,8 @@ class Client
     public $logger;
 
     public $storage;
+    
+    protected $callback_push_object;
 
     /**
      * Api version
@@ -262,6 +264,37 @@ class Client
         }
 
         return json_decode($response, TRUE);
+    }
+    
+    public function registerCallbackObject($callable) {
+        $this->callback_push_object = $callable;
+    }
+    
+    public function processPush($get = null, $post = null, $postRaw = null) {
+        
+        // GET
+        if (!$get) {
+            $get = $_GET;
+        }
+
+        // POST
+        if (!$post) {
+            $post = $_POST;
+        }
+        
+        // POST-RAW
+        if (!$postRaw) {
+            $postRaw = @file_get_contents('php://input');
+        }
+        
+        if ($this->callback_push_object) {
+            
+            /* TODO: Implement creation of object / get loaded object for object/id */
+            $obj = new models\Services\Identresults($this);
+            
+            // Call callback
+            call_user_func($this->callback_push_object, $obj);
+        }
     }
 
 }
