@@ -296,5 +296,18 @@ class Client
             call_user_func($this->callback_push_object, $obj);
         }
     }
+    
+    public function factory($object) {
+        
+        $product = 'secucard\models\\'.$object;
+        if(class_exists($product))
+        {
+            return new $product($this);
+        }
+        else {
+            throw new \Exception("Invalid product type given.");
+        }
+        
+    }
 
 }
