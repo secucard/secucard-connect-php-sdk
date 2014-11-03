@@ -315,6 +315,23 @@ abstract class MainModel extends BaseModel
     }
 
     /**
+     * Function to add related object to current relation
+     *
+     * @param string $relation_name
+     * @param object $value
+     */
+    public function addRelated($relation_name, $value)
+    {
+        if (!$value || !$this->hasRelation($relation_name)) {
+            return false;
+        }
+        if ($this->_relations[$relation_name]['type'] !== self::RELATION_HAS_MANY) {
+            return false;
+        }
+        $this->_related[$relation_name][] = $value;
+    }
+
+    /**
      * Function to set Attribute or relation on current model
      * @param string $name
      * @param mixed $value
@@ -388,6 +405,11 @@ abstract class MainModel extends BaseModel
         $id_column = $this->_id_column;
         if (empty($id_column)) {
             throw new \Exception('primary key not defined, cannot lazy load self');
+        }
+
+        if (empty($this->$id_column)) {
+            // lazy load self not allowed to objects without primary key set
+            return;
         }
 
         $response = $this->getResponse($this->$id_column);
