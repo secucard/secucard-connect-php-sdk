@@ -70,45 +70,7 @@ abstract class BaseModel
             throw new \BadMethodCallException('Cannot set attributes on already initialized object');
         }
 
-        foreach ($values as $attr_name => $value) {
-            // we need here to call the magic setter for descendant class
-            $this->setAttribute($attr_name, $value);
-        }
-        $this->initialized = $initialized;
-
-        return true;
-
-        /* Create object instance from attributes
-        foreach ($this->_attribute_defs as $name => $definition) {
-            if (isset($definition['options']['id'])) {
-                $this->_id_column = $name;
-                if (array_key_exists('id', $data)) {
-                    $this->id = $data['id'];
-                }
-            }
-
-        }
-        if ($this->_relations) {
-            foreach ($this->_relations as $name => $def) {
-                if (array_key_exists($name, $data)) {
-                    $property = $this->_attribute_defs[$name];
-                    $class_name = '\\secucard\\models\\' . $def['class'];
-
-                    if ($def['type'] == self::RELATION_HAS_ONE) {
-                        $child = new $class_name($this->client);
-                        // TODO do we need relations backwards
-                        //$child->add_relationship($this, $name);
-                        $this->setAttribute($name, $child);
-                    } elseif ($def['type'] == self::RELATION_HAS_MANY) {
-
-                        // We need to create collection of the right type
-                        // TODO implement correctly!
-                        //$this->setAttribute($name, $collection);
-                    }
-                }
-            }
-        }
-        return true;*/
+        return $this->_initValues($values, $initialized);
     }
 
     /**
@@ -262,6 +224,28 @@ abstract class BaseModel
                 $this->_id_column = $attr_name;
             }
         }
+
+        return true;
+    }
+
+    /**
+     * Function to initialize attributes and relations from array (obtained from API call)
+     * @param array $values
+     * @param bool $initialized
+     * @return bool true/false
+     */
+    protected function _initValues($values, $initialized)
+    {
+        if (!is_array($values) || empty($values)) {
+            return false;
+        }
+
+        foreach ($values as $attr_name => $value) {
+            // we need here to call the magic setter for descendant class
+            $this->setAttribute($attr_name, $value);
+        }
+
+        $this->initialized = $initialized;
 
         return true;
     }

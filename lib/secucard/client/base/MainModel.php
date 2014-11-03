@@ -265,14 +265,10 @@ abstract class MainModel extends BaseModel
         // add new object
 
         $response = $this->client->post($path, $this->getUpdateAttributes(), array());
-        // TODO get the object id from response
-        // following value is not correct:
-        $response_json = $response->json();
-        $this->_attributes[$this->_id_column] = $response_json[$this->_id_column];
-        // or initialize object from the response.. there can be some field values fixed
-        // TODO
-        return true;
 
+        $response_json = $response->json();
+
+        return $this->_initValues($response_json, true);
     }
 
     /**
