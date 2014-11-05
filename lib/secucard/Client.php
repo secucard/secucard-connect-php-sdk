@@ -46,7 +46,7 @@ class Client
     public $logger;
 
     public $storage;
-    
+
     protected $callback_push_object;
 
     /**
@@ -125,14 +125,14 @@ class Client
     {
         // create credentials
         $client_credentials = new ClientCredentials($this->config['client_id'], $this->config['client_secret']);
-        
+
         // default to client_credentials
         $credentials = $client_credentials;
-        
+
         if (isset($this->config['auth']['type']) && $this->config['auth']['type']  == 'password') {
             $credentials = new PasswordCredentials($this->config['auth']['username'], $this->config['auth']['password']);
         }
-        
+
 
         // create OAuthProvider
         $oauthProvider = new OauthProvider($this->config['auth_path'], $this->client, $this->storage, $client_credentials, $credentials);
@@ -265,13 +265,13 @@ class Client
 
         return json_decode($response, TRUE);
     }
-    
+
     public function registerCallbackObject($callable) {
         $this->callback_push_object = $callable;
     }
-    
+
     public function processPush($get = null, $post = null, $postRaw = null) {
-        
+
         // GET
         if (!$get) {
             $get = $_GET;
@@ -281,24 +281,51 @@ class Client
         if (!$post) {
             $post = $_POST;
         }
-        
+
+        $post_data = null;
         // POST-RAW
         if (!$postRaw) {
             $postRaw = @file_get_contents('php://input');
+            $post_data = json_decode($postRaw);
         }
-        
+
+        // we need somehow to get the object.id and the real id
+        // get the $post_object
+        $referenced_object = null;
+
+        if ($post_data && $post_data->object) {
+            $object_info = $post_data->object->object;
+            //get the model category and model from $object
+            //the delimiter is . or /
+            $model_info = explode('.', $object_info);
+            if (count($model_info) <= 1) {
+                $model_info = explode('/', $object_info);
+            }
+
+            if (count($model_info) > 1) {
+                $model_category = strtolower($model_info[0]);
+                $model = strtolower($model_info[1]);
+            }
+
+            $id = $post_data->object->id;
+            $action = $post_data->object->action;
+            if (empty($id) || empty($model_category) || empty($model) || $action == 'deleted') {
+                return;
+            }
+
+            // load referenced object from push
+            $referenced_object = $this->__get($model_category)->$model->get($id);
+        }
+
         if ($this->callback_push_object) {
-            
-            /* TODO: Implement creation of object / get loaded object for object/id */
-            $obj = new models\Services\Identresults($this);
-            
+
             // Call callback
-            call_user_func($this->callback_push_object, $obj);
+            call_user_func($this->callback_push_object, $referenced_object);
         }
     }
-    
+
     public function factory($object) {
-        
+
         $product = 'secucard\models\\'.$object;
         if(class_exists($product))
         {
@@ -307,7 +334,7 @@ class Client
         else {
             throw new \Exception("Invalid product type given.");
         }
-        
+
     }
 
 }
