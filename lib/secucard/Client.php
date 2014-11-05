@@ -24,7 +24,10 @@ use GuzzleHttp\Collection;
  */
 class Client
 {
-
+    /**
+     * Configuration array
+     * @var array
+     */
     protected $config;
 
     /**
@@ -45,8 +48,16 @@ class Client
      */
     public $logger;
 
+    /**
+     * Storage used to store authorization
+     * @var that implements StorageInterface
+     */
     public $storage;
 
+    /**
+     * Object to call when the push is called
+     * @var mixed
+     */
     protected $callback_push_object;
 
     /**
@@ -266,10 +277,20 @@ class Client
         return json_decode($response, TRUE);
     }
 
+    /**
+     * Function to register callback object
+     * @param mixed $callable
+     */
     public function registerCallbackObject($callable) {
         $this->callback_push_object = $callable;
     }
 
+    /**
+     * Function that will be called to process Push request from API
+     * @param array $get
+     * @param array $post
+     * @param object $postRaw
+     */
     public function processPush($get = null, $post = null, $postRaw = null) {
 
         // GET
@@ -287,16 +308,14 @@ class Client
         if (!$postRaw) {
             $postRaw = @file_get_contents('php://input');
             $post_data = json_decode($postRaw);
-        }
+        } else { $post_data = $postRaw;}
 
-        // we need somehow to get the object.id and the real id
-        // get the $post_object
         $referenced_object = null;
 
         if ($post_data && $post_data->object) {
             $object_info = $post_data->object->object;
             //get the model category and model from $object
-            //the delimiter is . or /
+            //the model category and model delimiter is '.' or '/'
             $model_info = explode('.', $object_info);
             if (count($model_info) <= 1) {
                 $model_info = explode('/', $object_info);
@@ -307,34 +326,35 @@ class Client
                 $model = strtolower($model_info[1]);
             }
 
-            $id = $post_data->object->id;
+            $object_id = $post_data->object->id;
             $action = $post_data->object->action;
-            if (empty($id) || empty($model_category) || empty($model) || $action == 'deleted') {
+            if (empty($object_id) || empty($model_category) || empty($model) || $action == 'deleted') {
                 return;
             }
 
-            // load referenced object from push
-            $referenced_object = $this->__get($model_category)->$model->get($id);
+            // load referenced object from API
+            $referenced_object = $this->__get($model_category)->$model->get($object_id);
         }
 
         if ($this->callback_push_object) {
-
             // Call callback
             call_user_func($this->callback_push_object, $referenced_object);
         }
     }
 
-    public function factory($object) {
+    /**
+     * Factory function to create object of expected model type
+     * @param string $object
+     * @throws \Exception
+     * @return object
+     */
+    public function factory($object)
+    {
 
         $product = 'secucard\models\\'.$object;
-        if(class_exists($product))
-        {
+        if(class_exists($product)) {
             return new $product($this);
         }
-        else {
-            throw new \Exception("Invalid product type given.");
-        }
-
+        throw new \Exception("Invalid product type given.");
     }
-
 }

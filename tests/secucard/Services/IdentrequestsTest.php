@@ -42,7 +42,8 @@ class IdentrequestsTest extends ClientTest
 
         $i = 0;
         foreach ($list as $item) {
-            var_dump('Item: ' . $i . ': ' . $item->id);
+            $this->client->logger->info('Item: ' . ($i + 1) . ': ' . $item->id);
+            $i++;
         }
     }
 }
