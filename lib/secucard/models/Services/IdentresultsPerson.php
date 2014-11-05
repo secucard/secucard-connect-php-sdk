@@ -18,6 +18,7 @@ class IdentresultsPerson extends BaseModel
         'customdata'=>array('type'=>BaseModel::DATA_TYPE_ARRAY),
         'attachments'=>array('type'=>BaseModel::DATA_TYPE_ARRAY),
         'userdata'=>array('type'=>BaseModel::DATA_TYPE_ARRAY),
+        'contactdata'=>array('type'=>BaseModel::DATA_TYPE_ARRAY),
         'identificationdocument'=>array('type'=>BaseModel::DATA_TYPE_ARRAY),
         );
 

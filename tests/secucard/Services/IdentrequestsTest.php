@@ -18,7 +18,6 @@ class IdentrequestsTest extends ClientTest
         $list = $this->client->services->identrequests->getList(array());
 
         $this->assertFalse(empty($list));
-
     }
 
     /**
@@ -26,9 +25,17 @@ class IdentrequestsTest extends ClientTest
      */
     public function testGetItem()
     {
-        $request = $this->client->services->identrequests->get('sir_544fc1d37ba2952b7a2ce2a1');
+        $list = $this->client->services->identrequests->getList(array('count'=>1));
 
-        $this->assertFalse(empty($request));
+        $this->assertFalse(empty($list), 'Cannot get any item, because list is empty');
+        $sample_item_id = $list[0]->id;
+        $this->assertFalse(empty($sample_item_id));
+
+        if ($sample_item_id) {
+            $item = $this->client->services->identrequests->get($sample_item_id);
+
+            $this->assertFalse(empty($item));
+        }
     }
 
     /**

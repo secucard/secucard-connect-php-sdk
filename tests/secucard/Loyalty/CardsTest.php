@@ -10,42 +10,50 @@ use secucard\tests\Api\ClientTest;
  */
 class CardsTest extends ClientTest
 {
-
+    /**
+     * @test
+     */
     public function testGetList()
     {
         $list = $this->client->loyalty->cards->getList(array());
 
         $this->assertFalse(empty($list), 'Card list empty');
 
+        // test lazy loading for accout
         $temp_account = null;
-        $count_without = 0;
-        // test lazy loading for account
+        $count = 0;
         foreach ($list as $card) {
+            // do not load all the cards available
+            if ($count > 20) {
+                break;
+            }
             if (!empty($card->account)) {
                 $this->assertFalse(empty($card->account->id));
-                //var_dump($card->account->display_name);
+
+                // it is needed for lazy loading to copy the loading property to some temporary variable
                 $tmp = $card->account->display_name;
                 $temp_account = $card->account;
                 $this->assertFalse(empty($card->account->display_name));
-            } else {
-                $count_without++;
             }
+            $count++;
         }
-
-        if ($count_without != count($list)) {
-            $this->assertFalse(empty($temp_account), 'All returned cards have empty account '. print_r($list, true));
-            $temp_account->bic = '123456';
-            $save_resp = $temp_account->save();
-            $delete_resp = $temp_account->delete();
-        }
-
     }
 
+    /**
+     * @test
+     */
     public function testGetItem()
     {
-        $card = $this->client->loyalty->cards->get('crd_67329');
+        $list = $this->client->loyalty->cards->getList(array('count'=>1));
 
-        $this->assertFalse(empty($card));
+        $this->assertFalse(empty($list));
+        $sample_item_id = $list[0]->id;
+        $this->assertFalse(empty($sample_item_id), 'Cannot get one item, because none is available');
+
+        if ($sample_item_id) {
+            $item = $this->client->loyalty->cards->get($sample_item_id);
+
+            $this->assertFalse(empty($item));
+        }
     }
-
 }

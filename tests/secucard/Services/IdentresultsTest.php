@@ -10,20 +10,32 @@ use secucard\tests\Api\ClientTest;
  */
 class IdentresultsTest extends ClientTest
 {
-
+    /**
+     * @test
+     */
     public function testGetList()
     {
         $list = $this->client->services->identresults->getList(array());
 
         $this->assertFalse(empty($list));
-
+        $this->sample_object_id = $list[0]->id;
     }
 
+    /**
+     * @test
+     */
     public function testGetItem()
     {
-        $request = $this->client->services->identresults->get('sis_544fcdcc7ba295e7182ce2a1');
+        $list = $this->client->services->identresults->getList(array());
 
-        $this->assertFalse(empty($request));
+        $this->assertFalse(empty($list), 'Cannot get any item, because list is empty');
+        $sample_item_id = $list[0]->id;
+        $this->assertFalse(empty($sample_item_id));
+
+        if ($sample_item_id) {
+            $item = $this->client->services->identresults->get($sample_item_id);
+
+            $this->assertFalse(empty($item));
+        }
     }
-
 }

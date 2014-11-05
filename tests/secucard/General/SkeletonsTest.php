@@ -10,7 +10,9 @@ use secucard\tests\Api\ClientTest;
  */
 class SkeletonsTest extends ClientTest
 {
-
+    /**
+     * @test
+     */
     public function testGetList()
     {
         $list = $this->client->general->skeletons->getList(array());
@@ -18,11 +20,21 @@ class SkeletonsTest extends ClientTest
         $this->assertFalse(empty($list));
     }
 
+    /**
+     * @test
+     */
     public function testGetItem()
     {
-        $skeleton = $this->client->general->skeletons->get('skl_59');
+        $list = $this->client->general->skeletons->getList(array('count'=>1));
 
-        $this->assertFalse(empty($skeleton));
+        $this->assertFalse(empty($list));
+        $sample_item_id = $list[0]->id;
+        $this->assertFalse(empty($sample_item_id), 'Cannot get one item, because none is available');
+
+        if ($sample_item_id) {
+            $item = $this->client->general->skeletons->get($sample_item_id);
+
+            $this->assertFalse(empty($item));
+        }
     }
-
 }

@@ -1,0 +1,78 @@
+<?php
+
+namespace secucard\tests\Api;
+
+use secucard\Client;
+
+/**
+ * @covers secucard\Client
+ */
+class ClientTest extends \PHPUnit_Framework_TestCase
+{
+    /**
+     * Api client
+     * @var secucard\Client
+     */
+    protected $client;
+
+    /**
+     * Function to set-up client correctly
+     */
+    protected function setUp()
+    {
+        $config = array(
+            'base_url'=>'https://core-dev7.secupay-ag.de',
+            'auth_path'=>'/app.core.connector/oauth/token',
+            'api_path'=>'/app.core.connector/api/v2',
+            'debug'=>true,
+            'client_id'=>'webapp',
+            'client_secret'=>'821fc7042ec0ddf5cc70be9abaa5d6d311db04f4679ab56191038cb6f7f9cb7c',
+            'username'=>'sten@beispiel.net',
+            'password'=>'secrets',
+            );
+
+        $fp = fopen("/tmp/secucard_php_test.log", "a");
+        $logger = new \secucard\client\log\Logger($fp, true);
+
+        $this->client = new \secucard\Client($config, $logger);
+    }
+
+    /**
+     * Function that will be used in callable
+     * @param object $obj
+     */
+    public static function pushObjectCheck($obj = null)
+    {
+        self::assertFalse(empty($obj));
+    }
+
+    /**
+     * @test
+     */
+    public function testClientCreation()
+    {
+        $this->assertFalse(empty($this->client));
+    }
+
+    /**
+     * @test for simple push function
+     *
+    public function testClientPush()
+    {
+        $this->assertFalse(empty($this->client));
+        $callable = array('secucard\tests\Api\ClientTest', 'pushObjectCheck');
+        $this->client->registerCallbackObject($callable);
+        $obj = new \stdClass();
+        $obj->object = 'Services/Identrequests';
+        $obj->action = 'updated';
+        $obj->id = 'sir_544fda7a7ba295e4242ce2a1';
+
+        $push_obj = new \stdClass();
+        $push_obj->object = $obj;
+        $push_obj->type = 'secucard.push';
+        $push_obj->created = 'some_date';
+
+        $this->client->processPush(null, null, $push_obj);
+
+    }/**/
+}
