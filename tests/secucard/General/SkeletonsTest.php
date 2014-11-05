@@ -20,7 +20,7 @@ class SkeletonsTest extends ClientTest
 
     public function testGetItem()
     {
-        $skeleton = 'not implemented yet';//$this->client->general->skeletons->get(1);
+        $skeleton = $this->client->general->skeletons->get('skl_59');
 
         $this->assertFalse(empty($skeleton));
     }

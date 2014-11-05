@@ -68,6 +68,8 @@ class BaseCollection implements \ArrayAccess, \Countable, \Iterator
     public function __construct($client, $item_type)
     {
         $this->position = 0;
+        $this->count = 0;
+        $this->offset = 0;
         $this->reached_end = false;
         $this->client = $client;
         if (empty($item_type)) {
@@ -110,7 +112,8 @@ class BaseCollection implements \ArrayAccess, \Countable, \Iterator
         }
 
         // check if we reached end of all items for iteration
-        if ($this->count != count($response['data'])) {
+        if ($this->count == count($this->_items)) {
+            $this->client->logger->info('reached end of a collection');
             $this->reached_end = true;
         }
     }
@@ -135,11 +138,15 @@ class BaseCollection implements \ArrayAccess, \Countable, \Iterator
             $this->_items[] = $current_item;
         }
         // set correct count
-        //$this->count = count($this->_items);
+        $this->count = count($this->_items);
+        $this->position = 0;
+        $this->offset = 0;
+        $this->reached_end = true;
     }
 
     /**
      * Convert collection to string
+     * @return string
      */
     public function __toString()
     {
@@ -152,10 +159,11 @@ class BaseCollection implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * Implements Countable
+     * Returns count of all items in collection (even with the not loaded parts)
      */
     public function count()
     {
-        return count($this->_items);
+        return $this->count;
     }
 
     /**
@@ -247,6 +255,7 @@ class BaseCollection implements \ArrayAccess, \Countable, \Iterator
      */
     public function _set_items($items)
     {
+        throw new BadMethodCallException('not implemented');
         $this->_items = $items;
     }
 
@@ -297,8 +306,9 @@ class BaseCollection implements \ArrayAccess, \Countable, \Iterator
      public function next()
      {
          ++$this->position;
+
          // if we are on the last item, try to load new items
-         if ($this->position == $this->count()) {
+         if ($this->position == count($this->_items)) {
              $this->loadNextScroll();
          }
      }
@@ -317,13 +327,15 @@ class BaseCollection implements \ArrayAccess, \Countable, \Iterator
       */
      private function loadNextScroll()
      {
-         $this->client->logger->info('trying to load next scroll');
-         if ($this->reached_end || !$this->scroll_id) {
+         if ($this->reached_end) {
              return false;
          }
+         $this->client->logger->info('trying to load next scroll, offset (' . $this->offset . ')');
+         // set offset to the count of all downloaded items
+         $this->offset = count($this->_items);
 
          // option array for the loadItems request
-         $options = array('scroll_id'=>$this->scroll_id);
+         $options = array('scroll_id'=>$this->scroll_id, 'offset'=>$this->offset);
          $this->loadItems($options);
          return true;
      }
