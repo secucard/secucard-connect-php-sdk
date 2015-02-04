@@ -94,7 +94,6 @@ class Client
         // Merge in default settings and validate the config
         $this->config = Collection::fromConfig($config, $default, $required);
 
-        // debug?
         if ($this->config['debug']) {
             // Add HTTP-Requests to log
             $_logger = new GuzzleSubscriber($logger);
@@ -177,7 +176,7 @@ class Client
             'client_secret'=>$this->config['client_secret'],
         );
 
-        // if the curl gets response status other than 200, it will throw an exception even when there is response available
+        // if the guzzle gets response http_status other than 200, it will throw an exception even when there is response available
         try {
             $response = $this->client->post($this->config['auth_path'], array('body'=>$params));
         } catch(\GuzzleHttp\Exception\ClientException $e) {
@@ -199,7 +198,6 @@ class Client
      */
     public function pollDeviceAccessToken($device_code)
     {
-        var_dump($device_code);
         $params = array(
             'grant_type'=>'device',
             'code'=>$device_code,
@@ -207,7 +205,6 @@ class Client
             'client_secret'=>$this->config['client_secret'],
         );
 
-        // if the curl gets response status other than 200, it will throw an exception even when there is response available
         try {
             $response = $this->client->post($this->config['auth_path'], array('body'=>$params));
         } catch(\GuzzleHttp\Exception\ClientException $e) {
@@ -254,11 +251,15 @@ class Client
         throw new \Exception('Invalid category name: ' . $name);
     }
 
+    /**
+     * Function to build URL to access API function
+     * @param string $path
+     * @return string $url
+     */
     protected function buildApiUrl($path) {
         $url = $this->config['base_url'] . $this->config['api_path'] . "/" . $path;
         return $url;
     }
-
 
     /**
      * GET request method
@@ -350,7 +351,8 @@ class Client
      * Function to register callback object
      * @param mixed $callable
      */
-    public function registerCallbackObject($callable) {
+    public function registerCallbackObject($callable)
+    {
         $this->callback_push_object = $callable;
     }
 
@@ -360,8 +362,8 @@ class Client
      * @param array $post
      * @param object $postRaw
      */
-    public function processPush($get = null, $post = null, $postRaw = null) {
-
+    public function processPush($get = null, $post = null, $postRaw = null)
+    {
         // GET
         if (!$get) {
             $get = $_GET;
@@ -413,6 +415,7 @@ class Client
 
     /**
      * Factory function to create object of expected model type
+     *
      * @param string $object
      * @throws \Exception
      * @return object
