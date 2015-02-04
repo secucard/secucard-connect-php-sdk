@@ -18,7 +18,6 @@ class IdentresultsTest extends ClientTest
         $list = $this->client->services->identresults->getList(array());
 
         $this->assertFalse(empty($list));
-        $this->sample_object_id = $list[0]->id;
     }
 
     /**

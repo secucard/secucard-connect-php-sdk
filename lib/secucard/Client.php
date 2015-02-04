@@ -7,7 +7,7 @@ namespace secucard;
 
 use secucard\client\oauth\GrantType\ClientCredentials;
 use secucard\client\oauth\GrantType\PasswordCredentials;
-use secucard\client\oauth\GrantType\RefreshToken;
+use secucard\client\oauth\GrantType\RefreshTokenCredentials;
 use secucard\client\oauth\OauthProvider;
 use secucard\client\log\Logger;
 use secucard\client\log\GuzzleSubscriber;
@@ -125,30 +125,99 @@ class Client
             $this->storage = new DummyStorage();
         }
 
-        // Ensure that the OauthProvider is attached to the client
+        // Ensure that the OauthProvider is attached to the client, when grant_type is not device
+        // but only when authorization is needed
         $this->setAuthorization();
     }
 
     /**
-     * Public function to set Authorization on client
+     * Private function to set Authorization on client
+     *
+     * @param GrantTypeInterface $credentials
      */
     private function setAuthorization()
     {
+        // conditions for client authorization types
+        // specify $config['auth']['type'] = 'none', when you dont want the Client to use authorization (useful for authorization for devices)
+        // specify $config['auth']['type'] = 'refresh_token' when you already have refresh token
+        if ($this->config['auth']['type'] === 'none') {
+            return;
+        }
+
         // create credentials
         $client_credentials = new ClientCredentials($this->config['client_id'], $this->config['client_secret']);
 
-        // default to client_credentials
+        // default credentials are client_credentials
         $credentials = $client_credentials;
-
-        if (isset($this->config['auth']['type']) && $this->config['auth']['type']  == 'password') {
-            $credentials = new PasswordCredentials($this->config['auth']['username'], $this->config['auth']['password']);
+        // check which credentials should be added to the client auth provider
+        if ($this->config['auth']['type'] === 'refresh_token') {
+            $credentials = new RefreshTokenCredentials($this->config['auth']['refresh_token']);
         }
-
 
         // create OAuthProvider
         $oauthProvider = new OauthProvider($this->config['auth_path'], $this->client, $this->storage, $client_credentials, $credentials);
         // assign OAuthProvider to guzzle client
         $this->client->getEmitter()->attach($oauthProvider);
+    }
+
+    /**
+     * Function to get device verification
+     *
+     * @param string $vendor
+     * @param string $uid
+     * @throws Exception
+     * @return array $response
+     */
+    public function obtainDeviceVerification($vendor, $uid)
+    {
+        $params = array(
+            'grant_type'=>'device',
+            'uuid'=>$vendor . '/' . $uid,
+            'client_id'=>$this->config['client_id'],
+            'client_secret'=>$this->config['client_secret'],
+        );
+
+        // if the curl gets response status other than 200, it will throw an exception even when there is response available
+        try {
+            $response = $this->client->post($this->config['auth_path'], array('body'=>$params));
+        } catch(\GuzzleHttp\Exception\ClientException $e) {
+            if ($e->hasResponse()) {
+                return $e->getResponse()->json();
+            }
+            throw $e;
+        }
+
+        return $response->json();
+    }
+
+    /**
+     * Function to get access_token and refresh_token for device authorization
+     *
+     * @param string $device_code
+     * @throws Exception
+     * @return array $response
+     */
+    public function pollDeviceAccessToken($device_code)
+    {
+        var_dump($device_code);
+        $params = array(
+            'grant_type'=>'device',
+            'code'=>$device_code,
+            'client_id'=>$this->config['client_id'],
+            'client_secret'=>$this->config['client_secret'],
+        );
+
+        // if the curl gets response status other than 200, it will throw an exception even when there is response available
+        try {
+            $response = $this->client->post($this->config['auth_path'], array('body'=>$params));
+        } catch(\GuzzleHttp\Exception\ClientException $e) {
+            if ($e->hasResponse()) {
+                return $e->getResponse()->json();
+            }
+            throw $e;
+        }
+
+        return $response->json();
     }
 
     /**
