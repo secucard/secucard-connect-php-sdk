@@ -21,7 +21,7 @@ abstract class MainModel extends BaseModel
 
     /**
      * Api client used for lazy loading
-     * @var \secucard\client\api\Client
+     * @var \secucard\Client
      */
     protected $client;
 
@@ -94,7 +94,8 @@ abstract class MainModel extends BaseModel
         // TODO recognize if object is loaded , if not, then load it!
         if (!$this->initialized) {
             if (!isset($this->_attributes[$name]) && !empty($this->_attribute_defs[$name])
-                || !isset($this->_related[$name]) && !empty($this->_relations[$name])) {
+                || !isset($this->_related[$name]) && !empty($this->_relations[$name])
+            ) {
                 // lazy load current object!
                 $this->lazyLoadSelf();
             }
@@ -151,7 +152,7 @@ abstract class MainModel extends BaseModel
      * @param array $options
      * @return BaseCollection $list
      */
-    public function getList($options)
+    public function getList($options = array())
     {
         $list = new BaseCollection($this->client, get_class($this));
         $list->loadItems($options);
@@ -197,16 +198,17 @@ abstract class MainModel extends BaseModel
         $path = '/app.core.connector/api/v2/' . $this->getCurrentModelUrlPath() . '/';
         if (empty($id)) {
             if (!$this->initialized || empty($this->_attributes[$this->_id_column])) {
-                throw new \Exception('cannot delete object with empty primary key value');
+                throw new \Exception('Cannot delete object with empty primary key value');
             }
-            $path .=  $this->_attributes[$this->_id_column];
+            $path .= $this->_attributes[$this->_id_column];
         } else {
             $path .= $id;
         }
 
+        $data = array();
         $options = array();
 
-        $response = $this->client->delete($path, $options);
+        $response = $this->client->delete($path, $data, $options);
         return $response;
     }
 
@@ -222,7 +224,7 @@ abstract class MainModel extends BaseModel
             switch ($this->_relations[$name]['type']) {
                 case MainModel::RELATION_HAS_MANY:
                     foreach ($related as $related_sub) {
-                         $ret[$name][] = $related_sub->getUpdateAttributes();
+                        $ret[$name][] = $related_sub->getUpdateAttributes();
                     }
                     break;
                 case MainModel::RELATION_HAS_ONE:
@@ -281,9 +283,9 @@ abstract class MainModel extends BaseModel
      * @return mixed the related object
      * @throws Exception if the relation is not specified
      */
-    public function getRelated($name, $refresh=false)
+    public function getRelated($name, $refresh = false)
     {
-        if(!$refresh && (isset($this->_related[$name]) || array_key_exists($name, $this->_related))) {
+        if (!$refresh && (isset($this->_related[$name]) || array_key_exists($name, $this->_related))) {
             return $this->_related[$name];
         }
 
@@ -293,7 +295,7 @@ abstract class MainModel extends BaseModel
         }
         $relation_def = $this->_relations[$name];
 
-        $this->client->logger->info('lazy loading '. get_class($this).'.'. $name);
+        $this->client->logger->info('lazy loading ' . get_class($this) . '.' . $name);
 
         if ($refresh) {
             unset($this->_related[$name]);
@@ -304,7 +306,7 @@ abstract class MainModel extends BaseModel
             $this->_related[$name] = null;
         } else {
             // get new object
-            $this->lazyLoad($relation_def);
+            $this->lazyLoad($name, $relation_def);
         }
 
         return $this->_related[$name];
@@ -357,8 +359,14 @@ abstract class MainModel extends BaseModel
         return parent::setAttribute($name, $value);
     }
 
-    // TODO think what would be the best return value
-    private function lazyLoad($relation_def)
+    /**
+     * Function to lazy load related object
+     * @param string $name
+     * @param array $relation_def
+     * @return bool
+     * @throws Exception
+     */
+    private function lazyLoad($name, $relation_def)
     {
         $related_category = $relation_def['category'];
         $related_model = $relation_def['model'];
@@ -425,8 +433,8 @@ abstract class MainModel extends BaseModel
         $options = array();
 
         // TODO fix
-        $response = $this->client->get($path . '/' . $id, array('query'=>$options));
-        return  $response->json();
+        $response = $this->client->get($path . '/' . $id, array('query' => $options));
+        return $response->json();
     }
 
     /**

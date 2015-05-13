@@ -17,6 +17,7 @@ abstract class BaseModel
      * Date type constants
      */
     const DATA_TYPE_ARRAY = 'array';
+    const DATA_TYPE_ARRAY_SUBOBJECT = 'array_subobject';
     const DATA_TYPE_BOOLEAN = 'boolean';
     const DATA_TYPE_DATE = 'date';
     const DATA_TYPE_DATETIME = 'datetime';
@@ -167,6 +168,17 @@ abstract class BaseModel
         switch ($definition['type']) {
             case self::DATA_TYPE_ARRAY:
                 if (is_array($value)) {
+                    $this->_attributes[$name] = $value;
+                } else {
+                    $this->_attributes[$name] = array($value);
+                }
+                break;
+            case self::DATA_TYPE_ARRAY_SUBOBJECT:
+                if (!empty($value) && is_array($value)) {
+                    // we have a subobject inside an array. We will just validate the $value and set the array to _attributes
+                    $class_name = '\\secucard\\models\\' . $definition['category'] . '\\' . $definition['model'];
+                    $attribute_obj = new $class_name();
+                    $attribute_obj->initValues($value);
                     $this->_attributes[$name] = $value;
                 } else {
                     $this->_attributes[$name] = array($value);

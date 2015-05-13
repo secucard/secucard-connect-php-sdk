@@ -15,17 +15,18 @@ use secucard\client\base\MainModel;
 class Accounts extends MainModel
 {
     protected $_attribute_defs = array(
-        'object'=>array('type'=>BaseModel::DATA_TYPE_STRING),
-        'id'=>array('type'=>BaseModel::DATA_TYPE_STRING, 'options'=>array('id'=>true)),
-        'iban'=>array('type'=>BaseModel::DATA_TYPE_STRING),
-        'bic'=>array('type'=>BaseModel::DATA_TYPE_STRING),
-        'forename'=>array('type'=>BaseModel::DATA_TYPE_STRING),
-        'surname'=>array('type'=>BaseModel::DATA_TYPE_STRING),
-        'display_name'=>array('type'=>BaseModel::DATA_TYPE_STRING),
-        );
+        'object' => array('type' => BaseModel::DATA_TYPE_STRING),
+        'id' => array('type' => BaseModel::DATA_TYPE_STRING, 'options' => array('id' => true)),
+        'username' => array('type' => BaseModel::DATA_TYPE_STRING),
+        'role' => array('type' => BaseModel::DATA_TYPE_STRING),
+        'assignment' => array('type' => BaseModel::DATA_TYPE_ARRAY),
+        'invitation' => array('type' => BaseModel::DATA_TYPE_ARRAY),
+        'social' => array('type' => BaseModel::DATA_TYPE_ARRAY),
+    );
 
-    protected $_relations = array();
-
+    protected $_relations = array(
+        'contact' => array('type' => MainModel::RELATION_HAS_ONE, 'category' => 'Common', 'model' => 'Contact'),
+    );
 
     // model specific functions
 

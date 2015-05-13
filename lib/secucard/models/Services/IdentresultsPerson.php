@@ -14,15 +14,14 @@ use secucard\client\base\BaseModel;
 class IdentresultsPerson extends BaseModel
 {
     protected $_attribute_defs = array(
-        'identificationprocess'=>array('type'=>BaseModel::DATA_TYPE_ARRAY),
-        'customdata'=>array('type'=>BaseModel::DATA_TYPE_ARRAY),
-        'attachments'=>array('type'=>BaseModel::DATA_TYPE_ARRAY),
-        'userdata'=>array('type'=>BaseModel::DATA_TYPE_ARRAY),
-        'contactdata'=>array('type'=>BaseModel::DATA_TYPE_ARRAY),
-        'identificationdocument'=>array('type'=>BaseModel::DATA_TYPE_ARRAY),
-        );
+        'identificationprocess' => array('type' => BaseModel::DATA_TYPE_ARRAY),
+        'customdata' => array('type' => BaseModel::DATA_TYPE_ARRAY),
+        'attachments' => array('type' => BaseModel::DATA_TYPE_ARRAY),
+        'userdata' => array('type' => BaseModel::DATA_TYPE_ARRAY),
+        'contactdata' => array('type' => BaseModel::DATA_TYPE_ARRAY),
+        'identificationdocument' => array('type' => BaseModel::DATA_TYPE_ARRAY),
+    );
 
-    protected $_relations = array(
-        );
+    protected $_relations = array();
 
 }

@@ -2,7 +2,6 @@
 
 namespace secucard\tests\Services;
 
-use secucard\models\Services\Identrequests;
 use secucard\tests\Api\ClientTest;
 
 /**
