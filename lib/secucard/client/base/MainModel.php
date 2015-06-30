@@ -356,7 +356,12 @@ abstract class MainModel extends BaseModel
             return true;
         }
 
-        return parent::setAttribute($name, $value);
+        if ($this->hasAttribute($name)) {
+            return parent::setAttribute($name, $value);
+        }
+
+        $this->client->logger->error("Attribute '{$name}' cannot be assigned. Attribute doesn't exist for " . get_class($this));
+        return false;
     }
 
     /**

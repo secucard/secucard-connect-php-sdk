@@ -161,7 +161,8 @@ abstract class BaseModel
     protected function setAttribute($name, $value)
     {
         if (!$this->hasAttribute($name)) {
-            throw new \Exception("Attribute '{$name}' cannot be assigned. Attribute doesn't exist");
+            // ignore attributes that does not exists
+            return false;
         }
 
         $definition = $this->_attribute_defs[$name];
