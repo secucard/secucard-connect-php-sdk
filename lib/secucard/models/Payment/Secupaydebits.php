@@ -28,7 +28,7 @@ class Secupaydebits extends MainModel
     );
 
     protected $_relations = array(
-        'container' => array('type' => MainModel::RELATION_HAS_ONE, 'category' => 'Payment', 'model' => 'Container'),
+        'container' => array('type' => MainModel::RELATION_HAS_ONE, 'category' => 'Payment', 'model' => 'Containers'),
         'contract' => array('type' => MainModel::RELATION_HAS_ONE, 'category' => 'Payment', 'model' => 'Contracts'),
         'customer' => array('type' => MainModel::RELATION_HAS_ONE, 'category' => 'Payment', 'model' => 'Customers'),
     );
