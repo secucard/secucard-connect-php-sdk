@@ -31,11 +31,11 @@ class SecupayprepaysTest extends ClientTest
         $prepay_data = [
             'customer' => [
                 'object' => 'payment.customers',
-                'id' => 'PCU_WJG973MWA2YAUT49R5GQGJSZR3YNAA'
+                'id' => 'PCU_xxxx'
             ],
             'contract' => [
                 'object' => 'payment.contracts',
-                'id' => 'PCR_GNCNSQ4TR2YBX74Y7N8KYFYW8PUKAG',
+                'id' => 'PCR_xxxx',
             ],
             'amount' => '100',
             'currency' => 'EUR',
