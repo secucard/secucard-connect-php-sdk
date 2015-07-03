@@ -384,7 +384,7 @@ class Client
         $referenced_object = null;
 
         if ($post_data && $post_data->object) {
-            $object_info = $post_data->object->object;
+            $object_info = $post_data->data->object;
             //get the model category and model from $object
             //the model category and model delimiter is '.' or '/'
             $model_info = explode('.', $object_info);
@@ -397,8 +397,8 @@ class Client
                 $model = strtolower($model_info[1]);
             }
 
-            $object_id = $post_data->object->id;
-            $action = $post_data->object->action;
+            $object_id = $post_data->data->id;
+            $action = $post_data->type;
             if (empty($object_id) || empty($model_category) || empty($model) || $action == 'deleted') {
                 return;
             }
