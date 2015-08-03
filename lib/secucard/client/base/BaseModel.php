@@ -18,6 +18,7 @@ abstract class BaseModel
      */
     const DATA_TYPE_ARRAY = 'array';
     const DATA_TYPE_ARRAY_SUBOBJECT = 'array_subobject';
+    const DATA_TYPE_ARRAY_SPECIAL = 'special';
     const DATA_TYPE_BOOLEAN = 'boolean';
     const DATA_TYPE_DATE = 'date';
     const DATA_TYPE_DATETIME = 'datetime';
@@ -185,6 +186,10 @@ abstract class BaseModel
                     $this->_attributes[$name] = array($value);
                 }
                 break;
+            case self::DATA_TYPE_ARRAY_SPECIAL:
+                // special attributes are parsed by overriden function
+                $this->_attributes[$name] = $this->_parseSpecialObjectsArray($name, $value);
+                break;
             case self::DATA_TYPE_BOOLEAN:
                 $this->_attributes[$name] = null;
                 if ($value === true || $value === false) {
@@ -301,6 +306,17 @@ abstract class BaseModel
     public function hasAttribute($name)
     {
         return array_key_exists($name, $this->_attribute_defs);
+    }
+
+    /**
+     * Function that will parse special objects type defined in attributes
+     * @param string $attribute
+     * @param mixed $value
+     * @throws \BadMethodCallException
+     */
+    protected function _parseSpecialObjectsArray($attribute, $value)
+    {
+        throw new \BadMethodCallException('Attribute [' . $attribute . '] type "special" defined on a class that cannot parse it');
     }
 
     /**

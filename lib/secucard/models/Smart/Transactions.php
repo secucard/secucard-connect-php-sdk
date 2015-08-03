@@ -23,7 +23,7 @@ class Transactions extends MainModel
         'basket' => array('type' => BaseModel::DATA_TYPE_ARRAY), // TODO move to relations
         'basket_info' => array('type' => BaseModel::DATA_TYPE_ARRAY), // TODO move to relations
         'idents' => array('type' => BaseModel::DATA_TYPE_ARRAY), // TODO move to relations
-        'receipt' => array('type' => BaseModel::DATA_TYPE_ARRAY), // TODO move to relations
+        'receipt' => array('type' => BaseModel::DATA_TYPE_ARRAY_SPECIAL),
         'created' => array('type' => BaseModel::DATA_TYPE_DATETIME),
         'updated' => array('type' => BaseModel::DATA_TYPE_DATETIME),
     );
@@ -33,4 +33,16 @@ class Transactions extends MainModel
         //'customer' => array('type' => MainModel::RELATION_HAS_MANY, 'category' => 'Loyalty', 'model' => 'Customers'),
     );
 
+    /**
+     * Function that parses value for 'receipt' field
+     * @see secucard\client\base.BaseModel::_parseSpecialObjectsArray()
+     */
+    protected function _parseSpecialObjectsArray($attribute, $value)
+    {
+        if ($attribute == 'receipt') {
+            $receipts = new Receipts();
+            return $receipts->parseReceipts($value);
+        }
+        return [];
+    }
 }
