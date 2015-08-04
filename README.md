@@ -1,4 +1,8 @@
-# Secucard connect PHP client library
+# secucard connect PHP client library
+
+[![Latest Stable Version](https://poser.pugx.org/secucard/secucard-connect-php-client-lib/v/stable)](https://packagist.org/packages/secucard/secucard-connect-php-client-lib)
+[![Total Downloads](https://poser.pugx.org/secucard/secucard-connect-php-client-lib/downloads)](https://packagist.org/packages/secucard/secucard-connect-php-client-lib)
+[![License](https://poser.pugx.org/secucard/secucard-connect-php-client-lib/license)](https://packagist.org/packages/secucard/secucard-connect-php-client-lib)
 
 ## Requirements
 
@@ -11,7 +15,7 @@ You can install the bindings via [Composer](http://getcomposer.org/). Add this t
 ```json
 {
   "require": {
-    "secucard/secucard-connect-php-client-lib":"0.0.1"
+    "secucard/secucard-connect-php-client-lib":"~0.0.5"
   }
 }
 ```
@@ -37,7 +41,7 @@ include "vendor/autoload.php";
 
 $config = array(
     'client_id' => 'your_client_id',
-    'client_secret' => 'your_clien_secret',
+    'client_secret' => 'your_client_secret',
 );
 
 // Setup dummy log file

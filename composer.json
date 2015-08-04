@@ -1,5 +1,5 @@
 {
-    "name": "secucard/secucard-connect-php-client-lib",
+    "name": "secucard/secucard-connect",
     "description": "secucard connect PHP client library",
 	"license": "Apache-2.0",
     "require": {
