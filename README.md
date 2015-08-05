@@ -1,4 +1,4 @@
-# secucard connect PHP client library
+# secucard connect PHP SDK
 
 [![Latest Stable Version](https://poser.pugx.org/secucard/secucard-connect/v/stable)](https://packagist.org/packages/secucard/secucard-connect)
 [![Total Downloads](https://poser.pugx.org/secucard/secucard-connect/downloads)](https://packagist.org/packages/secucard/secucard-connect)
