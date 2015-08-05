@@ -14,6 +14,14 @@ use secucard\client\base\MainModel;
  */
 class Transactions extends MainModel
 {
+    const STATUS_CREATED = "created";
+    const STATUS_PROCESSING = "processing";
+    const STATUS_FINISHED = "finished";
+    const STATUS_ABORTED = "aborted";
+    const STATUS_FAILED = "failed";
+    const STATUS_TIMEOUT = "timeout";
+    const STATUS_OK = "ok";
+
     protected $_attribute_defs = array(
         'object' => array('type' => BaseModel::DATA_TYPE_STRING),
         'id' => array('type' => BaseModel::DATA_TYPE_STRING, 'options' => array('id' => true)),
