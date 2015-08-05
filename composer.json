@@ -1,7 +1,8 @@
 {
     "name": "secucard/secucard-connect",
-    "description": "secucard connect PHP client library",
+    "description": "secucard connect PHP client SDK",
 	"license": "Apache-2.0",
+    "homepage": "https://github.com/secucard/secucard-connect-php-sdk",
     "require": {
         "php": ">=5.3.0",
         "guzzlehttp/guzzle": "4.*",

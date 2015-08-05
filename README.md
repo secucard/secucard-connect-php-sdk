@@ -1,8 +1,8 @@
 # secucard connect PHP client library
 
-[![Latest Stable Version](https://poser.pugx.org/secucard/secucard-connect-php-client-lib/v/stable)](https://packagist.org/packages/secucard/secucard-connect-php-client-lib)
-[![Total Downloads](https://poser.pugx.org/secucard/secucard-connect-php-client-lib/downloads)](https://packagist.org/packages/secucard/secucard-connect-php-client-lib)
-[![License](https://poser.pugx.org/secucard/secucard-connect-php-client-lib/license)](https://packagist.org/packages/secucard/secucard-connect-php-client-lib)
+[![Latest Stable Version](https://poser.pugx.org/secucard/secucard-connect/v/stable)](https://packagist.org/packages/secucard/secucard-connect)
+[![Total Downloads](https://poser.pugx.org/secucard/secucard-connect/downloads)](https://packagist.org/packages/secucard/secucard-connect)
+[![License](https://poser.pugx.org/secucard/secucard-connect/license)](https://packagist.org/packages/secucard/secucard-connect)
 
 ## Requirements
 
@@ -15,7 +15,7 @@ You can install the bindings via [Composer](http://getcomposer.org/). Add this t
 ```json
 {
   "require": {
-    "secucard/secucard-connect-php-client-lib":"~0.0.5"
+    "secucard/secucard-connect":"~0.1.0"
   }
 }
 ```
