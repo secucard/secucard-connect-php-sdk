@@ -44,13 +44,13 @@ class Client
 
     /**
      * Logger used for logging
-     * @var that implements LoggerInterface
+     * @var \Psr\Log\LoggerInterface
      */
     public $logger;
 
     /**
      * Storage used to store authorization
-     * @var that implements StorageInterface
+     * @var client\storage\StorageInterface
      */
     public $storage;
 
@@ -66,9 +66,11 @@ class Client
      */
     const VERSION = '0.0.1';
 
+    const HTTP_STATUS_CODE_OK = 200;
+
     /**
      * Constructor
-     * @param array $options - options to correctly initialize Guzzle Client
+     * @param array $config - options to correctly initialize Guzzle Client
      * @param $logger - pass here LoggerInterface to use for logging
      * @param $storage - pass here StorageInterface for storing runtime data (like oauth-tokens)
      */
@@ -132,7 +134,6 @@ class Client
     /**
      * Private function to set Authorization on client
      *
-     * @param GrantTypeInterface $credentials
      */
     private function setAuthorization()
     {
@@ -164,7 +165,7 @@ class Client
      *
      * @param string $vendor
      * @param string $uid
-     * @throws Exception
+     * @throws \Exception
      * @return array $response
      */
     public function obtainDeviceVerification($vendor, $uid)
@@ -193,7 +194,7 @@ class Client
      * Function to get access_token and refresh_token for device authorization
      *
      * @param string $device_code
-     * @throws Exception
+     * @throws \Exception
      * @return array $response
      */
     public function pollDeviceAccessToken($device_code)
@@ -222,7 +223,8 @@ class Client
      *
      * uses lazy loading for categories
      * @param string $name
-     * @return obj instance of BaseModelCategory
+     * @return client\base\BaseModelCategory $category
+     * @throws \Exception
      */
     public function __get($name)
     {
@@ -266,7 +268,7 @@ class Client
      *
      * @param string $path path to call
      * @param array $options
-     * @return $response|false
+     * @return false|$response
      */
     public function get($path, $options)
     {
@@ -281,17 +283,22 @@ class Client
 
     /**
      * DELETE function
-     * used to update data for model
+     * used to delete data for model
+     *
+     * @param string $path (url path to the model)
+     * @param array $data (empty array)
+     * @param array $options
+     * @return bool
      */
     public function delete($path, $data, $options)
     {
-        $options = array_merge(['auth'=>'oauth', 'data'=>$data], $options);
+        $options = array_merge(['auth'=>'oauth', 'body'=>$data], $options);
         $response = $this->client->delete($this->buildApiUrl($path), $options);
-        if (!$response) {
+        if (!$response || $response->getStatusCode() != self::HTTP_STATUS_CODE_OK) {
             return false;
         }
 
-        return json_decode($response, TRUE);
+        return true;
     }
 
     /**
@@ -300,7 +307,7 @@ class Client
      * @param string $path path to call
      * @param mixed $data (data to post)
      * @param array $options
-     * @return $response|false
+     * @return false|$response
      */
     public function post($path, $data, $options)
     {
@@ -319,7 +326,7 @@ class Client
      * @param string $path path to call
      * @param mixed $data
      * @param array $options
-     * @return $response|false
+     * @return false|array $response
      */
     public function postUrlEncoded($path, $data, $options)
     {
@@ -333,14 +340,19 @@ class Client
     }
 
     /**
-     * PUT function
+     * PUT function with JSON body
      * used to update data for model
+     *
+     * @param string $path
+     * @param array $data (data of model to update)
+     * @param array $options
+     * @return array $ret
      */
     public function put($path, $data, $options)
     {
-        $options = array_merge(['auth'=>'oauth', 'body'=>$data], $options);
+        $options = array_merge(['auth'=>'oauth', 'json'=>$data], $options);
         $response = $this->client->put($this->buildApiUrl($path), $options);
-        if (!$response) {
+        if (!$response || $response->getStatusCode() != self::HTTP_STATUS_CODE_OK) {
             return false;
         }
 
@@ -358,9 +370,11 @@ class Client
 
     /**
      * Function that will be called to process Push request from API
+     *
      * @param array $get
      * @param array $post
      * @param object $postRaw
+     * @throws \Exception
      */
     public function processPush($get = null, $post = null, $postRaw = null)
     {
@@ -395,6 +409,8 @@ class Client
             if (count($model_info) > 1) {
                 $model_category = strtolower($model_info[0]);
                 $model = strtolower($model_info[1]);
+            } else {
+                throw new \Exception('Unknown event[data][object] definition with value: ' . json_encode($object_info));
             }
 
             $object_id = $post_data->data->id;

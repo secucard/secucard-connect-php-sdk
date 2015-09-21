@@ -38,8 +38,20 @@ abstract class MainModel extends BaseModel
     protected $_related = array();
 
     /**
+     * Flag if Model is updatable
+     * @var bool
+     */
+    protected $_is_updatable = false;
+
+    /**
+     * Flag if Model is deletable
+     * @var bool
+     */
+    protected $_is_deletable = false;
+
+    /**
      * Constructor
-     * @param obj $client
+     * @param \secucard\Client $client
      */
     public function __construct(\secucard\Client &$client)
     {
@@ -73,7 +85,7 @@ abstract class MainModel extends BaseModel
      */
     public function isRemovable()
     {
-        return false;
+        return $this->_is_deletable;
     }
 
     /**
@@ -82,7 +94,7 @@ abstract class MainModel extends BaseModel
      */
     public function isUpdatable()
     {
-        return false;
+        return $this->_is_updatable;
     }
 
     /**
@@ -161,8 +173,10 @@ abstract class MainModel extends BaseModel
 
     /**
      * Method to get object identified by id
-     * @param $id
+     *
+     * @param string $id
      * @return new instance of current class or null
+     * @throws \Exception
      */
     public function get($id)
     {
@@ -184,9 +198,10 @@ abstract class MainModel extends BaseModel
 
     /**
      * Function to delete the model identified by id
+     *
      * @param string $id default null
-     * @throws \Exception
      * @return bool
+     * @throws \Exception
      */
     public function delete($id = null)
     {
@@ -194,8 +209,8 @@ abstract class MainModel extends BaseModel
             $this->client->logger->warning('Trying to delete model ' . get_class($this) . ' but it is not removable');
             return false;
         }
-        // TODO move the static path of path to some configuration
-        $path = '/app.core.connector/api/v2/' . $this->getCurrentModelUrlPath() . '/';
+
+        $path = $this->getCurrentModelUrlPath() . '/';
         if (empty($id)) {
             if (!$this->initialized || empty($this->_attributes[$this->_id_column])) {
                 throw new \Exception('Cannot delete object with empty primary key value');
@@ -241,6 +256,7 @@ abstract class MainModel extends BaseModel
      * It can update existing or create new object
      *
      * @return bool true on success
+     * @throws \Exception
      */
     public function save()
     {
@@ -259,9 +275,12 @@ abstract class MainModel extends BaseModel
             }
 
             $path .= $this->_attributes[$this->_id_column];
-            var_dump($this->_attributes);
+
             $response = $this->client->put($path, $this->getUpdateAttributes(), array());
-            // TODO check response and process it
+            if (!$response) {
+                return false;
+            }
+
             return true;
         }
         // add new object
@@ -281,7 +300,7 @@ abstract class MainModel extends BaseModel
      * @param string $name the relation name (see {@link relations})
      * @param boolean $refresh whether to reload the related objects from API
      * @return mixed the related object
-     * @throws Exception if the relation is not specified
+     * @throws \Exception if the relation is not specified
      */
     public function getRelated($name, $refresh = false)
     {
@@ -317,6 +336,7 @@ abstract class MainModel extends BaseModel
      *
      * @param string $relation_name
      * @param object $value
+     * @return bool
      */
     public function addRelated($relation_name, $value)
     {
@@ -327,6 +347,8 @@ abstract class MainModel extends BaseModel
             return false;
         }
         $this->_related[$relation_name][] = $value;
+
+        return true;
     }
 
     /**
@@ -344,8 +366,13 @@ abstract class MainModel extends BaseModel
             $related_model = $relation_def['model'];
             $class_name = '\\secucard\\models\\' . $related_category . '\\' . $related_model;
             if ($relation_def['type'] == self::RELATION_HAS_ONE) {
-                $related_obj = new $class_name($this->client);
-                $related_obj->initValues($value);
+                if (is_object($value)) {
+                    $related_obj = $value;
+                } else {
+                    // TODO care about removing relation (setting attribute to null)
+                    $related_obj = new $class_name($this->client);
+                    $related_obj->initValues($value);
+                }
                 $this->_related[$name] = $related_obj;
             } else {
                 // create collection from the values
@@ -369,7 +396,7 @@ abstract class MainModel extends BaseModel
      * @param string $name
      * @param array $relation_def
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     private function lazyLoad($name, $relation_def)
     {
@@ -380,7 +407,7 @@ abstract class MainModel extends BaseModel
 
         switch ($relation_def['type']) {
             case self::RELATION_HAS_ONE:
-                //$join_column_name = $relation_def['foreing_key'];
+                $join_column_name = $relation_def['foreing_key'];
                 // if the related object is not defined
                 if (empty($this->$join_column_name)) {
                     return false;
@@ -398,7 +425,7 @@ abstract class MainModel extends BaseModel
                 $this->_related[$name] = $related_col;
                 break;
             default:
-                throw new Exception('Invalid relation type: ' . $relation_def['type']);
+                throw new \Exception('Invalid relation type: ' . $relation_def['type']);
                 break;
         }
 

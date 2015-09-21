@@ -30,8 +30,12 @@ class Containers extends MainModel
 
     protected $_relations = array(
         'contract' => array('type' => MainModel::RELATION_HAS_ONE, 'category' => 'Payment', 'model' => 'Contracts'),
-        // TODO this is general relation. there can be more types of objects
-        //'assign' => array('type' => MainModel::RELATION_HAS_ONE, 'category' => 'General', 'model' => 'Common'),
     );
+
+    // Set updatable flag
+    protected $_is_updatable = true;
+
+    // Set deletable flag
+    protected $_is_deletable = true;
 
 }
