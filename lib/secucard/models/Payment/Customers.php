@@ -25,4 +25,9 @@ class Customers extends MainModel
         'contact' => array('type' => MainModel::RELATION_HAS_ONE, 'category' => 'Common', 'model' => 'Contact'),
     );
 
+    // Set updatable flag
+    protected $_is_updatable = true;
+
+    // Set deletable flag
+    protected $_is_deletable = true;
 }
