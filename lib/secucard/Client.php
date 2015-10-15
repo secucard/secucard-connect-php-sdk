@@ -78,10 +78,10 @@ class Client
     {
         // array of base configuration
         $default = array(
-            'base_url'=>'https://connect.secucard.com',
-            'auth_path'=>'/oauth/token',
-            'api_path'=>'/api/v2',
-            'debug'=>false,
+            'base_url' => 'https://connect.secucard.com',
+            'auth_path' => '/oauth/token',
+            'api_path' => '/api/v2',
+            'debug' => false,
         );
 
         // The following fields are required when creating the client
@@ -171,16 +171,16 @@ class Client
     public function obtainDeviceVerification($vendor, $uid)
     {
         $params = array(
-            'grant_type'=>'device',
-            'uuid'=>$vendor . '/' . $uid,
-            'client_id'=>$this->config['client_id'],
-            'client_secret'=>$this->config['client_secret'],
+            'grant_type' => 'device',
+            'uuid' => $vendor . '/' . $uid,
+            'client_id' => $this->config['client_id'],
+            'client_secret' => $this->config['client_secret'],
         );
 
         // if the guzzle gets response http_status other than 200, it will throw an exception even when there is response available
         try {
-            $response = $this->client->post($this->config['auth_path'], array('body'=>$params));
-        } catch(\GuzzleHttp\Exception\ClientException $e) {
+            $response = $this->client->post($this->config['auth_path'], array('body' => $params));
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
             if ($e->hasResponse()) {
                 return $e->getResponse()->json();
             }
@@ -200,15 +200,15 @@ class Client
     public function pollDeviceAccessToken($device_code)
     {
         $params = array(
-            'grant_type'=>'device',
-            'code'=>$device_code,
-            'client_id'=>$this->config['client_id'],
-            'client_secret'=>$this->config['client_secret'],
+            'grant_type' => 'device',
+            'code' => $device_code,
+            'client_id' => $this->config['client_id'],
+            'client_secret' => $this->config['client_secret'],
         );
 
         try {
-            $response = $this->client->post($this->config['auth_path'], array('body'=>$params));
-        } catch(\GuzzleHttp\Exception\ClientException $e) {
+            $response = $this->client->post($this->config['auth_path'], array('body' => $params));
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
             if ($e->hasResponse()) {
                 return $e->getResponse()->json();
             }
@@ -236,7 +236,7 @@ class Client
             return $this->category_map[strtolower($name)];
         }
         $category = null;
-        if (file_exists(__DIR__."/../../models/". ucfirst($name) ."Category.php")) {
+        if (file_exists(__DIR__ . "/../../models/" . ucfirst($name) . "Category.php")) {
             // create subcategory if there is a class for it
             $category_class = '\\secucard\\models\\' . $name . 'Category';
             $category = new $category_class($this, $name);
@@ -258,7 +258,8 @@ class Client
      * @param string $path
      * @return string $url
      */
-    protected function buildApiUrl($path) {
+    protected function buildApiUrl($path)
+    {
         $url = $this->config['base_url'] . $this->config['api_path'] . "/" . $path;
         return $url;
     }
@@ -272,7 +273,7 @@ class Client
      */
     public function get($path, $options)
     {
-        $options = array_merge(['auth'=>'oauth'], $options);
+        $options = array_merge(['auth' => 'oauth'], $options);
         $response = $this->client->get($this->buildApiUrl($path), $options);
         if (!$response) {
             return false;
@@ -292,7 +293,7 @@ class Client
      */
     public function delete($path, $data, $options)
     {
-        $options = array_merge(['auth'=>'oauth', 'body'=>$data], $options);
+        $options = array_merge(['auth' => 'oauth', 'body' => $data], $options);
         $response = $this->client->delete($this->buildApiUrl($path), $options);
         if (!$response || $response->getStatusCode() != self::HTTP_STATUS_CODE_OK) {
             return false;
@@ -311,7 +312,7 @@ class Client
      */
     public function post($path, $data, $options)
     {
-        $options = array_merge(['auth'=>'oauth', 'json'=>$data], $options);
+        $options = array_merge(['auth' => 'oauth', 'json' => $data], $options);
         $response = $this->client->post($this->buildApiUrl($path), $options);
         if (!$response) {
             return false;
@@ -330,7 +331,7 @@ class Client
      */
     public function postUrlEncoded($path, $data, $options)
     {
-        $options = array_merge(['auth'=>'oauth', 'body'=>$data], $options);
+        $options = array_merge(['auth' => 'oauth', 'body' => $data], $options);
         $response = $this->client->post($this->buildApiUrl($path), $options);
         if (!$response) {
             return false;
@@ -350,7 +351,7 @@ class Client
      */
     public function put($path, $data, $options)
     {
-        $options = array_merge(['auth'=>'oauth', 'json'=>$data], $options);
+        $options = array_merge(['auth' => 'oauth', 'json' => $data], $options);
         $response = $this->client->put($this->buildApiUrl($path), $options);
         if (!$response || $response->getStatusCode() != self::HTTP_STATUS_CODE_OK) {
             return false;
@@ -393,39 +394,60 @@ class Client
         if (!$postRaw) {
             $postRaw = @file_get_contents('php://input');
             $post_data = json_decode($postRaw);
-        } else { $post_data = $postRaw;}
+        } else {
+            $post_data = $postRaw;
+        }
 
-        $referenced_object = null;
+        $this->logger->info('Received Push with Posted data: ' . json_encode($post_data));
+
+        $referenced_objects = [];
 
         if ($post_data && $post_data->object) {
-            $object_info = $post_data->data->object;
-            //get the model category and model from $object
-            //the model category and model delimiter is '.' or '/'
-            $model_info = explode('.', $object_info);
-            if (count($model_info) <= 1) {
-                $model_info = explode('/', $object_info);
-            }
+            // process the post_data
+            $event_info = $post_data->object;   // normally 'event.pushes'
+            $event_id = $post_data->id;         // event_id
 
-            if (count($model_info) > 1) {
-                $model_category = strtolower($model_info[0]);
-                $model = strtolower($model_info[1]);
-            } else {
-                throw new \Exception('Unknown event[data][object] definition with value: ' . json_encode($object_info));
-            }
-
-            $object_id = $post_data->data->id;
-            $action = $post_data->type;
-            if (empty($object_id) || empty($model_category) || empty($model) || $action == 'deleted') {
+            $event_action = $post_data->type;
+            if ($event_action == 'deleted') {
                 return;
             }
 
-            // load referenced object from API
-            $referenced_object = $this->__get($model_category)->$model->get($object_id);
+            $event_data = $post_data->data;
+            if (empty($event_data) || !is_array($event_data)) {
+                throw new \Exception('Invalid empty or not array event[data] field from post_data: ' . json_encode($post_data));
+            }
+
+            foreach ($event_data as $event_object) {
+                if (empty($event_object)) {
+                    throw new \Exception('Invalid empty event object in post_data: ' . json_encode($post_data));
+                }
+                if (is_array($event_object)) {
+                    // cast $event_object to object
+                    $event_object = json_decode(json_encode($event_object), false);
+                }
+                // get the category and model from $event_object, the category and model delimiter is '.' or '/'
+                $model_info = explode('.', $event_object->object);
+                if (count($model_info) <= 1) {
+                    $model_info = explode('/', $event_object->object);
+                }
+
+                $object_id = $event_object->id;
+                $category = strtolower($model_info[0]);
+                $model = strtolower($model_info[1]);
+                if (count($model_info) != 2 || empty($object_id) || empty($category) || empty($model)) {
+                    throw new \Exception('Unknown event_object definition with value: ' . json_encode($event_object));
+                }
+
+                // load referenced object
+                $referenced_objects[] = $this->__get($category)->$model->get($object_id);
+            }
         }
 
         if ($this->callback_push_object) {
-            // Call callback
-            call_user_func($this->callback_push_object, $referenced_object);
+            // Call callback on all objects in event->data array
+            foreach ($referenced_objects as $referenced_object) {
+                call_user_func($this->callback_push_object, $referenced_object);
+            }
         }
     }
 
@@ -439,8 +461,8 @@ class Client
     public function factory($object)
     {
 
-        $product = 'secucard\models\\'.$object;
-        if(class_exists($product)) {
+        $product = 'secucard\models\\' . $object;
+        if (class_exists($product)) {
             return new $product($this);
         }
         throw new \Exception("Invalid product type given.");
