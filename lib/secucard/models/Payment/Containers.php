@@ -30,6 +30,7 @@ class Containers extends MainModel
 
     protected $_relations = array(
         'contract' => array('type' => MainModel::RELATION_HAS_ONE, 'category' => 'Payment', 'model' => 'Contracts'),
+        'customer' => array('type' => MainModel::RELATION_HAS_ONE, 'category' => 'Payment', 'model' => 'Customers'),
     );
 
     // Set updatable flag

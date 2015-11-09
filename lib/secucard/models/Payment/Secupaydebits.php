@@ -24,13 +24,13 @@ class Secupaydebits extends MainModel
         'trans_id' => array('type' => BaseModel::DATA_TYPE_STRING),
         'status' => array('type' => BaseModel::DATA_TYPE_STRING),
         'transaction_status' => array('type' => BaseModel::DATA_TYPE_STRING),
-
     );
 
     protected $_relations = array(
         'container' => array('type' => MainModel::RELATION_HAS_ONE, 'category' => 'Payment', 'model' => 'Containers'),
         'contract' => array('type' => MainModel::RELATION_HAS_ONE, 'category' => 'Payment', 'model' => 'Contracts'),
-        'customer' => array('type' => MainModel::RELATION_HAS_ONE, 'category' => 'Payment', 'model' => 'Customers'),
+        // Relation to customer has been removed, because container has the relation to customer
+        //'customer' => array('type' => MainModel::RELATION_HAS_ONE, 'category' => 'Payment', 'model' => 'Customers'),
     );
 
 }

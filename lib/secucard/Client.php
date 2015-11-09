@@ -337,7 +337,7 @@ class Client
             return false;
         }
 
-        return json_decode($response, TRUE);
+        return $response->json();
     }
 
     /**
@@ -357,7 +357,7 @@ class Client
             return false;
         }
 
-        return json_decode($response, TRUE);
+        return $response->json();
     }
 
     /**
