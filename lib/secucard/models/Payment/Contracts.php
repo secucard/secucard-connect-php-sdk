@@ -19,6 +19,7 @@ class Contracts extends MainModel
         'id' => array('type' => BaseModel::DATA_TYPE_STRING, 'options' => array('id' => true)),
         'demo' => array('type' => BaseModel::DATA_TYPE_BOOLEAN),
         'allow_cloning' => array('type' => BaseModel::DATA_TYPE_BOOLEAN),
+        'sepa_mandate_inform' => array('type' => BaseModel::DATA_TYPE_STRING),
         'created' => array('type' => BaseModel::DATA_TYPE_DATETIME),
         'updated' => array('type' => BaseModel::DATA_TYPE_DATETIME),
     );
