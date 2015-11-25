@@ -15,12 +15,12 @@
 
     "autoload": {
         "psr-0": {
-            "secucard": "lib/"
+            "SecucardConnect": "src/SecucardConnect"
         }
     },
     "autoload-dev": {
         "psr-0": {
-            "secucard\\tests": "tests/"
+            "SecucardConnect\\Test": "tests/SecucardConnect/Test"
         }
     }
 }
