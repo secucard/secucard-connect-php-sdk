@@ -4,10 +4,9 @@
  */
 
 namespace SecucardConnect\Product\Common\Model;
-use secucard\client\base\BadMethodCallException;
-use secucard\client\base\Exception;
-use secucard\client\base\offset;
-use secucard\client\base\secucard;
+use BadMethodCallException;
+use Exception;
+use SecucardConnect\SecucardConnect;
 
 /**
  * Provides a simple iterator and array access interface to a array of BaseModel classes
@@ -17,8 +16,8 @@ use secucard\client\base\secucard;
 class BaseCollection implements \ArrayAccess, \Countable, \Iterator
 {
     /**
-     * Client for subobjects to be able to reload data
-     * @var secucard\client\api\Client
+     * Client for sub objects to be able to reload data
+     * @var SecucardConnect
      */
     private $client;
 
@@ -52,6 +51,8 @@ class BaseCollection implements \ArrayAccess, \Countable, \Iterator
      */
     private $item_type;
 
+    private $itemPath;
+
     /**
      * Iterator position
      * @var int
@@ -66,10 +67,12 @@ class BaseCollection implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * Constructor
-     * @param secucard\client\api\Client
+     * @param $client
      * @param string $item_type - to know which objects should be inside the array
+     * @param $itemPath
+     * @throws Exception
      */
-    public function __construct($client, $item_type)
+    public function __construct($client, $item_type, $itemPath)
     {
         $this->position = 0;
         $this->count = 0;
@@ -80,6 +83,7 @@ class BaseCollection implements \ArrayAccess, \Countable, \Iterator
             throw new Exception('Item type cannot be empty');
         }
         $this->item_type = $item_type;
+        $this->itemPath = $itemPath;
     }
 
     /**
@@ -108,7 +112,7 @@ class BaseCollection implements \ArrayAccess, \Countable, \Iterator
         $item_class = $this->item_type;
 
         foreach ($response['data'] as $item) {
-            $current_item = new $item_class($this->client);
+            $current_item = new $item_class($this->client, $this->itemPath);
             // set initialized flag for item to true (we expect all data to be available in the server response)
             $current_item->initValues($item, true);
             // add current_item to $this->_items array
@@ -136,7 +140,7 @@ class BaseCollection implements \ArrayAccess, \Countable, \Iterator
         $item_class = $this->item_type;
 
         foreach ($data as $item) {
-            $current_item = new $item_class($this->client);
+            $current_item = new $item_class($this->client, $this->itemPath);
             $current_item->initValues($item);
             // add current_item to $this->_items array
             $this->_items[] = $current_item;
@@ -184,7 +188,7 @@ class BaseCollection implements \ArrayAccess, \Countable, \Iterator
      */
     public function getUrlPath()
     {
-        return str_replace('\\', '/', substr($this->item_type, strlen('secucard\\models\\')));
+        return $this->itemPath[0] . '/' . $this->itemPath[1];
     }
 
     /**
@@ -201,8 +205,10 @@ class BaseCollection implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * Array access, set item by offset
-     * @param int offset
+     * @param mixed $offset
      * @param object $value
+     * @throws Exception
+     * @internal param offset $int
      */
     public function offsetSet($offset, $value)
     {
@@ -260,7 +266,7 @@ class BaseCollection implements \ArrayAccess, \Countable, \Iterator
     public function _set_items($items)
     {
         throw new BadMethodCallException('not implemented');
-        $this->_items = $items;
+        //$this->_items = $items;
     }
 
     /**

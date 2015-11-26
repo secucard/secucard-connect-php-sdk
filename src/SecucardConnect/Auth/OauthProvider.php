@@ -1,6 +1,6 @@
 <?php
 /**
- * Class OauhtProvider
+ * Class OauthProvider
  */
 
 namespace SecucardConnect\Auth;
@@ -161,7 +161,7 @@ class OauthProvider implements SubscriberInterface
     {
         if (isset($this->accessToken['expires_in']) && $this->accessToken['expires_in'] < time() && $this->refreshToken) {
             // The access token has expired
-            $this->updateToken(new \SecucardConnect\Auth\RefreshTokenCredentials($this->refreshToken));
+            $this->updateToken(new RefreshTokenCredentials($this->refreshToken));
         }
         if (!$this->accessToken) {
             // Try to acquire a new access token from the server

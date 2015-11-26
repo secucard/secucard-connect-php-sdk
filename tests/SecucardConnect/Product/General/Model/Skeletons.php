@@ -3,7 +3,7 @@
  * Skeletons Api Model class
  */
 
-namespace SecucardConnect\Test\General;
+namespace SecucardConnect\Product\General\Model;
 
 use SecucardConnect\Product\Common\Model\BaseModel;
 use SecucardConnect\Product\Common\Model\MainModel;

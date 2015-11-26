@@ -1,13 +1,13 @@
 <?php
 
-namespace SecucardConnect\Test\Payment;
+namespace SecucardConnect\Product\Payment;
 
-use SecucardConnect\Test\Api\ClientTest;
+use SecucardConnect\BaseClientTest;
 
 /**
  * @covers secucard\models\Payments\Customers
  */
-class CustomersTest extends ClientTest
+class CustomersTest extends BaseClientTest
 {
     /**
      * @test

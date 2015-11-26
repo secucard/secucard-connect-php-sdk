@@ -4,6 +4,7 @@
  */
 
 namespace SecucardConnect\Product\Common\Model;
+use SecucardConnect\SecucardConnect;
 
 /**
  * Class that should be used as parent class of every Complex data Model
@@ -21,7 +22,7 @@ abstract class MainModel extends BaseModel
 
     /**
      * Api client used for lazy loading
-     * @var \SecucardConnect\SecucardConnect
+     * @var SecucardConnect
      */
     protected $client;
 
@@ -49,13 +50,16 @@ abstract class MainModel extends BaseModel
      */
     protected $_is_deletable = false;
 
+
     /**
      * Constructor
-     * @param \SecucardConnect\SecucardConnect $client
+     * @param SecucardConnect $client
+     * @param $resourcePath
      */
-    public function __construct(\SecucardConnect\SecucardConnect &$client)
+    public function __construct(SecucardConnect &$client, $resourcePath)
     {
         $this->client = $client;
+        $this->resourcePath = $resourcePath;
         $this->setRelations($this->_relations);
         parent::__construct();
     }
@@ -166,7 +170,7 @@ abstract class MainModel extends BaseModel
      */
     public function getList($options = array())
     {
-        $list = new BaseCollection($this->client, get_class($this));
+        $list = new BaseCollection($this->client, get_class($this), $this->resourcePath);
         $list->loadItems($options);
         return $list;
     }
@@ -175,7 +179,7 @@ abstract class MainModel extends BaseModel
      * Method to get object identified by id
      *
      * @param string $id
-     * @return new instance of current class or null
+     * @return MainModel instance of current class or null
      * @throws \Exception
      */
     public function get($id)
@@ -189,7 +193,7 @@ abstract class MainModel extends BaseModel
 
         if (!empty($response)) {
             $current_class = get_class($this);
-            $new_obj = new $current_class($this->client);
+            $new_obj = new $current_class($this->client, $this->resourcePath);
             $new_obj->initValues($response, true);
         }
 
@@ -364,19 +368,19 @@ abstract class MainModel extends BaseModel
             $relation_def = $this->_relations[$name];
             $related_category = $relation_def['category'];
             $related_model = $relation_def['model'];
-            $class_name = '\\secucard\\models\\' . $related_category . '\\' . $related_model;
+            $class_name = '\\SecucardConnect\\Product\\' . $related_category . '\\Model\\' . $related_model;
             if ($relation_def['type'] == self::RELATION_HAS_ONE) {
                 if (is_object($value)) {
                     $related_obj = $value;
                 } else {
                     // TODO care about removing relation (setting attribute to null)
-                    $related_obj = new $class_name($this->client);
+                    $related_obj = new $class_name($this->client, $this->resourcePath);
                     $related_obj->initValues($value);
                 }
                 $this->_related[$name] = $related_obj;
             } else {
                 // create collection from the values
-                $collection = new \SecucardConnect\Product\Common\Model\BaseCollection($this->client, $class_name);
+                $collection = new BaseCollection($this->client, $class_name, $this->resourcePath);
                 $collection->loadFromArray($value);
                 $this->_related[$name] = $collection;
             }

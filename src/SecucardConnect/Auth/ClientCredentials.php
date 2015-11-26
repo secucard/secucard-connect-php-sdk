@@ -14,7 +14,6 @@ class ClientCredentials implements GrantTypeInterface
      * Constructor
      * @param $client_id
      * @param $client_secret
-     * @internal param array $config
      */
     public function __construct($client_id, $client_secret)
     {

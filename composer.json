@@ -14,13 +14,13 @@
     },
 
     "autoload": {
-        "psr-0": {
-            "SecucardConnect": "src/SecucardConnect"
+        "psr-4": {
+            "SecucardConnect\\": "src/SecucardConnect"
         }
     },
     "autoload-dev": {
-        "psr-0": {
-            "SecucardConnect\\Test": "tests/SecucardConnect/Test"
+        "psr-4": {
+            "SecucardConnect\\": "tests/SecucardConnect"
         }
     }
 }

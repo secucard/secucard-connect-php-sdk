@@ -1,13 +1,13 @@
 <?php
 
-namespace SecucardConnect\Test\Api;
-use SecucardConnect\SecucardConnect;
+namespace SecucardConnect;
+
 use SecucardConnect\Util\Logger;
 
 /**
  * @covers secucard\Client
  */
-class ClientTest extends \PHPUnit_Framework_TestCase
+class BaseClientTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Api client
@@ -21,14 +21,12 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $config = array(
-            //'base_url'=>'https://core-dev10.secupay-ag.de',
-            //'auth_path'=>'/app.core.connector/oauth/token',
-            //'api_path'=>'/app.core.connector/api/v2',
-            //'debug'=>true,
-            'client_id'=>'webapp',
-            'client_secret'=>'821fc7042ec0ddf5cc70be9abaa5d6d311db04f4679ab56191038cb6f7f9cb7c',
-            'username'=>'sten@beispiel.net',
-            'password'=>'secrets',
+            'base_url'=>'https://connect-dev10.secupay-ag.de',
+            'debug'=>true,
+            'client_id'=>'f0478f73afe218e8b5f751a07c978ecf',
+            'client_secret'=>'30644327cfbde722ad2ad12bb9c0a2f86a2bee0a2d8de8d862210112af3d01bb',
+//            'username'=>'sten@beispiel.net',
+//            'password'=>'secrets',
         );
 
         $fp = fopen("/tmp/secucard_php_test.log", "a");

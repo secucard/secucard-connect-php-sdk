@@ -1,13 +1,13 @@
 <?php
 
-namespace SecucardConnect\Test\Smart;
+namespace SecucardConnect\Product\Smart;
 
-use SecucardConnect\Test\Api\ClientTest;
+use SecucardConnect\BaseClientTest;
 
 /**
  * @covers secucard\models\Smart\Idents
  */
-class IdentsTest extends ClientTest
+class IdentsTest extends BaseClientTest
 {
     /**
      * @test

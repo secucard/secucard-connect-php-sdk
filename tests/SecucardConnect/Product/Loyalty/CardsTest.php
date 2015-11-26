@@ -1,13 +1,13 @@
 <?php
 
-namespace SecucardConnect\Test\Loyalty;
+namespace SecucardConnect\Product\Loyalty;
 
-use SecucardConnect\Test\Api\ClientTest;
+use SecucardConnect\BaseClientTest;
 
 /**
  * @covers secucard\models\Loyalty\Cards
  */
-class CardsTest extends ClientTest
+class CardsTest extends BaseClientTest
 {
     /**
      * @test

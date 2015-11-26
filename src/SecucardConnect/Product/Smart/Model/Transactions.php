@@ -5,7 +5,6 @@
 
 namespace SecucardConnect\Product\Smart\Model;
 
-use secucard\models\Smart\Receipts;
 use SecucardConnect\Product\Common\Model\BaseModel;
 use SecucardConnect\Product\Common\Model\MainModel;
 

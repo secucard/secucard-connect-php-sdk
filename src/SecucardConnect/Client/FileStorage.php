@@ -70,7 +70,7 @@ class FileStorage extends DummyStorage {
             $this->storage = json_decode($data, TRUE);
             return true;
         }
-
+       return false;
     }
     
     private function save() {

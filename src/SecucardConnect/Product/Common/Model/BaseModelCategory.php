@@ -4,8 +4,7 @@
  */
 
 namespace SecucardConnect\Product\Common\Model;
-use secucard\client\base\instance;
-use secucard\client\base\secucard;
+use SecucardConnect\SecucardConnect;
 
 /**
  * Base Model Category class to allow to use $client->category->model->method design pattern
@@ -16,7 +15,7 @@ class BaseModelCategory
 {
     /**
      * client that will be used for models
-     * @var secucard\client\api\Client
+     * @var SecucardConnect
      */
     protected $client;
 
@@ -35,7 +34,7 @@ class BaseModelCategory
     /**
      * Constructor
      */
-    public function __construct(\SecucardConnect\SecucardConnect &$client, $category_name)
+    public function __construct(SecucardConnect &$client, $category_name)
     {
         $this->client = $client;
         $this->category_name = $category_name;
@@ -46,18 +45,22 @@ class BaseModelCategory
      * Function can become more complex if we allow the category names to begin with lowercase letter
      *
      * @param string $name
-     * @return instance of class for model
+     * @return MainModel instance of class for model
+     * @throws \Exception
      */
     public function __get($name)
     {
-        if (isset($this->model_map[strtolower($name)])) {
-            return $this->model_map[strtolower($name)];
+        $resource = ucfirst(strtolower($name));
+
+        if (isset($this->model_map[$resource])) {
+            return $this->model_map[$resource];
         }
-        $model_class = '\\secucard\\models\\' . ucfirst($this->category_name) . '\\' . ucfirst($name);
+        $model_class = '\\SecucardConnect\\Product\\' . $this->category_name . '\\Model\\' . $resource;
+
         // create model inside model_map
-        $model = new $model_class($this->client);
+        $model = new $model_class($this->client, array($this->category_name, $resource));
         if ($model) {
-            $this->model_map[strtolower($name)] = $model;
+            $this->model_map[$resource] = $model;
             return $model;
         }
 

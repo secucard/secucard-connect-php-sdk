@@ -15,7 +15,6 @@ class RefreshTokenCredentials implements GrantTypeInterface
     /**
      * Constructor
      * @param $refresh_token
-     * @internal param string $refreshToken
      */
     public function __construct($refresh_token)
     {

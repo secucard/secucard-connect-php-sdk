@@ -4,9 +4,9 @@
  */
 
 namespace SecucardConnect\Product\Common\Model;
-use secucard\client\base\DateTime;
-use secucard\client\base\DateTimeZone;
-use secucard\client\base\Exception;
+use DateTime;
+use DateTimeZone;
+use Exception;
 
 /**
  * Class that should be used as parent class of every Data model
@@ -53,6 +53,12 @@ abstract class BaseModel
      * @var string
      */
     protected $_id_column;
+
+    /**
+     * Name of resource and product.
+     * @var array
+     */
+    protected $resourcePath;
 
     /**
      * Constructor
@@ -109,6 +115,8 @@ abstract class BaseModel
 
             return $this->_attributes[$name];
         }
+
+        return null;
     }
 
     /**
@@ -153,6 +161,8 @@ abstract class BaseModel
         if ($this->_attribute_defs[$name]['type'] == self::DATA_TYPE_DATE) {
             return 'Y-m-d';
         }
+
+        return null;
     }
 
     /**
@@ -180,8 +190,8 @@ abstract class BaseModel
                 break;
             case self::DATA_TYPE_ARRAY_SUBOBJECT:
                 if (!empty($value) && is_array($value)) {
-                    // we have a subobject inside an array. We will just validate the $value and set the array to _attributes
-                    $class_name = '\\secucard\\models\\' . $definition['category'] . '\\' . $definition['model'];
+                    // we have a sub object inside an array. We will just validate the $value and set the array to _attributes
+                    $class_name = '\\SecucardConnect\\Product\\' . $definition['category'] . '\\Model\\' . $definition['model'];
                     $attribute_obj = new $class_name();
                     $attribute_obj->initValues($value);
                     $this->_attributes[$name] = $value;
@@ -190,7 +200,7 @@ abstract class BaseModel
                 }
                 break;
             case self::DATA_TYPE_ARRAY_SPECIAL:
-                // special attributes are parsed by overriden function
+                // special attributes are parsed by overridden function
                 $this->_attributes[$name] = $this->_parseSpecialObjectsArray($name, $value);
                 break;
             case self::DATA_TYPE_BOOLEAN:
@@ -286,9 +296,7 @@ abstract class BaseModel
      */
     protected function getCurrentModelUrlPath()
     {
-        $current_class = get_class($this);
-        $path = str_replace('\\', '/', substr($current_class, strlen('secucard\\models\\')));
-        return $path;
+        return $this->resourcePath[0] . '/' . $this->resourcePath[1];
     }
 
     /**

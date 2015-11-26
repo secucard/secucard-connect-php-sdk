@@ -5,9 +5,10 @@
 
 namespace SecucardConnect;
 
+use GuzzleHttp\Client;
 use GuzzleHttp\Collection;
+use GuzzleHttp\Exception\ClientException;
 use Psr\Log\LoggerInterface;
-use secucard\client;
 use SecucardConnect\Auth\ClientCredentials;
 use SecucardConnect\Auth\OauthProvider;
 use SecucardConnect\Auth\RefreshTokenCredentials;
@@ -103,7 +104,7 @@ class SecucardConnect
         }
 
         // Create a new Secucard client
-        $this->client = new \GuzzleHttp\Client($this->config->toArray());
+        $this->client = new Client($this->config->toArray());
 
         // Create logger
         if ($_logger instanceof GuzzleSubscriber) {
@@ -137,7 +138,7 @@ class SecucardConnect
     private function setAuthorization()
     {
         // conditions for client authorization types
-        // specify $config['auth']['type'] = 'none', when you dont want the Client to use authorization (useful for authorization for devices)
+        // specify $config['auth']['type'] = 'none', when you don't want the Client to use authorization (useful for authorization for devices)
         // specify $config['auth']['type'] = 'refresh_token' when you already have refresh token
         if ($this->config['auth']['type'] === 'none') {
             return;
@@ -179,7 +180,7 @@ class SecucardConnect
         // if the guzzle gets response http_status other than 200, it will throw an exception even when there is response available
         try {
             $response = $this->client->post($this->config['auth_path'], array('body' => $params));
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
+        } catch (ClientException $e) {
             if ($e->hasResponse()) {
                 return $e->getResponse()->json();
             }
@@ -207,7 +208,7 @@ class SecucardConnect
 
         try {
             $response = $this->client->post($this->config['auth_path'], array('body' => $params));
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
+        } catch (ClientException $e) {
             if ($e->hasResponse()) {
                 return $e->getResponse()->json();
             }
@@ -231,21 +232,24 @@ class SecucardConnect
         if (isset($this->$name)) {
             return $this->$name;
         }
-        if (isset($this->category_map[strtolower($name)])) {
-            return $this->category_map[strtolower($name)];
+
+        $product = ucfirst(strtolower($name));
+
+        if (isset($this->category_map[$product])) {
+            return $this->category_map[$product];
         }
         $category = null;
-        if (file_exists(__DIR__ . "/../../models/" . ucfirst($name) . "Category.php")) {
+        if (file_exists(__DIR__ . "/Product/" . $product . "/" . $product . "Category.php")) {
             // create subcategory if there is a class for it
-            $category_class = '\\secucard\\models\\' . $name . 'Category';
-            $category = new $category_class($this, $name);
+            $category_class = '\\SecucardConnect\\Product\\' . $product . '\\' . $product . 'Category';
+            $category = new $category_class($this, $product);
         } else {
             // it is not checked if the category exists
-            $category = new Product\Common\Model\BaseModelCategory($this, $name);
+            $category = new Product\Common\Model\BaseModelCategory($this, $product);
         }
         // create category inside category_map
         if ($category) {
-            $this->category_map[strtolower($name)] = $category;
+            $this->category_map[$product] = $category;
             return $category;
         }
 
@@ -460,7 +464,7 @@ class SecucardConnect
     public function factory($object)
     {
 
-        $product = 'secucard\models\\' . $object;
+        $product = 'SecucardConnect\Product\\' . $object . '\\' ;
         if (class_exists($product)) {
             return new $product($this);
         }

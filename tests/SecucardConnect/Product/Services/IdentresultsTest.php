@@ -1,20 +1,20 @@
 <?php
 
-namespace SecucardConnect\Test\Smart;
+namespace SecucardConnect\Product\Services;
 
-use SecucardConnect\Test\Api\ClientTest;
+use SecucardConnect\BaseClientTest;
 
 /**
- * @covers secucard\models\Smart\Checkins
+ * @covers secucard\models\Services\Identresults
  */
-class CheckinsTest extends ClientTest
+class IdentresultsTest extends BaseClientTest
 {
     /**
      * @test
      */
     public function testGetList()
     {
-        $list = $this->client->smart->checkins->getList();
+        $list = $this->client->services->identresults->getList(array());
 
         $this->assertFalse(empty($list));
     }
@@ -24,14 +24,14 @@ class CheckinsTest extends ClientTest
      */
     public function testGetItem()
     {
-        $list = $this->client->smart->checkins->getList(array());
+        $list = $this->client->services->identresults->getList(array());
 
         $this->assertFalse(empty($list) || $list->count() < 1, 'Cannot get any item, because list is empty');
         $sample_item_id = $list[0]->id;
         $this->assertFalse(empty($sample_item_id));
 
         if ($sample_item_id) {
-            $item = $this->client->smart->checkins->get($sample_item_id);
+            $item = $this->client->services->identresults->get($sample_item_id);
 
             $this->assertFalse(empty($item));
         }
