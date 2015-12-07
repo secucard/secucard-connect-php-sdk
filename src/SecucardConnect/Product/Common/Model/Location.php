@@ -11,11 +11,15 @@ namespace SecucardConnect\Product\Common\Model;
  */
 class Location extends BaseModel
 {
-    protected $_attribute_defs = array(
-        'lat'=>array('type'=>BaseModel::DATA_TYPE_FLOAT),
-        'lon'=>array('type'=>BaseModel::DATA_TYPE_FLOAT),
-        );
+    /**
+     * @var float
+     */
+    public $lat;
 
-    protected $_relations = array();
+
+    /**
+     * @var float;
+     */
+    public $lon;
 
 }

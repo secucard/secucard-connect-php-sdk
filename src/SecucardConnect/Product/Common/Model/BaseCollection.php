@@ -4,9 +4,9 @@
  */
 
 namespace SecucardConnect\Product\Common\Model;
+
 use BadMethodCallException;
 use Exception;
-use SecucardConnect\SecucardConnect;
 
 /**
  * Provides a simple iterator and array access interface to a array of BaseModel classes
@@ -16,114 +16,53 @@ use SecucardConnect\SecucardConnect;
 class BaseCollection implements \ArrayAccess, \Countable, \Iterator
 {
     /**
-     * Client for sub objects to be able to reload data
-     * @var SecucardConnect
-     */
-    private $client;
-
-    /**
      * Array of items inside collection
      * @var array
      */
-    private $_items = array();
+    public $_items = array();
 
     /**
      * Scroll_id for collection
      * @var string
      */
-    private $scroll_id;
+    public $scroll_id;
 
     /**
      * Count of items returned by Api
      * @var int
      */
-    private $count;
+    public $count;
 
     /**
      * Current offset of data
      * @var int
      */
-    private $offset;
-
-    /**
-     * Item type class name
-     * @var string
-     */
-    private $item_type;
-
-    private $itemPath;
+    public $offset;
 
     /**
      * Iterator position
      * @var int
      */
-    private $position;
+    public $position;
 
     /**
      * A flag that is set to true when the end of the list is reached (for lazy loading)
      * @var bool
      */
-    private $reached_end;
+    public $reached_end;
+
+
+
 
     /**
      * Constructor
-     * @param $client
-     * @param string $item_type - to know which objects should be inside the array
-     * @param $itemPath
-     * @throws Exception
      */
-    public function __construct($client, $item_type, $itemPath)
+    public function __construct()
     {
         $this->position = 0;
         $this->count = 0;
         $this->offset = 0;
         $this->reached_end = false;
-        $this->client = $client;
-        if (empty($item_type)) {
-            throw new Exception('Item type cannot be empty');
-        }
-        $this->item_type = $item_type;
-        $this->itemPath = $itemPath;
-    }
-
-    /**
-     * Function to add items to collection
-     *
-     * @param object $response
-     */
-    public function parseResponse($response)
-    {
-        if (is_object($response)) {
-            $response = (array)$response;
-        }
-        if (isset($response['count'])) {
-            $this->count = $response['count'];
-        }
-        if (isset($response['offset'])) {
-            $this->offset = $response['offset'];
-        }
-        if (isset($response['scroll_id'])) {
-            $this->scroll_id = $response['scroll_id'];
-        }
-
-        if (!isset($response['data'])) {
-            return;
-        }
-        $item_class = $this->item_type;
-
-        foreach ($response['data'] as $item) {
-            $current_item = new $item_class($this->client, $this->itemPath);
-            // set initialized flag for item to true (we expect all data to be available in the server response)
-            $current_item->initValues($item, true);
-            // add current_item to $this->_items array
-            $this->_items[] = $current_item;
-        }
-
-        // check if we reached end of all items for iteration
-        if ($this->count == count($this->_items)) {
-            $this->client->logger->info('reached end of a collection');
-            $this->reached_end = true;
-        }
     }
 
     /**
@@ -159,7 +98,7 @@ class BaseCollection implements \ArrayAccess, \Countable, \Iterator
     public function __toString()
     {
         $items = array();
-        foreach($this->_items as $item) {
+        foreach ($this->_items as $item) {
             $items[] = $item->as_json(false);
         }
         return print_r($items, true);
@@ -182,26 +121,6 @@ class BaseCollection implements \ArrayAccess, \Countable, \Iterator
         return new \ArrayIterator($this->_items);
     }
 
-    /**
-     * Function that returns Url path for current model
-     * @return string
-     */
-    public function getUrlPath()
-    {
-        return $this->itemPath[0] . '/' . $this->itemPath[1];
-    }
-
-    /**
-     * Function to load items for $options
-     * @param array $options
-     */
-    public function loadItems($options)
-    {
-        $path = $this->getUrlPath();
-
-        $response = $this->client->get($path, array('query'=>$options));
-        $this->parseResponse($response->json());
-    }
 
     /**
      * Array access, set item by offset
@@ -288,65 +207,65 @@ class BaseCollection implements \ArrayAccess, \Countable, \Iterator
      * ITERATOR INTERFACE FUNCTIONS
      */
 
-     /**
-      * Function to rewind iterator to the begining
-      */
-     public function rewind()
-     {
-         $this->position = 0;
-     }
+    /**
+     * Function to rewind iterator to the beginning
+     */
+    public function rewind()
+    {
+        $this->position = 0;
+    }
 
-     /**
-      * Function to get item on current position
-      */
-     public function current()
-     {
-         return $this->_items[$this->position];
-     }
+    /**
+     * Function to get item on current position
+     */
+    public function current()
+    {
+        return $this->_items[$this->position];
+    }
 
-     public function key()
-     {
-         return $this->position;
-     }
+    public function key()
+    {
+        return $this->position;
+    }
 
-     /**
-      * Function to move position to next item
-      * This function uses lazy loading to load another data when the currently loaded data ends
-      */
-     public function next()
-     {
-         ++$this->position;
+    /**
+     * Function to move position to next item
+     * This function uses lazy loading to load another data when the currently loaded data ends
+     */
+    public function next()
+    {
+        ++$this->position;
 
-         // if we are on the last item, try to load new items
-         if ($this->position == count($this->_items)) {
-             $this->loadNextScroll();
-         }
-     }
+        // if we are on the last item, try to load new items
+        if ($this->position == count($this->_items)) {
+            $this->loadNextScroll();
+        }
+    }
 
-     /**
-      * check if current position is valid
-      */
-     public function valid()
-     {
-         return isset($this->_items[$this->position]);
-     }
+    /**
+     * check if current position is valid
+     */
+    public function valid()
+    {
+        return isset($this->_items[$this->position]);
+    }
 
-     /**
-      * Function that tries to load next scroll
-      * @return boolean
-      */
-     private function loadNextScroll()
-     {
-         if ($this->reached_end) {
-             return false;
-         }
-         $this->client->logger->info('trying to load next scroll, offset (' . $this->offset . ')');
-         // set offset to the count of all downloaded items
-         $this->offset = count($this->_items);
+    /**
+     * Function that tries to load next scroll
+     * @return boolean
+     */
+    private function loadNextScroll()
+    {
+        if ($this->reached_end) {
+            return false;
+        }
+        $this->client->logger->info('trying to load next scroll, offset (' . $this->offset . ')');
+        // set offset to the count of all downloaded items
+        $this->offset = count($this->_items);
 
-         // option array for the loadItems request
-         $options = array('scroll_id'=>$this->scroll_id, 'offset'=>$this->offset);
-         $this->loadItems($options);
-         return true;
-     }
+        // option array for the loadItems request
+        $options = array('scroll_id' => $this->scroll_id, 'offset' => $this->offset);
+        $this->loadItems($options);
+        return true;
+    }
 }

@@ -23,15 +23,11 @@ class GuzzleSubscriber implements SubscriberInterface
 
     /**
      * Constructor
-     * @param LoggerInterface|callable|resource|null $logger Logger used to log messages
+     * @param LoggerInterface|Logger $logger Logger used to log messages
      */
-    public function __construct($logger = null)
+    public function __construct(LoggerInterface $logger)
     {
-        if ($logger instanceof LoggerInterface) {
-            $this->logger = $logger;
-        } else {
-            $this->logger = new Logger($logger);
-        }
+        $this->logger = $logger;
     }
 
     /**
@@ -43,7 +39,7 @@ class GuzzleSubscriber implements SubscriberInterface
         return [
             // Fire after responses are verified (which trigger error events).
             'complete' => ['onComplete', RequestEvents::VERIFY_RESPONSE - 10],
-            'error'    => ['onError', RequestEvents::EARLY]
+            'error' => ['onError', RequestEvents::EARLY]
         ];
     }
 
@@ -73,14 +69,5 @@ class GuzzleSubscriber implements SubscriberInterface
         $response = $event->getResponse();
         $error = $event->getException();
         $this->logger->error(">>>>>>>>\n{$request}\n<<<<<<<<\n{$response}\n--------\n{$error}");
-    }
-
-    /**
-     * Getter for logger
-     * @return LoggerInterface $logger
-     */
-    public function getLogger()
-    {
-        return $this->logger;
     }
 }

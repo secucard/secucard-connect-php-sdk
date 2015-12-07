@@ -7,6 +7,7 @@ namespace SecucardConnect\Util;
 
 use Psr\Log\LoggerInterface;
 use Psr\Log\LoggerTrait;
+use Psr\Log\LogLevel;
 
 /**
  * Logger implementation that can write to a function, resource, or uses echo() if nothing is provided
@@ -66,5 +67,42 @@ class Logger implements LoggerInterface
     public function setEnabled($value)
     {
         $this->enabled = $value;
+    }
+
+    public static function logWarn(LoggerInterface $logger, $message, \Exception $exception = null)
+    {
+        self::doLog(LogLevel::WARNING, $logger, $message, $exception);
+    }
+
+    public static function logError(LoggerInterface $logger, $message, \Exception $exception = null)
+    {
+        self::doLog(LogLevel::ERROR, $logger, $message, $exception);
+    }
+
+    public static function logInfo(LoggerInterface $logger, $message, \Exception $exception = null)
+    {
+        self::doLog(LogLevel::INFO, $logger, $message, $exception);
+    }
+
+    public static function logDebug(LoggerInterface $logger, $message, \Exception $exception = null)
+    {
+        self::doLog(LogLevel::DEBUG, $logger, $message, $exception);
+    }
+
+    /**
+     * @param $level
+     * @param LoggerInterface $logger
+     * @param $message
+     * @param \Exception $exception
+     */
+    public static function doLog($level, LoggerInterface $logger, $message, \Exception $exception = null)
+    {
+        if (!empty($logger)) {
+            $context = [];
+            if (!empty($exception)) {
+                $context['exception'] = $exception;
+            }
+            $logger->log($level, $message, $context);
+        }
     }
 }

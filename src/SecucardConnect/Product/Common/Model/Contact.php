@@ -9,27 +9,85 @@ namespace SecucardConnect\Product\Common\Model;
  * Contact Data Model class
  *
  */
-class Contact extends BaseModel
+class Contact
 {
-    protected $_attribute_defs = array(
-        'salutation' => array('type' => BaseModel::DATA_TYPE_STRING),
-        'title' => array('type' => BaseModel::DATA_TYPE_STRING),
-        'forename' => array('type' => BaseModel::DATA_TYPE_STRING),
-        'surname' => array('type' => BaseModel::DATA_TYPE_STRING),
-        'name' => array('type' => BaseModel::DATA_TYPE_STRING), // not used for now
-        'companyname' => array('type' => BaseModel::DATA_TYPE_STRING),
-        // TODO check if date is correct!
-        'dob' => array('type' => BaseModel::DATA_TYPE_DATE),
-        'birthplace' => array('type' => BaseModel::DATA_TYPE_STRING),
-        'nationality' => array('type' => BaseModel::DATA_TYPE_STRING),
-        'gender' => array('type' => BaseModel::DATA_TYPE_STRING),
-        'phone' => array('type' => BaseModel::DATA_TYPE_STRING),
-        'mobile' => array('type' => BaseModel::DATA_TYPE_STRING),
-        'email' => array('type' => BaseModel::DATA_TYPE_STRING),
-        'picture' => array('type' => BaseModel::DATA_TYPE_STRING),
-        'url_website' => array('type' => BaseModel::DATA_TYPE_STRING),
-        // Address is subarray
-        'address' => array('type' => BaseModel::DATA_TYPE_ARRAY_SUBOBJECT, 'category' => 'Common', 'model' => 'Contactaddress'),
-    );
+    /**
+     * @var string
+     */
+    public $salutation;
 
+    /**
+     * @var string
+     */
+    public $title;
+
+    /**
+     * @var string
+     */
+    public $forename;
+
+    /**
+     * @var string
+     */
+    public $surname;
+
+    /**
+     * @var string
+     */
+    public $name;
+
+    /**
+     * @var string
+     */
+    public $companyname;
+
+    /**
+     * @var \DateTime
+     */
+    public $dob;
+
+    /**
+     * @var string
+     */
+    public $birthplace;
+
+    /**
+     * @var string
+     */
+    public $nationality;
+
+    /**
+     * @var string
+     */
+    public $gender;
+
+    /**
+     * @var string
+     */
+    public $phone;
+
+    /**
+     * @var string
+     */
+    public $mobile;
+
+    /**
+     * @var string
+     */
+    public $email;
+
+    /**
+     * @var string
+     */
+    public $picture;
+
+    /**
+     * @var string
+     */
+    public $url_website;
+
+    /**
+     * @var ContactAddress[]
+     */
+    public $address;
 }

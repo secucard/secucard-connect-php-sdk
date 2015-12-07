@@ -54,12 +54,9 @@ abstract class MainModel extends BaseModel
     /**
      * Constructor
      * @param SecucardConnect $client
-     * @param $resourcePath
      */
-    public function __construct(SecucardConnect &$client, $resourcePath)
+    public function __construct()
     {
-        $this->client = $client;
-        $this->resourcePath = $resourcePath;
         $this->setRelations($this->_relations);
         parent::__construct();
     }
@@ -170,7 +167,7 @@ abstract class MainModel extends BaseModel
      */
     public function getList($options = array())
     {
-        $list = new BaseCollection($this->client, get_class($this), $this->resourcePath);
+        $list = new BaseCollection($this->client, get_class($this), null);
         $list->loadItems($options);
         return $list;
     }

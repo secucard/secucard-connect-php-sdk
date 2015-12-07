@@ -7,9 +7,8 @@ namespace SecucardConnect\Auth;
  * Refresh token grant type
  * Class that is used to refresh token
  */
-class RefreshTokenCredentials implements GrantTypeInterface
+class RefreshTokenCredentials extends ClientCredentials
 {
-
     protected $refresh_token;
 
     /**
@@ -34,6 +33,7 @@ class RefreshTokenCredentials implements GrantTypeInterface
      */
     public function addParameters(&$params)
     {
+        parent::addParameters($params);
         $params['refresh_token'] = $this->refresh_token;
     }
 }

@@ -7,18 +7,18 @@ namespace SecucardConnect\Auth;
  */
 class ClientCredentials implements GrantTypeInterface
 {
-    protected $client_id;
-    protected $client_secret;
+    public $client_id;
+    public $client_secret;
 
     /**
      * Constructor
-     * @param $client_id
-     * @param $client_secret
+     * @param $clientId
+     * @param $clientSecret
      */
-    public function __construct($client_id, $client_secret)
+    public function __construct($clientId, $clientSecret)
     {
-        $this->client_id = $client_id;
-        $this->client_secret = $client_secret;
+        $this->client_id = $clientId;
+        $this->client_secret = $clientSecret;
     }
 
     public function getType()

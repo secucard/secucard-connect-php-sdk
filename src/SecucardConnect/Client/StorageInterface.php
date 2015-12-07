@@ -2,7 +2,8 @@
 
 namespace SecucardConnect\Client;
 
-interface StorageInterface {
+interface StorageInterface
+{
     /**
      * Retrieve an item from cache
      *

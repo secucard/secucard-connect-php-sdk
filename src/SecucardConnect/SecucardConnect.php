@@ -5,14 +5,16 @@
 
 namespace SecucardConnect;
 
+use Exception;
 use GuzzleHttp\Client;
-use GuzzleHttp\Collection;
-use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Client\ClientError;
 use Psr\Log\LoggerInterface;
-use SecucardConnect\Auth\ClientCredentials;
+use SecucardConnect\Auth\GrantTypeInterface;
 use SecucardConnect\Auth\OauthProvider;
-use SecucardConnect\Auth\RefreshTokenCredentials;
+use SecucardConnect\Client\ClientContext;
 use SecucardConnect\Client\DummyStorage;
+use SecucardConnect\Client\Product;
+use SecucardConnect\Client\ResourceMetadata;
 use SecucardConnect\Client\StorageInterface;
 use SecucardConnect\Util\GuzzleSubscriber;
 use SecucardConnect\Util\Logger;
@@ -25,6 +27,11 @@ use SecucardConnect\Util\Logger;
 class SecucardConnect
 {
     /**
+     * @var OAuthProvider
+     */
+    private $oauthProvider;
+
+    /**
      * Configuration array
      * @var array
      */
@@ -34,13 +41,18 @@ class SecucardConnect
      * GuzzleHttp client
      * @var object GuzzleHttp
      */
-    protected $client;
+    protected $httpClient;
+
+    /**
+     * @var ClientContext
+     */
+    private $clientContext;
 
     /**
      * Array that maps category names
      * @var array
      */
-    protected $category_map;
+    protected $productMap;
 
     /**
      * Logger used for logging
@@ -67,21 +79,30 @@ class SecucardConnect
     const VERSION = '0.0.1';
 
     const HTTP_STATUS_CODE_OK = 200;
+    private $credentials;
 
     /**
      * Constructor
      * @param array $config - options to correctly initialize Guzzle Client
-     * @param $logger - pass here LoggerInterface to use for logging
-     * @param $storage - pass here StorageInterface for storing runtime data (like oauth-tokens)
+     * @param LoggerInterface $logger - pass here LoggerInterface to use for logging
+     * @param StorageInterface $dataStorage - pass here StorageInterface for storing runtime data (like oauth-tokens)
+     * @param StorageInterface $tokenStorage
+     * @param GrantTypeInterface $credentials The credentials to use when operations need authorization
      */
-    public function __construct(array $config, $logger = null, $storage = null)
-    {
+    public function __construct(
+        array $config,
+        LoggerInterface $logger = null,
+        StorageInterface $dataStorage = null,
+        StorageInterface $tokenStorage,
+        GrantTypeInterface $credentials
+    ) {
         // array of base configuration
         $default = array(
             'base_url' => 'https://connect.secucard.com',
             'auth_path' => '/oauth/token',
             'api_path' => '/api/v2',
             'debug' => false,
+            'auth' => ['type' => null]
         );
 
         // The following fields are required when creating the client
@@ -89,278 +110,131 @@ class SecucardConnect
             'base_url',
             'auth_path',
             'api_path',
-            'client_id',
-            'client_secret'
         );
 
         // Merge in default settings and validate the config
-        $this->config = Collection::fromConfig($config, $default, $required);
+        $this->config = $this->mergeCfg($config, $default, $required);
+
+        if ($logger == null) {
+            // initialize default logger - with logging disabled
+            $logger = new Logger(null, false);
+        }
+
+        $this->logger = $logger;
+
+        // Create a new Secucard client
+        $this->httpClient = new Client($this->config);
 
         if ($this->config['debug']) {
             // Add HTTP-Requests to log
-            $_logger = new GuzzleSubscriber($logger);
-        } else {
-            $_logger = $logger;
-        }
-
-        // Create a new Secucard client
-        $this->client = new Client($this->config->toArray());
-
-        // Create logger
-        if ($_logger instanceof GuzzleSubscriber) {
-            // add subscriber to guzzle
-            $this->logger = $_logger->getLogger();
-            $this->client->getEmitter()->attach($_logger);
-        } elseif ($_logger instanceof LoggerInterface) {
-            // initialize logger with a logger parameter
-            $this->logger = $_logger;
-        } else {
-            // initialize default logger - with logging disabled
-            $this->logger = new Logger(null, false);
+            $this->httpClient->getEmitter()->attach(new GuzzleSubscriber($this->logger));
         }
 
         // Create storage
-        if ($storage instanceof StorageInterface) {
-            $this->storage = $storage;
+        if ($dataStorage instanceof StorageInterface) {
+            $this->storage = $dataStorage;
         } else {
             $this->storage = new DummyStorage();
         }
 
+        $this->clientContext = new ClientContext($this->httpClient, $this->config, $this->logger);
+
         // Ensure that the OauthProvider is attached to the client, when grant_type is not device
         // but only when authorization is needed
-        $this->setAuthorization();
+        $this->setAuthorization($tokenStorage, $credentials);
+        $this->credentials = $credentials;
+    }
+
+
+    private static function mergeCfg(array $config = [], array $defaults = [], array $required = [])
+    {
+        $data = $config + $defaults;
+
+        if ($missing = array_diff($required, array_keys($data))) {
+            throw new \InvalidArgumentException('Config is missing the following keys: ' . implode(', ', $missing));
+        }
+
+        return $data;
     }
 
     /**
      * Private function to set Authorization on client
-     *
+     * @param StorageInterface $storage
+     * @param GrantTypeInterface $credentials
      */
-    private function setAuthorization()
+    private function setAuthorization(StorageInterface $storage, GrantTypeInterface $credentials = null)
     {
         // conditions for client authorization types
-        // specify $config['auth']['type'] = 'none', when you don't want the Client to use authorization (useful for authorization for devices)
-        // specify $config['auth']['type'] = 'refresh_token' when you already have refresh token
-        if ($this->config['auth']['type'] === 'none') {
+        if ($credentials == null) {
             return;
         }
 
-        // create credentials
-        $client_credentials = new ClientCredentials($this->config['client_id'], $this->config['client_secret']);
-
-        // default credentials are client_credentials
-        $credentials = $client_credentials;
-        // check which credentials should be added to the client auth provider
-        if ($this->config['auth']['type'] === 'refresh_token') {
-            $credentials = new RefreshTokenCredentials($this->config['auth']['refresh_token']);
-        }
-
         // create OAuthProvider
-        $oauthProvider = new OauthProvider($this->config['auth_path'], $this->client, $this->storage, $client_credentials, $credentials);
+        $this->oauthProvider = new OauthProvider($this->config['auth_path'], $this->httpClient, $storage, $credentials);
+
+        $this->oauthProvider->setLogger($this->logger);
+
         // assign OAuthProvider to guzzle client
-        $this->client->getEmitter()->attach($oauthProvider);
+        $this->httpClient->getEmitter()->attach($this->oauthProvider);
     }
 
+
     /**
-     * Function to get device verification
-     *
-     * @param string $vendor
-     * @param string $uid
-     * @throws \Exception
-     * @return array $response
+     * Performs authentication using the given parameter and the credentials passed in this instance
+     * constructor. The returned result depends on the credentials type and parameter content. <br/>
+     * Note: For credentials other then Auth\DeviceCredentials calling this method is fully optional - since no user
+     * interaction is required the auth is done automatically when needed (usually when invoking the first
+     * service call). However one may call in advance (before service calls) to make sure the authentication is working
+     * correctly.
+     * @param array $param Optional argument array, may contain a 'devicecode' entry.
+     * @return bool|Auth\AuthCodes For instances of Auth\DeviceCredentials an instance of
+     * Auth\AuthCodes is returned when passing no parameter, when passing 'devicecode' key either true or false
+     * if the authentication is still pending. In the pending case just repeat the call until true.<br/>
+     * For other credential types true is returned.
+     * @throws Exception If an error happens during the process. Inspect the exception type to get further details
+     * about the cause.
+     * @see \SecucardConnect\Client\AuthError
      */
-    public function obtainDeviceVerification($vendor, $uid)
+    public function authenticate(array $param = null)
     {
-        $params = array(
-            'grant_type' => 'device',
-            'uuid' => $vendor . '/' . $uid,
-            'client_id' => $this->config['client_id'],
-            'client_secret' => $this->config['client_secret'],
-        );
-
-        // if the guzzle gets response http_status other than 200, it will throw an exception even when there is response available
-        try {
-            $response = $this->client->post($this->config['auth_path'], array('body' => $params));
-        } catch (ClientException $e) {
-            if ($e->hasResponse()) {
-                return $e->getResponse()->json();
-            }
-            throw $e;
+        $result =  $this->oauthProvider->getAccessToken(is_array($param) ? $param['devicecode'] : null);
+        if (is_string($result)) {
+            return true;
+        } else {
+            return $result;
         }
-
-        return $response->json();
     }
 
-    /**
-     * Function to get access_token and refresh_token for device authorization
-     *
-     * @param string $device_code
-     * @throws \Exception
-     * @return array $response
-     */
-    public function pollDeviceAccessToken($device_code)
-    {
-        $params = array(
-            'grant_type' => 'device',
-            'code' => $device_code,
-            'client_id' => $this->config['client_id'],
-            'client_secret' => $this->config['client_secret'],
-        );
-
-        try {
-            $response = $this->client->post($this->config['auth_path'], array('body' => $params));
-        } catch (ClientException $e) {
-            if ($e->hasResponse()) {
-                return $e->getResponse()->json();
-            }
-            throw $e;
-        }
-
-        return $response->json();
-    }
 
     /**
-     * Magic getter for getting the model object inside category
+     * Magic getter for getting the product object.
      *
-     * uses lazy loading for categories
      * @param string $name
-     * @return \SecucardConnect\Product\Common\Model\BaseModelCategory $category
+     * @return \SecucardConnect\Client\Product
      * @throws \Exception
      */
     public function __get($name)
     {
-        // if the $name is property of current object
-        if (isset($this->$name)) {
-            return $this->$name;
+        $prod = ucfirst(strtolower($name));
+
+        if (isset($this->productMap[$prod])) {
+            return $this->productMap[$prod];
         }
 
-        $product = ucfirst(strtolower($name));
-
-        if (isset($this->category_map[$product])) {
-            return $this->category_map[$product];
-        }
-        $category = null;
-        if (file_exists(__DIR__ . "/Product/" . $product . "/" . $product . "Category.php")) {
-            // create subcategory if there is a class for it
-            $category_class = '\\SecucardConnect\\Product\\' . $product . '\\' . $product . 'Category';
-            $category = new $category_class($this, $product);
+        $rm = new ResourceMetadata($name);
+        $prodInst = null;
+        $prodClass = $rm->productClass;
+        if (class_exists($prodClass)) {
+            // try to create product impl. if there is a class for it
+            $prodInst = new $prodClass($prod, $this->clientContext);
         } else {
-            // it is not checked if the category exists
-            $category = new Product\Common\Model\BaseModelCategory($this, $product);
+            // use default
+            $prodInst = new Product($prod, $this->clientContext);
         }
+
         // create category inside category_map
-        if ($category) {
-            $this->category_map[$product] = $category;
-            return $category;
-        }
-
-        throw new \Exception('Invalid category name: ' . $name);
-    }
-
-    /**
-     * Function to build URL to access API function
-     * @param string $path
-     * @return string $url
-     */
-    protected function buildApiUrl($path)
-    {
-        $url = $this->config['base_url'] . $this->config['api_path'] . "/" . $path;
-        return $url;
-    }
-
-    /**
-     * GET request method
-     *
-     * @param string $path path to call
-     * @param array $options
-     * @return false|$response
-     */
-    public function get($path, $options)
-    {
-        $options = array_merge(['auth' => 'oauth'], $options);
-        $response = $this->client->get($this->buildApiUrl($path), $options);
-        if (!$response) {
-            return false;
-        }
-
-        return $response;
-    }
-
-    /**
-     * DELETE function
-     * used to delete data for model
-     *
-     * @param string $path (url path to the model)
-     * @param array $data (empty array)
-     * @param array $options
-     * @return bool
-     */
-    public function delete($path, $data, $options)
-    {
-        $options = array_merge(['auth' => 'oauth', 'body' => $data], $options);
-        $response = $this->client->delete($this->buildApiUrl($path), $options);
-        if (!$response || $response->getStatusCode() != self::HTTP_STATUS_CODE_OK) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * POST json request method
-     *
-     * @param string $path path to call
-     * @param mixed $data (data to post)
-     * @param array $options
-     * @return false|$response
-     */
-    public function post($path, $data, $options)
-    {
-        $options = array_merge(['auth' => 'oauth', 'json' => $data], $options);
-        $response = $this->client->post($this->buildApiUrl($path), $options);
-        if (!$response) {
-            return false;
-        }
-
-        return $response;
-    }
-
-    /**
-     * POST url_encoded request method
-     *
-     * @param string $path path to call
-     * @param mixed $data
-     * @param array $options
-     * @return false|array $response
-     */
-    public function postUrlEncoded($path, $data, $options)
-    {
-        $options = array_merge(['auth' => 'oauth', 'body' => $data], $options);
-        $response = $this->client->post($this->buildApiUrl($path), $options);
-        if (!$response) {
-            return false;
-        }
-
-        return $response->json();
-    }
-
-    /**
-     * PUT function with JSON body
-     * used to update data for model
-     *
-     * @param string $path
-     * @param array $data (data of model to update)
-     * @param array $options
-     * @return array $ret
-     */
-    public function put($path, $data, $options)
-    {
-        $options = array_merge(['auth' => 'oauth', 'json' => $data], $options);
-        $response = $this->client->put($this->buildApiUrl($path), $options);
-        if (!$response || $response->getStatusCode() != self::HTTP_STATUS_CODE_OK) {
-            return false;
-        }
-
-        return $response->json();
+        $this->productMap[$prod] = $prodInst;
+        return $prodInst;
     }
 
     /**
@@ -454,6 +328,7 @@ class SecucardConnect
         }
     }
 
+
     /**
      * Factory function to create object of expected model type
      *
@@ -464,10 +339,12 @@ class SecucardConnect
     public function factory($object)
     {
 
-        $product = 'SecucardConnect\Product\\' . $object . '\\' ;
+        $product = 'SecucardConnect\Product\\' . $object . '\\';
         if (class_exists($product)) {
             return new $product($this);
         }
         throw new \Exception("Invalid product type given.");
     }
+
+
 }

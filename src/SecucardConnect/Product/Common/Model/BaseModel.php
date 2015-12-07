@@ -4,6 +4,7 @@
  */
 
 namespace SecucardConnect\Product\Common\Model;
+
 use DateTime;
 use DateTimeZone;
 use Exception;
@@ -55,10 +56,16 @@ abstract class BaseModel
     protected $_id_column;
 
     /**
-     * Name of resource and product.
-     * @var array
+     * @var string
      */
-    protected $resourcePath;
+    public $id;
+
+    /**
+     * @var string
+     */
+    public $object;
+
+
 
     /**
      * Constructor
@@ -96,6 +103,24 @@ abstract class BaseModel
         }
         return $this->setAttribute($name, $value);
     }
+
+    public function getId()
+    {
+        if (empty ($this->_id_column)) {
+            return null;
+        }
+        return $this->_attributes[$this->_id_column];
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isInitialized()
+    {
+        return $this->initialized;
+    }
+
+
 
     /**
      * Magic getter
