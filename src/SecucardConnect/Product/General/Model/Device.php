@@ -12,7 +12,7 @@ use SecucardConnect\Product\Common\Model\MainModel;
  * Devices Api Model class
  *
  */
-class Devices extends MainModel
+class Device extends MainModel
 {
     // TODO this model is not yet implemented correctly
     protected $_attribute_defs = array(

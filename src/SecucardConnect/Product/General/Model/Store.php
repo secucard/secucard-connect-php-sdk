@@ -1,6 +1,6 @@
 <?php
 /**
- * Merchants Api Model class
+ * Stores Api Model class
  */
 
 namespace SecucardConnect\Product\General\Model;
@@ -9,18 +9,20 @@ use SecucardConnect\Product\Common\Model\BaseModel;
 use SecucardConnect\Product\Common\Model\MainModel;
 
 /**
- * Merchants Api Model class
+ * Stores Api Model class
  *
  */
-class Merchants extends MainModel
+class Store extends MainModel
 {
-    // TODO this class is not yet implemented
+    // TODO this model is not yet implemented correctly
     protected $_attribute_defs = array(
         'object' => array('type' => BaseModel::DATA_TYPE_STRING),
         'id' => array('type' => BaseModel::DATA_TYPE_STRING, 'options' => array('id' => true)),
     );
 
-    protected $_relations = array(
-        //
-    );
+    protected $_relations = array();
+
+
+    // model specific functions
+
 }

@@ -11,7 +11,7 @@ use SecucardConnect\Product\Common\Model\BaseModel;
  * Accounts Api Model class
  *
  */
-class Accounts extends BaseModel
+class Account extends BaseModel
 {
     /**
      * @var string

@@ -22,7 +22,7 @@ class Assignment
 
 
     /**
-     * @var AccountDevices
+     * @var AccountDevice
      */
     public $assign;
 }
