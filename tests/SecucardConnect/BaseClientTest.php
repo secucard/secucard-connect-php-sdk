@@ -38,7 +38,8 @@ class BaseClientTest extends \PHPUnit_Framework_TestCase
         $this->logger = new Logger($fp, true);
 
 
-        $store = new FileStorage('/tmp/.secucardstore');
+        $store = new FileStorage(__DIR__ . '/../../' . '.secucardclientstore');
+//        $store = new DummyStorage();
 
         $this->client = new SecucardConnect($config, $this->logger, $store, $store, $this->getCredentials());
     }

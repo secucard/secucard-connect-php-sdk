@@ -9,8 +9,17 @@ namespace SecucardConnect\Product\Smart\Model;
  * Receipts class to parse Receipts array to subclasses
  *
  */
-class Receipts
+class ReceiptLine
 {
+    /**
+     * @var string
+     */
+    public $type;
+
+    /**
+     * @var Value
+     */
+    public $value;
 
     /**
      * Function to parse receipts from multidimensional array to array of objects
@@ -50,6 +59,34 @@ class Receipts
 
         return $ret;
     }
+}
+
+class Value
+{
+    /**
+     * @var string
+     */
+    public $caption;
+
+    /**
+     * @var string
+     */
+    public $text;
+
+    /**
+     * @var string
+     */
+    public $name;
+
+    /**
+     * @var string
+     */
+    public $value;
+
+    /**
+     * @var string[]
+     */
+    public $decoration;
 }
 
 class ReceiptBase

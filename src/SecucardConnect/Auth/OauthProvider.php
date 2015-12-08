@@ -103,10 +103,9 @@ class OauthProvider implements SubscriberInterface
 
     /**
      * Request before-send event handler
-     *
      * Adds the Authorization header if an access token was found
-     *
      * @param BeforeEvent $event - Event received
+     * @throws ClientError If the access token could not properly set to the request.
      */
     public function onBefore(BeforeEvent $event)
     {
@@ -141,7 +140,16 @@ class OauthProvider implements SubscriberInterface
     {
         if (isset($this->accessToken['expires_in']) && $this->accessToken['expires_in'] < time() && $this->refreshToken) {
             // The access token has expired
-            $this->updateToken(new RefreshTokenCredentials($this->refreshToken));
+            if (!$this->credentials instanceof ClientCredentials) {
+                throw new ClientError('Invalid credentials type supplied, must be of type ' . ClientCredentials::class);
+            }
+
+            if ($this->credentials instanceof RefreshTokenCredentials) {
+                $this->updateToken($this->credentials);
+            } else {
+                $this->updateToken(new RefreshTokenCredentials($this->credentials->client_id,
+                    $this->credentials->client_secret, $this->refreshToken));
+            }
         }
 
         if (!$this->accessToken) {
@@ -155,6 +163,8 @@ class OauthProvider implements SubscriberInterface
                         return false;
                     }
                 }
+            } elseif ($this->credentials instanceof RefreshTokenCredentials) {
+                $this->updateToken($this->credentials);
             } else {
                 $this->updateToken();
             }
@@ -177,26 +187,25 @@ class OauthProvider implements SubscriberInterface
 
         // array of url parameters that will be sent in auth request
         $params = array();
-        if ($refreshToken != null) {
-            $this->setParams($params, $refreshToken);
+        if ($refreshToken == null && !empty($deviceCode)) {
+            $tokenData = $this->pollDeviceAccessToken($deviceCode);
+            if ($tokenData === false) {
+                return false;
+            }
         } else {
-            if (!empty($deviceCode)) {
-                $tokenData = $this->pollDeviceAccessToken($deviceCode);
-                if ($tokenData === false) {
-                    return false;
-                }
-            } else {
-                $this->setParams($params, $this->credentials);
-                try {
-                    $response = $this->post($params);
-                    $tokenData = $response->json();
-                } catch (Exception $e) {
+            $this->setParams($params, $refreshToken == null ? $this->credentials : $refreshToken);
 
-                }
+            try {
+                $response = $this->post($params);
+                $tokenData = $response->json();
+            } catch (ClientException $e) {
+                throw($this->mapError($e));
             }
         }
 
-        // todo: Add check for successful response
+        if (empty($tokenData)) {
+            throw new ClientError('Error obtaining access token.');
+        }
 
         // Process the returned data, both expired_in and refresh_token are optional parameters
         $this->accessToken = array('access_token' => $tokenData['access_token'],);
@@ -211,10 +220,8 @@ class OauthProvider implements SubscriberInterface
             $this->refreshToken = $tokenData['refresh_token'];
             // Save refresh token to storage
             $this->storage->set('refresh_token', $this->refreshToken);
-        } else {
-            // Got no refresh token => delete existing from storage
-            $this->storage->delete('refresh_token');
         }
+        // never delete existing refresh token
 
         return true;
     }

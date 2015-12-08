@@ -12,17 +12,7 @@ use SecucardConnect\Product\Common\Model\MainModel;
  * Stores Api Model class
  *
  */
-class Store extends MainModel
+class Store extends BaseModel
 {
-    // TODO this model is not yet implemented correctly
-    protected $_attribute_defs = array(
-        'object' => array('type' => BaseModel::DATA_TYPE_STRING),
-        'id' => array('type' => BaseModel::DATA_TYPE_STRING, 'options' => array('id' => true)),
-    );
-
-    protected $_relations = array();
-
-
-    // model specific functions
 
 }

@@ -87,7 +87,7 @@ class Contact
     public $url_website;
 
     /**
-     * @var ContactAddress[]
+     * @var \SecucardConnect\Product\Common\Model\Address[]
      */
     public $address;
 }

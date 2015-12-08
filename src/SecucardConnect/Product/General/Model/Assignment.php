@@ -20,9 +20,8 @@ class Assignment
      */
     public $owner;
 
-
     /**
-     * @var AccountDevice
+     * @var \SecucardConnect\Product\General\Model\AccountDevice
      */
     public $assign;
 }

@@ -24,7 +24,7 @@ class Account extends BaseModel
     public $role;
 
     /**
-     * @var Assignment[]
+     * @var \SecucardConnect\Product\General\Model\Assignment[]
      */
     public $assignment;
 

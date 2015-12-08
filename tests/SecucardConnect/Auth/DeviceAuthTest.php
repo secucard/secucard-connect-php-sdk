@@ -17,6 +17,8 @@ class DeviceAuthTest extends BaseClientTest
     }
 
     /**
+     * Existing tokens must be removed before running the test!
+     *
      * @test
      */
     public function testAuth()
@@ -24,6 +26,8 @@ class DeviceAuthTest extends BaseClientTest
         $codes = $this->client->authenticate();
 
         $this->assertTrue($codes instanceof AuthCodes);
+
+        Logger::logInfo($this->logger, 'User code: ' . $codes->user_code);
 
         $t = time() + 60 * 2;
         do {
@@ -37,6 +41,4 @@ class DeviceAuthTest extends BaseClientTest
 
         $this->assertTrue($result === true);
     }
-
-
 }

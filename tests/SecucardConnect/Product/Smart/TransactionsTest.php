@@ -2,6 +2,7 @@
 
 namespace SecucardConnect\Product\Smart;
 
+use SecucardConnect\Auth\RefreshTokenCredentials;
 use SecucardConnect\BaseClientTest;
 
 /**
@@ -9,6 +10,17 @@ use SecucardConnect\BaseClientTest;
  */
 class TransactionsTest extends BaseClientTest
 {
+
+    protected function getCredentials()
+    {
+        // smart product uses device auth so either provide valid refresh token here or obtain token by processing
+        // the auth flow, see \SecucardConnect\Auth\DeviceAuthTest
+        return new RefreshTokenCredentials(
+            'your-id',
+            'your-secret',
+            'your-token');
+    }
+
     /**
      * @test
      */

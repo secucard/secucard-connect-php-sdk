@@ -12,15 +12,7 @@ use SecucardConnect\Product\Common\Model\MainModel;
  * Merchants Api Model class
  *
  */
-class Merchant extends MainModel
+class Merchant extends BaseModel
 {
-    // TODO this class is not yet implemented
-    protected $_attribute_defs = array(
-        'object' => array('type' => BaseModel::DATA_TYPE_STRING),
-        'id' => array('type' => BaseModel::DATA_TYPE_STRING, 'options' => array('id' => true)),
-    );
 
-    protected $_relations = array(
-        //
-    );
 }

@@ -12,18 +12,21 @@ class RefreshTokenCredentials extends ClientCredentials
     protected $refresh_token;
 
     /**
-     * Constructor
-     * @param $refresh_token
+     * @param string $clientId
+     * @param string $clientSecret
+     * @param string $refresh_token
      */
-    public function __construct($refresh_token)
+    public function __construct($clientId, $clientSecret, $refresh_token)
     {
+        parent::__construct($clientId, $clientSecret);
         $this->refresh_token = $refresh_token;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getType() {
+    public function getType()
+    {
         return 'refresh_token';
     }
 
