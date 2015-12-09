@@ -11,7 +11,16 @@ use SecucardConnect\Product\Common\Model\BaseModel;
 use SecucardConnect\Product\Common\Model\MainModel;
 use SecucardConnect\Util\MapperUtil;
 
-class ProductService
+/**
+ * Base class from which all product resource specific services must derive.<br/>
+ * Implements all basic secucard API resource operations. Service subclasses may override for special behaviour (for
+ * example to add static args or deny operations) and add resource specific operations. Especially operations using
+ * the RequestOps::EXECUTE operation or RequestParams->action should exist as a properly named (like action for
+ * instance, "cancel" etc. ) functions in the resource service.
+ *
+ * @package SecucardConnect\Client
+ */
+abstract class ProductService
 {
     /**
      * @var ResourceMetadata
@@ -45,10 +54,6 @@ class ProductService
      * ProductService constructor.
      * @param ResourceMetadata $resourceMetadata
      * @param ClientContext $context
-     * @internal param Client $httpClient
-     * @internal param array $config
-     * @internal param LoggerInterface $logger
-     * @internal param Channel $channel
      */
     private function __construct(ResourceMetadata $resourceMetadata, ClientContext $context)
     {
@@ -266,7 +271,7 @@ class RequestOps
     const UPDATE = 'PUT';
     const DELETE = 'DELETE';
     const GET = 'GET';
-    const EXCECUTE = '???';
+    const EXECUTE = '???';
     const CUSTOM = 'APP';
 }
 
