@@ -6,19 +6,28 @@ namespace SecucardConnect\Auth;
 class DeviceCredentials extends ClientCredentials
 {
     /**
-     * @var string
+     * ID-Name/Value pairs identifying the device.
+     * @var array
      */
-    public $deviceId;
+    public $vendorIds;
 
     /**
+     * The vendor name.
+     * @var string
+     */
+    public $vendor;
+
+    /**
+     * Authorization code, obtained from a auth call.
      * @var string
      */
     public $deviceCode;
 
-    public function __construct($clientId, $clientSecret, $deviceId)
+    public function __construct($clientId, $clientSecret, $vendor, $vendorIds)
     {
         parent::__construct($clientId, $clientSecret);
-        $this->deviceId = $deviceId;
+        $this->vendor = $vendor;
+        $this->vendorIds = $vendorIds;
     }
 
     public function getType()
@@ -32,10 +41,22 @@ class DeviceCredentials extends ClientCredentials
 
         // uuid only used in the first step when a code needs to be obtained,
         if (empty($this->deviceCode)) {
-            $params['uuid'] = $this->deviceId;
+            $params['uuid'] = $this->buildUuid();
         } else {
             $params['code'] = $this->deviceCode;
         }
+    }
+
+
+    private function buildUuid()
+    {
+        $id = '/vendor/' . $this->vendor;
+
+        foreach ($this->vendorIds as $name => $value) {
+            $id .= '/' . $name . '/' . $value;
+        }
+
+        return $id;
     }
 
 
