@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: tk
- * Date: 03.12.15
- * Time: 17:10
- */
 
 namespace SecucardConnect\Client;
 
@@ -12,6 +6,10 @@ namespace SecucardConnect\Client;
 use GuzzleHttp\Client;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Gathers all resources shared across different layers and components of the application.
+ * @package SecucardConnect\Client
+ */
 class ClientContext
 {
     /**
