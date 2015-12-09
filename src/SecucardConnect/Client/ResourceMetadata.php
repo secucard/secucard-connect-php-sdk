@@ -4,6 +4,7 @@ namespace SecucardConnect\Client;
 
 
 use Exception;
+use SecucardConnect\Product\Common\Model\BaseModel;
 
 /**
  * Hold all names, class names, service names and paths of a particular resource.
@@ -39,26 +40,36 @@ class ResourceMetadata
         $this->resourceServiceClass = $classPrefix . $this->resource . 'Service';
 
         if (!class_exists($this->resourceServiceClass, true)) {
-            throw new ClientError('Unknown service "' . $resource . '" for product "' . $product . '".');
+            throw new ClientError('Unable to find service for "' . $product . '/' . $resource
+                . '", expected to find similiar to "Product\\<Product>\\<Resource>Service"');
         }
 
         $rc = new \ReflectionClass($this->resourceServiceClass);
+
 
         $dir = dirname($rc->getFileName());
 
         $this->resourcePath = $this->product . '/' . $this->resource;
 
         // check all classes in this product model dir against the given resource name to find the right resource class
-        // necessary because class name is singular of resource name (seems safer than just stripping the "s")
+        // necessary because class name may be singular of resource name (seems safer than just stripping the "s")
         $files = glob($dir . '/Model/*.php');
         foreach ($files as $file) {
             $name = basename($file, '.php');
             if (strpos($this->resource, $name) !== false) {
-                $this->resourceClass = $classPrefix . 'Model\\' . $name;
-                return;
+                $cls = $classPrefix . 'Model\\' . $name;
+                $rc = new \ReflectionClass($cls);
+                $parents = $rc->getParentClass();
+                foreach ($parents as $parent) {
+                    if ($parent === BaseModel::class) {
+                        $this->resourceClass = $cls;
+                        return;
+                    }
+                }
             }
         }
 
-        throw new ClientError('Unable to find a resource class for resource ' . $this->resource);
+        throw new ClientError('Unable to find a class for resource ' . $this->resource
+            . '", expected to find similiar to "Product\\<Product>\\Model\\<Resource or singular of Resource>"');
     }
 }
