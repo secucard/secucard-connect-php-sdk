@@ -53,10 +53,11 @@ class ResourceMetadata
 
         // check all classes in this product model dir against the given resource name to find the right resource class
         // necessary because class name may be singular of resource name (seems safer than just stripping the "s")
+        $basicresource = strtolower($this->resource);
         $files = glob($dir . '/Model/*.php');
         foreach ($files as $file) {
             $name = basename($file, '.php');
-            if (strpos($this->resource, $name) !== false) {
+            if (strpos($basicresource, strtolower($name)) !== false) {
                 $cls = $classPrefix . 'Model\\' . $name;
                 $rc = new \ReflectionClass($cls);
                 $parents = $rc->getParentClass();
