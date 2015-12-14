@@ -3,6 +3,7 @@
 namespace SecucardConnect\Product\General;
 
 use SecucardConnect\BaseClientTest;
+use SecucardConnect\Client\QueryParams;
 
 /**
  * @covers secucard\models\General\Accounts
@@ -14,9 +15,27 @@ class AccountsTest extends BaseClientTest
      */
     public function testGetList()
     {
-        $list = $this->client->general->accounts->getList(array());
-
+        $service = $this->client->general->accounts;
+        $query = new QueryParams(3, 2);
+        $list = $service->getList($query);
         $this->assertFalse(empty($list));
+        $this->assertTrue($list->count == 3);
+        $this->assertTrue($list->count <= $list->totalCount);
+    }
+
+    public function testGetListScroll()
+    {
+        $service = $this->client->general->accounts;
+        $query = new QueryParams(2);
+        $list = $service->getScrollableList($query, '1m');
+        $this->assertFalse(empty($list->scrollId));
+        $this->assertTrue($list->count == 2);
+        $list = $service->getNextBatch($list->scrollId);
+        $this->assertFalse(empty($list));
+        $this->assertTrue($list->count == 2);
+        $list = $service->getNextBatch($list->scrollId);
+        $this->assertFalse(empty($list));
+        $this->assertTrue($list->count == 2);
     }
 
     /**
@@ -24,9 +43,9 @@ class AccountsTest extends BaseClientTest
      */
     public function testGetItem()
     {
-        $list = $this->client->general->accounts->getList(array('count'=>1));
+        $list = $this->client->general->accounts->getList(new QueryParams(1));
 
-        $this->assertFalse(empty($list));
+        $this->assertTrue($list->count() == 1);
         $sample_item_id = $list[0]->id;
         $this->assertFalse(empty($sample_item_id), 'Cannot get one item, because none is available');
 

@@ -49,7 +49,7 @@ class Product
      * Function can become more complex if we allow the category names to begin with lowercase letter
      *
      * @param string $name
-     * @return MainModel instance of class for model
+     * @return ProductService The instance of the service class for resource.
      * @throws \Exception
      */
     public function __get($name)

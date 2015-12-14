@@ -7,7 +7,8 @@ namespace SecucardConnect;
 
 use Exception;
 use GuzzleHttp\Client;
-use GuzzleHttp\Client\ClientError;
+use GuzzleHttp\HandlerStack;
+use Psr\Http\Message\RequestInterface;
 use Psr\Log\LoggerInterface;
 use SecucardConnect\Auth\GrantTypeInterface;
 use SecucardConnect\Auth\OauthProvider;
@@ -16,7 +17,7 @@ use SecucardConnect\Client\DummyStorage;
 use SecucardConnect\Client\Product;
 use SecucardConnect\Client\ResourceMetadata;
 use SecucardConnect\Client\StorageInterface;
-use SecucardConnect\Util\GuzzleSubscriber;
+use SecucardConnect\Util\GuzzleLogger;
 use SecucardConnect\Util\Logger;
 
 /**
@@ -32,14 +33,14 @@ class SecucardConnect
     private $oauthProvider;
 
     /**
-     * Configuration array
+     * Configuration
      * @var array
      */
     protected $config;
 
     /**
      * GuzzleHttp client
-     * @var object GuzzleHttp
+     * @var Client
      */
     protected $httpClient;
 
@@ -79,7 +80,6 @@ class SecucardConnect
     const VERSION = '0.0.1';
 
     const HTTP_STATUS_CODE_OK = 200;
-    private $credentials;
 
     /**
      * Constructor
@@ -102,7 +102,7 @@ class SecucardConnect
             'auth_path' => '/oauth/token',
             'api_path' => '/api/v2',
             'debug' => false,
-            'auth' => ['type' => null]
+            'auth' => null
         );
 
         // The following fields are required when creating the client
@@ -115,34 +115,27 @@ class SecucardConnect
         // Merge in default settings and validate the config
         $this->config = $this->mergeCfg($config, $default, $required);
 
-        if ($logger == null) {
-            // initialize default logger - with logging disabled
-            $logger = new Logger(null, false);
-        }
+        // initialize default logger with logging disabled if not provided
+        $this->logger = $logger == null ? new Logger(null, false) : $logger;
 
-        $this->logger = $logger;
-
-        // Create a new Secucard client
-        $this->httpClient = new Client($this->config);
-
-        if ($this->config['debug']) {
-            // Add HTTP-Requests to log
-            $this->httpClient->getEmitter()->attach(new GuzzleSubscriber($this->logger));
-        }
-
-        // Create storage
-        if ($dataStorage instanceof StorageInterface) {
-            $this->storage = $dataStorage;
-        } else {
+        // Create the default common storage if necessary
+        if ($dataStorage == null) {
             $this->storage = new DummyStorage();
         }
 
-        $this->clientContext = new ClientContext($this->httpClient, $this->config, $this->logger);
+        // create OAuthProvider, pass the separate token storage
+        if ($credentials != null) {
+            $this->oauthProvider = new OauthProvider($this->config['auth_path'], $tokenStorage, $credentials);
+            $this->oauthProvider->setLogger($this->logger);
+        }
 
-        // Ensure that the OauthProvider is attached to the client, when grant_type is not device
-        // but only when authorization is needed
-        $this->setAuthorization($tokenStorage, $credentials);
-        $this->credentials = $credentials;
+        $this->initHttpClient();
+
+        if ($this->oauthProvider != null) {
+            $this->oauthProvider->setHttpClient($this->httpClient);
+        }
+
+        $this->clientContext = new ClientContext($this->httpClient, $this->config, $this->logger);
     }
 
 
@@ -155,27 +148,6 @@ class SecucardConnect
         }
 
         return $data;
-    }
-
-    /**
-     * Private function to set Authorization on client
-     * @param StorageInterface $storage
-     * @param GrantTypeInterface $credentials
-     */
-    private function setAuthorization(StorageInterface $storage, GrantTypeInterface $credentials = null)
-    {
-        // conditions for client authorization types
-        if ($credentials == null) {
-            return;
-        }
-
-        // create OAuthProvider
-        $this->oauthProvider = new OauthProvider($this->config['auth_path'], $this->httpClient, $storage, $credentials);
-
-        $this->oauthProvider->setLogger($this->logger);
-
-        // assign OAuthProvider to guzzle client
-        $this->httpClient->getEmitter()->attach($this->oauthProvider);
     }
 
 
@@ -197,7 +169,7 @@ class SecucardConnect
      */
     public function authenticate(array $param = null)
     {
-        $result =  $this->oauthProvider->getAccessToken(is_array($param) ? $param['devicecode'] : null);
+        $result = $this->oauthProvider->getAccessToken(is_array($param) ? $param['devicecode'] : null);
         if (is_string($result)) {
             return true;
         } else {
@@ -344,6 +316,30 @@ class SecucardConnect
             return new $product($this);
         }
         throw new \Exception("Invalid product type given.");
+    }
+
+    private function initHttpClient()
+    {
+        $stack = HandlerStack::create();
+        $options = ['base_uri' => $this->config['base_url'], 'handler' => $stack, 'auth' => null];
+
+        if (isset($this->config['debug']) && $this->config['debug'] === true) {
+            $options['debug'] = true;
+            // Add HTTP-Requests to log
+            $stack->push(new GuzzleLogger($this->logger));
+        }
+
+        if ($this->oauthProvider != null) {
+            // assign OAuthProvider to guzzle client  to intercept requests and adding auth tokens
+            $stack->push(function (callable $handler) {
+                return function (RequestInterface $request, array $options) use ($handler) {
+                    $request = $this->oauthProvider->appyAuthorization($request, $options);
+                    return $handler($request, $options);
+                };
+            });
+        }
+
+        $this->httpClient = new Client($options);
     }
 
 

@@ -16,28 +16,34 @@ use Exception;
 class BaseCollection implements \ArrayAccess, \Countable, \Iterator
 {
     /**
-     * Array of items inside collection
+     * Array of typed result objects.
      * @var array
      */
-    public $_items = array();
+    public $items = array();
 
     /**
-     * Scroll_id for collection
+     * An unique id identifying the (server side) result set snapshot this items belong to.
+     * Since the items (may) represent just a part of the whole data set this id can be used to scroll forward through
+     * the search result set. Only set when this collection is requested as "scrollable".
+     * @see  ProduService->getScrollableList()
      * @var string
      */
-    public $scroll_id;
+    public $scrollId;
 
     /**
-     * Count of items returned by Api
+     * The overall count of available items in the whole search result set. This collection items set itself may only
+     * contain a fraction of the overall count.
+     * @var int
+     */
+    public $totalCount;
+
+    /**
+     * The actual number of items in this collection.
+     * This count may be less then requested by the query if the end of the result set is reached.
      * @var int
      */
     public $count;
 
-    /**
-     * Current offset of data
-     * @var int
-     */
-    public $offset;
 
     /**
      * Iterator position
@@ -49,9 +55,7 @@ class BaseCollection implements \ArrayAccess, \Countable, \Iterator
      * A flag that is set to true when the end of the list is reached (for lazy loading)
      * @var bool
      */
-    public $reached_end;
-
-
+    public $reachedEnd;
 
 
     /**
@@ -104,9 +108,9 @@ class BaseCollection implements \ArrayAccess, \Countable, \Iterator
         return print_r($items, true);
     }
 
+
     /**
-     * Implements Countable
-     * Returns count of all items in collection (even with the not loaded parts)
+     * {@inheritDoc}
      */
     public function count()
     {

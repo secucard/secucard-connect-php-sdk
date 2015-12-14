@@ -7,15 +7,13 @@ namespace SecucardConnect\Auth;
 
 use Exception;
 use GuzzleHttp\Client;
-use GuzzleHttp\Event\BeforeEvent;
-use GuzzleHttp\Event\RequestEvents;
-use GuzzleHttp\Event\SubscriberInterface;
 use GuzzleHttp\Exception\ClientException;
+use Psr\Http\Message\RequestInterface;
 use Psr\Log\LoggerInterface;
+use SecucardConnect\Client\ClientContext;
 use SecucardConnect\Client\ClientError;
+use SecucardConnect\Client\ProductService;
 use SecucardConnect\Client\StorageInterface;
-use SecucardConnect\Product\Common\Model\Error;
-use SecucardConnect\Util\Logger;
 use SecucardConnect\Util\MapperUtil;
 
 /**
@@ -23,16 +21,8 @@ use SecucardConnect\Util\MapperUtil;
  *
  * @author Jakub Elias <j.elias@secupay.ag>
  */
-class OauthProvider implements SubscriberInterface
+class OauthProvider extends ProductService
 {
-    /**
-     * Client to get the Auth information
-     * You can use special client for authorization requests or reuse the current
-     *
-     * @var Client
-     */
-    protected $httpClient;
-
     /**
      * @var StorageInterface
      */
@@ -64,25 +54,33 @@ class OauthProvider implements SubscriberInterface
     protected $auth_path;
 
     /**
-     * @var LoggerInterface
+     * @param Client $httpClient
      */
-    private $logger;
+    public function setHttpClient($httpClient)
+    {
+        $this->httpClient = $httpClient;
+    }
+
+    /**
+     * @param LoggerInterface $logger
+     */
+    public function setLogger($logger)
+    {
+        $this->logger = $logger;
+    }
+
 
     /**
      * Constructor
      * @param string $auth_path
-     * @param Client $client
      * @param StorageInterface $storage
      * @param GrantTypeInterface $credentials
      */
-    public function __construct(
-        $auth_path,
-        Client $client,
-        StorageInterface $storage,
+    public function __construct( $auth_path, StorageInterface $storage,
         GrantTypeInterface $credentials
     ) {
+        parent::__construct();
         $this->auth_path = $auth_path;
-        $this->httpClient = $client;
         $this->storage = $storage;
         $this->credentials = $credentials;
 
@@ -90,37 +88,26 @@ class OauthProvider implements SubscriberInterface
         $this->accessToken = $this->storage->get('access_token');
     }
 
-    /**
-     * Function to get subscribed event
-     * @return array
-     */
-    public function getEvents()
-    {
-        return array(
-            'before' => array('onBefore', RequestEvents::SIGN_REQUEST)
-        );
-    }
 
     /**
-     * Request before-send event handler
-     * Adds the Authorization header if an access token was found
-     * @param BeforeEvent $event - Event received
-     * @throws ClientError If the access token could not properly set to the request.
+     * Adds the authorization header if an access token was found
+     * @param RequestInterface $request
+     * @param array $options
+     * @return \Psr\Http\Message\MessageInterface|RequestInterface If the access token could not properly set to the request.
+     * @throws ClientError
      */
-    public function onBefore(BeforeEvent $event)
+    public function appyAuthorization(RequestInterface $request, array $options = null)
     {
-        $request = $event->getRequest();
-
         // Only sign requests using "auth"="oauth"
         // IMPORTANT: you have to create special auth client (GuzzleHttp\Client) if you want to get all the request authorized
-        if ($request->getConfig()['auth'] != 'oauth') {
-            return;
+        if (!isset($options['auth']) || $options['auth'] != 'oauth') {
+            return $request;
         }
 
         // get Access token for current request
         $accessToken = $this->getAccessToken();
         if (is_string($accessToken)) {
-            $request->setHeader('Authorization', 'Bearer ' . $accessToken);
+            return $request->withHeader('Authorization', 'Bearer ' . $accessToken);
         } else {
             throw new ClientError('Authentication error, invalid on no access token data returned.');
         }
@@ -197,9 +184,9 @@ class OauthProvider implements SubscriberInterface
 
             try {
                 $response = $this->post($params);
-                $tokenData = $response->json();
+                $tokenData = MapperUtil::jsonDecode((string)$response->getBody(), true);
             } catch (ClientException $e) {
-                throw($this->mapError($e));
+                throw($this->mapError($e, 'Error obtaining access token.'));
             }
         }
 
@@ -243,10 +230,10 @@ class OauthProvider implements SubscriberInterface
         // if the guzzle gets response http_status other than 200, it will throw an exception even when there is response available
         try {
             $response = $this->post($params);
-            $codes = MapperUtil::map($response->json(), new AuthCodes(), $this->logger);
+            $codes = MapperUtil::mapResponse($response, new AuthCodes(), $this->logger);
             return $codes;
         } catch (ClientException $e) {
-            throw $this->mapError($e);
+            throw $this->mapError($e, 'Error requesting device codes.');
         }
     }
 
@@ -255,7 +242,7 @@ class OauthProvider implements SubscriberInterface
      * This method may be invoked multiple times until it returns the token data.
      * @param string $deviceCode The device code obtained by obtainDeviceVerification().
      * @throws \Exception If a error happens.
-     * @return Token | boolean Returns false if the authorization is still pending on server side and the access
+     * @return array | boolean Returns false if the authorization is still pending on server side and the access
      * token data on success.
      */
     private function pollDeviceAccessToken($deviceCode)
@@ -271,10 +258,10 @@ class OauthProvider implements SubscriberInterface
 
         try {
             $response = $this->post($params);
-            return $response->json();
+            return MapperUtil::jsonDecode((string)$response->getBody(), true);
         } catch (ClientException $e) {
             // check for auth pending case
-            $err = $this->mapError($e);
+            $err = $this->mapError($e, 'Error during device authentication.');
             if ($err instanceof AuthDeniedException && $err->getError() != null && $err->getError()->error ===
                 'authorization_pending'
             ) {
@@ -285,45 +272,6 @@ class OauthProvider implements SubscriberInterface
             // must reset to be ready for new auth attempt
             $this->credentials->deviceCode = null;
         }
-    }
-
-
-    /**
-     * @param ClientException $e
-     * @return Exception|ClientException|AuthDeniedException|BadAuthException
-     */
-    private function mapError($e)
-    {
-        $error = null;
-        $json = $e->getResponse()->json();
-
-        if ($e->getCode() == 401) {
-            try {
-                $error = new Error($json['error'], $json['error_description']);
-            } catch (Exception $e) {
-                Logger::logWarn($this->logger, 'Failed to get error details from response.', $e);
-            }
-            return new AuthDeniedException($error, 'Invalid credentials');
-        }
-
-        if ($e->getCode() == 400) {
-            try {
-                $error = new Error($json['error'], $json['error_description']);
-            } catch (Exception $e) {
-                Logger::logWarn($this->logger, 'Failed to get error details from response.', $e);
-            }
-            return new BadAuthException($error, 'Error obtaining access token', 400, $e);
-        }
-
-        return $e;
-    }
-
-    /**
-     * @param LoggerInterface $logger
-     */
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
     }
 
     /**
@@ -339,10 +287,10 @@ class OauthProvider implements SubscriberInterface
 
     /**
      * @param $params
-     * @return \GuzzleHttp\Message\ResponseInterface
+     * @return \Psr\Http\Message\ResponseInterface
      */
     private function post($params)
     {
-        return $this->httpClient->post($this->auth_path, array('body' => $params));
+        return $this->httpClient->post($this->auth_path, array('form_params' => $params));
     }
 }

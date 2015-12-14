@@ -5,11 +5,18 @@ namespace SecucardConnect\Client;
 
 use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
 use Psr\Log\LoggerInterface;
+use SecucardConnect\Auth\AuthDeniedException;
+use SecucardConnect\Auth\BadAuthException;
 use SecucardConnect\Product\Common\Model\BaseCollection;
 use SecucardConnect\Product\Common\Model\BaseModel;
+use SecucardConnect\Product\Common\Model\Error;
 use SecucardConnect\Product\Common\Model\MainModel;
+use SecucardConnect\Util\Logger;
 use SecucardConnect\Util\MapperUtil;
+use Symfony\Component\Yaml\Exception\ParseException;
 
 /**
  * Base class from which all product resource specific services must derive.<br/>
@@ -30,17 +37,17 @@ abstract class ProductService
     /**
      * @var Client
      */
-    private $httpClient;
+    protected $httpClient;
 
     /**
      * @var array
      */
-    private $config;
+    protected $config;
 
     /**
      * @var LoggerInterface
      */
-    private $logger;
+    protected $logger;
 
 
     public static function create($product, $resource, ClientContext $context)
@@ -55,28 +62,75 @@ abstract class ProductService
      * @param ResourceMetadata $resourceMetadata
      * @param ClientContext $context
      */
-    private function __construct(ResourceMetadata $resourceMetadata, ClientContext $context)
+    protected function __construct(ResourceMetadata $resourceMetadata = null, ClientContext $context = null)
     {
         $this->resourceMetadata = $resourceMetadata;
-        $this->httpClient = $context->httpClient;
-        $this->logger = $context->logger;
-        $this->config = $context->config;
+        if ($context != null) {
+            $this->httpClient = $context->httpClient;
+            $this->logger = $context->logger;
+            $this->config = $context->config;
+        }
     }
 
     /**
-     * Function to get list of MainModels
-     * @param array $query
-     * @return BaseCollection $list
-     * @throws Exception
-     * @internal param array $options
+     * Performs the query for resources according to the given query parameters.
+     * @param QueryParams $query The search parameters to apply.
+     * @return BaseCollection A collection containing the found items and some meta data. Null if nothing found.
+     * @throws Exception If an error happens.
      */
-    public function getList($query = null)
+    public function getList(QueryParams $query = null)
     {
-        $params = new RequestParams(RequestOps::GET, $this->resourceMetadata, null, $query);
+        return $this->getListInternal($query);
+    }
+
+    /**
+     * Much like getList() but additionally supports fast (forward only) retrieval of large result data amounts by
+     * returning the results in batches or pages, like forward scrolling through the whole result.<br/>
+     * First specify all wanted search params like count, sort in this call, the returned collection will then contain
+     * the first batch along with an unique id to get the next batches by calling getNextBatch().<br/>
+     * Actually this API call will create a result set snapshot or search context (server side) from which the results
+     * are returned. The mandatory parameter $expireTime specifies how long this snapshot should exist on the server.
+     * Since this allocates server resources please choose carefully appropriate times according to your needs,
+     * otherwise the server resource monitoring may limit your requests.
+     * @param QueryParams $params The query params to apply.
+     * @param string $expireTime String specifying the expire time expression of the search context on the server. Valid
+     * expression are "{number}{s|m|h}" like "5m" for 5 minutes.
+     * @return BaseCollection The first results.
+     * @throws Exception If an error happens.
+     */
+    public function getScrollableList(QueryParams $params, $expireTime)
+    {
+        if (empty($expireTime)) {
+            throw new ClientError("Missing expire time parameter.");
+        }
+        return $this->getListInternal($params, $expireTime);
+    }
+
+    // todo
+    /**
+     * Returns the next batch of results initially requested by getScrollableList() call.
+     * @param string $id The id of the result set snapshot to access. Get this id from the collection returned by
+     * getScrollableList().
+     * @return BaseCollection The collection of result items. The number of returned items may be less as requested
+     * by the initial count parameter at the end of the result set. Will return null if no data is available anymore.
+     * The total count of items in result is not set here.
+     * todo: what happens on expiring
+     */
+    public function getNextBatch($id)
+    {
+        return $this->getListInternal(null, null, $id);
+    }
+
+    private function getListInternal(QueryParams $query = null, $expireTime = null, $scrollId = null)
+    {
+        $sp = new SearchParams($query, $expireTime, $scrollId);
+
+        $params = new RequestParams(RequestOps::GET, $this->resourceMetadata, null, $sp);
+
         $jsonResponse = $this->request($params);
 
         if ($jsonResponse == false) {
-            throw new Exception('Error retrieving data list.');
+            throw new ClientError('Error retrieving data list.');
         }
 
         $list = new BaseCollection(null, $this->resourceMetadata->resourceClass, null);
@@ -85,27 +139,28 @@ abstract class ProductService
             $jsonResponse = (array)$jsonResponse;
         }
         if (isset($jsonResponse['count'])) {
-            $list->count = $jsonResponse['count'];
+            $list->totalCount = $jsonResponse['count'];
         }
-        if (isset($jsonResponse['offset'])) {
-            $list->offset = $jsonResponse['offset'];
-        }
+
         if (isset($jsonResponse['scroll_id'])) {
-            $list->scroll_id = $jsonResponse['scroll_id'];
+            $list->scrollId = $jsonResponse['scroll_id'];
         }
 
         if (!isset($jsonResponse['data'])) {
             return $list;
         }
 
-        foreach ($jsonResponse['data'] as $item) {
-            $list->_items[] = $this->createResourceInst($item, $this->resourceMetadata->resourceClass);
+        $items = $jsonResponse['data'];
+        $list->count = count($items);
+
+        foreach ($items as $item) {
+            $list->items[] = $this->createResourceInst($item, $this->resourceMetadata->resourceClass);
         }
 
         // check if we reached end of all items for iteration
-        if ($list->count == count($list->_items)) {
+        if ($list->count == $list->totalCount) {
             $this->logger->info('reached end of a collection');
-            $list->reached_end = true;
+            $list->reachedEnd = true;
         }
 
         return $list;
@@ -228,22 +283,113 @@ abstract class ProductService
 
         $options = array_merge(['auth' => 'oauth'], $params->options);
 
-        if (!empty($params->query)) {
-            $options['query'] = $params->query;
+        $p = array();
+        if (!empty($params->searchParams->query)) {
+            $q = $params->searchParams->query;
+
+            if (!empty($q->count)) {
+                $p['count'] = $q->count;
+            }
+
+            if (!empty($q->offset)) {
+                $p['offset'] = $q->offset;
+            }
+
+            if (!empty($q->query)) {
+                $p['q'] = $q->query;
+            }
+
+            if (!empty($q->fields)) {
+                $p['fields'] = implode(',', $q->fields);
+            }
+
+            if (!empty($q->sortOrder)) {
+                foreach ($q->sortOrder as $key => $value) {
+                    $p['sort[' . $key . ']'] = $value;
+                }
+            }
         };
+
+        if (!empty($params->searchParams->scrollId)) {
+            $p['scroll_id'] = $params->searchParams->scrollId;
+        }
+
+        if (!empty($params->searchParams->scrollExpire)) {
+            $p['scroll_expire'] = $params->searchParams->scrollExpire;
+        }
+
+
+        if (count($p) != 0) {
+            $options['query'] = $p;
+        }
 
         if (!empty($params->jsonData)) {
             $options['json'] = $params->jsonData;
         };
 
-        $req = $this->httpClient->createRequest($params->operation, $url, $options);
-        $response = $this->httpClient->send($req);
-
-        if ($response->getStatusCode() == 200) {
-            return $response->json();
+        try {
+            $response = $this->httpClient->request($params->operation, $url, $options);
+        } catch (Exception $e) {
+            throw $this->mapError($e, 'Error sending API request.');
         }
 
+        if ($response->getStatusCode() == 200) {
+            try {
+                return MapperUtil::jsonDecode((string)$response->getBody());
+            } catch (\InvalidArgumentException $e) {
+                throw new ParseException(
+                    $e->getMessage(),
+                    $this
+                );
+            }
+        }
         return false;
+    }
+
+    /**
+     * @param Exception $e
+     * @param string $msg
+     * @return ApiError|AuthError|ClientError
+     */
+    protected function mapError(Exception $e, $msg)
+    {
+        if ($e instanceof ClientException) {
+            // http 4xx
+            $error = null;
+            $json = MapperUtil::jsonDecode((string)$e->getResponse()->getBody(), true);
+
+            if ($e->getCode() == 401 || $e->getCode() == 400) {
+                try {
+                    $error = new Error($json['error'], $json['error_description']);
+                } catch (Exception $e) {
+                    Logger::logWarn($this->logger, 'Failed to get error details from response.', $e);
+                }
+            }
+
+            if ($e->getCode() == 401) {
+                return new AuthDeniedException($error, $msg);
+            }
+
+            if ($e->getCode() == 400) {
+                return new BadAuthException($error, $msg, 400, $e);
+            }
+        }
+
+        if ($e instanceof ServerException) {
+            // http 5xx
+            try {
+                // try to map to known server error response
+                $body = MapperUtil::jsonDecode((string)$e->getResponse()->getBody(), true);
+                if (isset($body['error']) && strtolower($body['error']) === 'productinternalexception') {
+                    $err = new ApiError($body['error'], $body['code'], $body['error_details'],
+                        $body['error_user'], $body['supportId']);
+                    return $err;
+                }
+            } catch (Exception $e) {
+            }
+        }
+
+        return $e;
     }
 
     private function createResourceInst($json, $class)
@@ -294,9 +440,9 @@ class RequestParams
     public $id;
 
     /**
-     * @var array
+     * @var SearchParams
      */
-    public $query;
+    public $searchParams;
 
     /**
      * @var string
@@ -307,7 +453,6 @@ class RequestParams
      * @var string
      */
     public $actionArg;
-
 
     /**
      * @var string
@@ -324,21 +469,52 @@ class RequestParams
      * @param string $operation
      * @param ResourceMetadata $resourceMetadata
      * @param string $id
-     * @param array $query
+     * @param SearchParams $searchParams
      * @param array $options
      */
     public function __construct(
         $operation,
         ResourceMetadata $resourceMetadata,
         $id = null,
-        array $query = null,
+        SearchParams $searchParams = null,
         array $options = array()
     ) {
         $this->operation = $operation;
         $this->id = $id;
-        $this->query = $query;
+        $this->searchParams = $searchParams;
         $this->options = $options;
         $this->resourceMetadata = $resourceMetadata;
+    }
+}
+
+class SearchParams
+{
+    /**
+     * @var QueryParams
+     */
+    public $query;
+
+    /**
+     * @var string
+     */
+    public $scrollExpire;
+
+    /**
+     * @var string
+     */
+    public $scrollId;
+
+    /**
+     * SearchParams constructor.
+     * @param QueryParams $query
+     * @param string $scrollExpire
+     * @param string $scrollId
+     */
+    public function __construct(QueryParams $query = null, $scrollExpire = null, $scrollId = null)
+    {
+        $this->query = $query;
+        $this->scrollExpire = $scrollExpire;
+        $this->scrollId = $scrollId;
     }
 
 

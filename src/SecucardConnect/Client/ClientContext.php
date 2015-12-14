@@ -33,7 +33,7 @@ class ClientContext
      * @param array $config
      * @param LoggerInterface $logger
      */
-    public function __construct(Client $httpClient, array $config, LoggerInterface $logger)
+    public function __construct(Client $httpClient = null, array $config = null, LoggerInterface $logger = null)
     {
         $this->httpClient = $httpClient;
         $this->config = $config;
