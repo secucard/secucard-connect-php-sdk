@@ -6,7 +6,7 @@
 
 ## Requirements
 
-PHP 5.3.0 and later.
+PHP 5.5.0 and later.
 
 ## Composer
 
@@ -15,7 +15,7 @@ You can install the bindings via [Composer](http://getcomposer.org/). Add this t
 ```json
 {
   "require": {
-    "secucard/secucard-connect":"~0.1.0"
+    "secucard/secucard-connect":"dev-develop"
   }
 }
 ```
@@ -34,25 +34,26 @@ require_once('vendor/autoload.php');
 
 ## Getting Started
 
-Simple usage looks like:
+Simple usage with client credentials looks like:
 
 ```php
 include "vendor/autoload.php";
 
-$config = array(
-    'client_id' => 'your_client_id',
-    'client_secret' => 'your_client_secret',
-);
+$config = array();
 
-// Setup dummy log file
+$credentials = new ClientCredentials('your-id','your-secret')
+
 $fp = fopen("/tmp/secucard_php_test.log", "a");
 $logger = new secucard\client\log\Logger($fp, true);
 
+// general storage, here used shared for tokens and internal caching, but recommendation is to split up in two 
+ $store = new FileStorage('your-storage-file-path');
+ 
 // create Secucard client
-$secucard = new secucard\Client($config, $logger);
+$secucard = new SecucardConnect($config, $logger, $store, $store, $credentials);
 
 // use secucard client to get available loyalty/cards list
-$data = $secucard->Loyalty->Cards->getList(array());
+$list = $secucard->Loyalty->Cards->getList();
 ```
 
 ## Documentation
