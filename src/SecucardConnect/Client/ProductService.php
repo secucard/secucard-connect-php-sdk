@@ -16,7 +16,6 @@ use SecucardConnect\Product\Common\Model\Error;
 use SecucardConnect\Product\Common\Model\MainModel;
 use SecucardConnect\Util\Logger;
 use SecucardConnect\Util\MapperUtil;
-use Symfony\Component\Yaml\Exception\ParseException;
 
 /**
  * Base class from which all product resource specific services must derive.<br/>
@@ -253,8 +252,8 @@ abstract class ProductService
             }
         }
 
-        $options = array_merge(['auth' => 'oauth', 'json' => $model->getUpdateAttributes()], array());
-        $params = new RequestParams($method, $this->resourceMetadata, $id, null, $options);
+        $params = new RequestParams($method, $this->resourceMetadata, $id, null, null, null,
+            MapperUtil::jsonEncode($model));
         $jsonResponse = $this->request($params);
 
         if ($jsonResponse == false) {
@@ -264,10 +263,57 @@ abstract class ProductService
         return $this->createResourceInst($jsonResponse, $this->resourceMetadata->resourceClass);
     }
 
+    protected function updateWithAction($id, $action, $actionArg = null, $object = null, $class = null)
+    {
+        return $this->requestAction(RequestOps::UPDATE, $id, $action, $actionArg, $object, $class);
+    }
+
+    protected function deleteWithAction($id, $action, $actionArg = null, $object = null, $class = null)
+    {
+        return $this->requestAction(RequestOps::DELETE, $id, $action, $actionArg, $object, $class);
+    }
+
+    protected function execute($id, $action, $actionArg = null, $object = null, $class = null)
+    {
+        return $this->requestAction(RequestOps::EXECUTE, $id, $action, $actionArg, $object, $class);
+    }
+
+    protected function executeCustom($appId, $action, $object = null, $class = null)
+    {
+        return $this->requestAction(RequestOps::EXECUTE, null, $action, null, $object, $class, $appId);
+    }
+
+    private function requestAction(
+        $op,
+        $id = null,
+        $action,
+        $actionArg = null,
+        $object = null,
+        $class = null,
+        $appId = null
+    ) {
+        $json = $object == null ? null : MapperUtil::jsonEncode($object);
+        $params = new RequestParams($op, $this->resourceMetadata, $id, null, $action, $actionArg, $json);
+        if ($appId != null) {
+            $params->appId = $appId;
+        }
+        $json = $this->request($params);
+        if ($class != null) {
+            return MapperUtil::map($json, $class);
+        }
+        return $json;
+    }
+
     private function request(RequestParams $params)
     {
         $rm = $params->resourceMetadata;
-        $url = $this->config['base_url'] . $this->config['api_path'] . "/" . $rm->product . '/' . $rm->resource;
+        $base = $this->config['base_url'] . $this->config['api_path'] . "/";
+
+        if (!empty($params->appId)) {
+            $url = $base . 'General/Apps/' . $params->appId . '/callBackend';
+        } else {
+            $url = $base . $rm->product . '/' . $rm->resource;
+        }
 
         if (!empty($params->id)) {
             $url .= '/' . $params->id;
@@ -334,15 +380,9 @@ abstract class ProductService
         }
 
         if ($response->getStatusCode() == 200) {
-            try {
-                return MapperUtil::jsonDecode((string)$response->getBody());
-            } catch (\InvalidArgumentException $e) {
-                throw new ParseException(
-                    $e->getMessage(),
-                    $this
-                );
-            }
+            return MapperUtil::mapResponse($response);
         }
+
         return false;
     }
 
@@ -356,11 +396,11 @@ abstract class ProductService
         if ($e instanceof ClientException) {
             // http 4xx
             $error = null;
-            $json = MapperUtil::jsonDecode((string)$e->getResponse()->getBody(), true);
+            $json = MapperUtil::mapResponse($e->getResponse());
 
             if ($e->getCode() == 401 || $e->getCode() == 400) {
                 try {
-                    $error = new Error($json['error'], $json['error_description']);
+                    $error = new Error($json->error, $json->error_description);
                 } catch (Exception $e) {
                     Logger::logWarn($this->logger, 'Failed to get error details from response.', $e);
                 }
@@ -379,10 +419,10 @@ abstract class ProductService
             // http 5xx
             try {
                 // try to map to known server error response
-                $body = MapperUtil::jsonDecode((string)$e->getResponse()->getBody(), true);
-                if (isset($body['error']) && strtolower($body['error']) === 'productinternalexception') {
-                    $err = new ApiError($body['error'], $body['code'], $body['error_details'],
-                        $body['error_user'], $body['supportId']);
+                $body = MapperUtil::mapResponse($e->getResponse());
+                if (isset($body->error) && strtolower($body->error) === 'productinternalexception') {
+                    $err = new ApiError($body->error, $body->code, $body->error_details,
+                        $body->error_user, $body->supportId);
                     return $err;
                 }
             } catch (Exception $e) {
@@ -439,6 +479,13 @@ class RequestParams
      */
     public $id;
 
+
+    /**
+     * App identifier for custom actions.
+     * @var string
+     */
+    public $appId;
+
     /**
      * @var SearchParams
      */
@@ -470,6 +517,9 @@ class RequestParams
      * @param ResourceMetadata $resourceMetadata
      * @param string $id
      * @param SearchParams $searchParams
+     * @param null $action
+     * @param null $actionArg
+     * @param null $jsonData
      * @param array $options
      */
     public function __construct(
@@ -477,6 +527,9 @@ class RequestParams
         ResourceMetadata $resourceMetadata,
         $id = null,
         SearchParams $searchParams = null,
+        $action = null,
+        $actionArg = null,
+        $jsonData = null,
         array $options = array()
     ) {
         $this->operation = $operation;
@@ -484,6 +537,9 @@ class RequestParams
         $this->searchParams = $searchParams;
         $this->options = $options;
         $this->resourceMetadata = $resourceMetadata;
+        $this->action = $action;
+        $this->actionArg = $actionArg;
+        $this->jsonData = $jsonData;
     }
 }
 

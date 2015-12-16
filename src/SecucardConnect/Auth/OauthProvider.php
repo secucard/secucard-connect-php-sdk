@@ -184,8 +184,8 @@ class OauthProvider extends ProductService
 
             try {
                 $response = $this->post($params);
-                $tokenData = MapperUtil::jsonDecode((string)$response->getBody(), true);
-            } catch (ClientException $e) {
+                $tokenData = MapperUtil::mapResponse($response);
+            } catch (Exception $e) {
                 throw($this->mapError($e, 'Error obtaining access token.'));
             }
         }
@@ -195,16 +195,16 @@ class OauthProvider extends ProductService
         }
 
         // Process the returned data, both expired_in and refresh_token are optional parameters
-        $this->accessToken = array('access_token' => $tokenData['access_token'],);
-        if (isset($tokenData['expires_in'])) {
-            $this->accessToken['expires_in'] = time() + $tokenData['expires_in'];
+        $this->accessToken = array('access_token' => $tokenData->access_token,);
+        if (isset($tokenData->expires_in)) {
+            $this->accessToken['expires_in'] = time() + $tokenData->expires_in;
         }
 
         // Save access token to storage
         $this->storage->set('access_token', $this->accessToken);
 
-        if (isset($tokenData['refresh_token'])) {
-            $this->refreshToken = $tokenData['refresh_token'];
+        if (isset($tokenData->refresh_token)) {
+            $this->refreshToken = $tokenData->refresh_token;
             // Save refresh token to storage
             $this->storage->set('refresh_token', $this->refreshToken);
         }
@@ -242,7 +242,7 @@ class OauthProvider extends ProductService
      * This method may be invoked multiple times until it returns the token data.
      * @param string $deviceCode The device code obtained by obtainDeviceVerification().
      * @throws \Exception If a error happens.
-     * @return array | boolean Returns false if the authorization is still pending on server side and the access
+     * @return mixed | boolean Returns false if the authorization is still pending on server side and the access
      * token data on success.
      */
     private function pollDeviceAccessToken($deviceCode)
@@ -258,8 +258,8 @@ class OauthProvider extends ProductService
 
         try {
             $response = $this->post($params);
-            return MapperUtil::jsonDecode((string)$response->getBody(), true);
-        } catch (ClientException $e) {
+            return MapperUtil::mapResponse($response);
+        } catch (Exception $e) {
             // check for auth pending case
             $err = $this->mapError($e, 'Error during device authentication.');
             if ($err instanceof AuthDeniedException && $err->getError() != null && $err->getError()->error ===
