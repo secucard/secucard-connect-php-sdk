@@ -3,11 +3,12 @@
 namespace SecucardConnect\Product\Services;
 
 
+
 /**
- * Operations for the services/identresults resource.
+ * Operations for the services/identrequests resource.
  * @package SecucardConnect\Product\Services
  */
-class IdentResultsService
+class IdentRequestsService
 {
 
 }
