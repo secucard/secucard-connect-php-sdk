@@ -300,24 +300,6 @@ class SecucardConnect
         }
     }
 
-
-    /**
-     * Factory function to create object of expected model type
-     *
-     * @param string $object
-     * @throws \Exception
-     * @return object
-     */
-    public function factory($object)
-    {
-
-        $product = 'SecucardConnect\Product\\' . $object . '\\';
-        if (class_exists($product)) {
-            return new $product($this);
-        }
-        throw new \Exception("Invalid product type given.");
-    }
-
     private function initHttpClient()
     {
         $stack = HandlerStack::create();
