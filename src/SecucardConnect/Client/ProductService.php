@@ -13,7 +13,6 @@ use SecucardConnect\Auth\BadAuthException;
 use SecucardConnect\Product\Common\Model\BaseCollection;
 use SecucardConnect\Product\Common\Model\BaseModel;
 use SecucardConnect\Product\Common\Model\Error;
-use SecucardConnect\Product\Common\Model\MainModel;
 use SecucardConnect\Util\Logger;
 use SecucardConnect\Util\MapperUtil;
 
@@ -170,7 +169,7 @@ abstract class ProductService
      * Method to get object identified by id
      *
      * @param string $id
-     * @return MainModel instance of current class or null
+     * @return BaseModel
      * @throws \Exception
      */
     public function get($id)
@@ -192,17 +191,13 @@ abstract class ProductService
     /**
      * Function to delete the model identified by id
      *
-     * @param BaseModel|MainModel $model
+     * @param BaseModel $model
      * @return bool
      * @throws Exception
      * @internal param string $id default null
      */
     public function delete(BaseModel $model)
     {
-        if (!$model->isRemovable()) {
-            throw new Exception('Trying to delete model ' . get_class($model) . ' but it is not removable');
-        }
-
         $id = $model->getId();
         if (empty($id)) {
             throw new Exception('Cannot delete object with empty primary key value');
@@ -223,7 +218,7 @@ abstract class ProductService
      * Function to save object
      * It can update existing or create new object
      *
-     * @param BaseModel|MainModel $model
+     * @param BaseModel $model
      * @return bool true on success
      * @throws Exception
      */
@@ -244,11 +239,6 @@ abstract class ProductService
 
             if (!$model->isInitialized()) {
                 throw new Exception('Trying to save not initialized item');
-            }
-
-            if (!$model->isUpdatable()) {
-                throw new Exception('Trying to update model ' . $this->resourceMetadata->resourceClass
-                    . ' but it is not updatable!');
             }
         }
 

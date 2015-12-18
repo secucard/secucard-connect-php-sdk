@@ -6,7 +6,6 @@
 namespace SecucardConnect\Client;
 
 use Exception;
-use SecucardConnect\Product\Common\Model\MainModel;
 
 /**
  * Class to allow to use secucard-client->product->service->method design pattern
