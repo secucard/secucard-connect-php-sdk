@@ -14,7 +14,11 @@ class ClientError extends \Exception
 {
     public function __construct($message = "", Exception $previous = null)
     {
-        parent::__construct($message . '(' . $previous->getMessage() . ')', 0, $previous);
+        $msg = $message;
+        if ($previous != null) {
+            $msg .= '(' . $previous->getMessage() . ')';
+        }
+        parent::__construct($msg, 0, $previous);
     }
 
 }
