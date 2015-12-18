@@ -9,7 +9,7 @@ use GuzzleHttp\Psr7\Stream;
 class StorageTest extends \PHPUnit_Framework_TestCase
 {
     // the test storage dir
-    private $dir = 'test';
+    protected $dir = 'test';
 
     /**
      * @test
