@@ -6,150 +6,37 @@
 namespace SecucardConnect\Product\Smart\Model;
 
 /**
- * Receipts class to parse Receipts array to subclasses
+ * Class modeling a single receipt line. These lines will be returned when a transaction is completed.
  *
  */
 class ReceiptLine
 {
     /**
+     * The type of this line.
+     * @see \SecucardConnect\Product\Smart\Model\ReceiptLineTypes
      * @var string
      */
     public $type;
 
     /**
-     * @var Value
+     * The actual value of the line.
+     * @var ReceiptLineValue
      */
     public $value;
 
     /**
-     * Function to parse receipts from multidimensional array to array of objects
-     * @param array $params
-     * @return array of objects
-     * @throws \Exception
+     * ReceiptLine constructor.
+     * @param string $type
+     * @param ReceiptLineValue $value
      */
-    public function parseReceipts($params)
+    public function __construct($type = null, ReceiptLineValue $value = null)
     {
-        $ret = array();
-        if (empty($params) || !is_array($params)) {
-            return $ret;
-        }
-
-        foreach ($params as $receipt) {
-            $new_receipt = null;
-            switch ($receipt['type']) {
-                case ReceiptTextline::TYPE:
-                    $new_receipt = new ReceiptTextline();
-                    break;
-                case ReceiptSeparator::TYPE:
-                    $new_receipt = new ReceiptSeparator();
-                    break;
-                case ReceiptSpace::TYPE:
-                    $new_receipt = new ReceiptSpace();
-                    break;
-                case ReceiptNameValue::TYPE:
-                    $new_receipt = new ReceiptNameValue();
-                    break;
-                default:
-                    throw new \Exception('Received unknown Receipt type ' . $receipt['type']);
-                    break;
-            }
-            $new_receipt->setAttributes($receipt['value']);
-            $ret[] = $new_receipt;
-        }
-
-        return $ret;
-    }
-}
-
-class Value
-{
-    /**
-     * @var string
-     */
-    public $caption;
-
-    /**
-     * @var string
-     */
-    public $text;
-
-    /**
-     * @var string
-     */
-    public $name;
-
-    /**
-     * @var string
-     */
-    public $value;
-
-    /**
-     * @var string[]
-     */
-    public $decoration;
-}
-
-class ReceiptBase
-{
-    const TYPE = 'base';
-
-    /**
-     * Function to set attributes on current object
-     * @param array $values
-     */
-    public function setAttributes($values)
-    {
-        if (empty($values) || !is_array($values)) {
-            return;
-        }
-
-        foreach ($values as $key => $value) {
-            $this->{$key} = $value;
-        }
+        $this->type = $type;
+        $this->value = $value;
     }
 
-    /**
-     * Function that returns array representation for current object
-     * @return array
-     */
-    public function __toArray()
-    {
-        $values = get_object_vars($this);
-
-        $ret = array(
-            'type' => self::TYPE,
-            'value' => $values,
-        );
-    }
-}
-
-class ReceiptTextline extends ReceiptBase
-{
-    const TYPE = "textline";
-
-    public $text;
-    public $decorations;
-}
-
-class ReceiptSeparator extends ReceiptBase
-{
-    const TYPE = "separator";
-
-    public $caption;
-}
-
-class ReceiptSpace extends ReceiptBase
-{
-    const TYPE = "space";
 
 }
 
 
-class ReceiptNameValue extends ReceiptBase
-{
-    const TYPE = "name-value";
 
-    public $name;
-    public $value;
-    public $decorations;
-}
