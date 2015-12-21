@@ -7,7 +7,7 @@ use JsonMapper;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
-class MapperUtil
+final class MapperUtil
 {
     private static $jsonErrors = [
         JSON_ERROR_DEPTH => 'JSON_ERROR_DEPTH - Maximum stack depth exceeded',

@@ -6,7 +6,7 @@ namespace SecucardConnect\Product\Smart\Model;
  * Defines possible types of receipt lines.
  * @package SecucardConnect\Product\Smart\Model
  */
-abstract class ReceiptLineTypes
+final class ReceiptLineTypes
 {
     /**
      *  A horizontal separator like a line. May have caption.

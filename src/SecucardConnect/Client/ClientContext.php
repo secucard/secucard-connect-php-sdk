@@ -28,15 +28,7 @@ class ClientContext
     public $logger;
 
     /**
-     * ClientContext constructor.
-     * @param Client $httpClient
-     * @param array $config
-     * @param LoggerInterface $logger
+     * @var StorageInterface
      */
-    public function __construct(Client $httpClient = null, array $config = null, LoggerInterface $logger = null)
-    {
-        $this->httpClient = $httpClient;
-        $this->config = $config;
-        $this->logger = $logger;
-    }
+    public $storage;
 }

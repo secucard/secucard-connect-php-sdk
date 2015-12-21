@@ -25,7 +25,7 @@ use SecucardConnect\Util\Logger;
  * Uses GuzzleHttp client library
  * @author Jakub Elias <j.elias@secupay.ag>
  */
-class SecucardConnect
+final class SecucardConnect
 {
     /**
      * @var OAuthProvider
@@ -135,7 +135,12 @@ class SecucardConnect
             $this->oauthProvider->setHttpClient($this->httpClient);
         }
 
-        $this->clientContext = new ClientContext($this->httpClient, $this->config, $this->logger);
+        $c = new ClientContext();
+        $c->httpClient  = $this->httpClient;
+        $c->storage = $this->storage;
+        $c->config = $this->config;
+        $c->logger = $this->logger;
+        $this->clientContext = $c;
     }
 
 

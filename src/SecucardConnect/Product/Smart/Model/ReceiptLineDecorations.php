@@ -6,7 +6,7 @@ namespace SecucardConnect\Product\Smart\Model;
  * Defines possible decorations of receipt line texts.
  * @package SecucardConnect\Product\Smart\Model
  */
-abstract class ReceiptLineDecorations
+final class ReceiptLineDecorations
 {
     /**
      * Emphasize the text.
