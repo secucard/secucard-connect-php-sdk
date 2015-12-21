@@ -50,7 +50,7 @@ class IdentRequest extends BaseModel
     public $contract;
 
     /**
-     * @var RequestPerson
+     * @var RequestPerson[]
      */
     public $person;
 

@@ -13,6 +13,7 @@ use SecucardConnect\Auth\BadAuthException;
 use SecucardConnect\Product\Common\Model\BaseCollection;
 use SecucardConnect\Product\Common\Model\BaseModel;
 use SecucardConnect\Product\Common\Model\Error;
+use SecucardConnect\Product\Common\Model\MediaResource;
 use SecucardConnect\Util\Logger;
 use SecucardConnect\Util\MapperUtil;
 
@@ -460,6 +461,21 @@ abstract class ProductService
         }
 
         return $e;
+    }
+
+    /**
+     * Create new or complete a media resource object.
+     * @param null $resource
+     * @return null|MediaResource
+     */
+    protected function initMediaResource(&$resource = null)
+    {
+        if ($resource == null) {
+            $resource = new MediaResource();
+        }
+        $resource->setHttpClient($this->httpClient);
+        $resource->setStore($this->storage);
+        return $resource;
     }
 
     private function createResourceInst($json, $class)

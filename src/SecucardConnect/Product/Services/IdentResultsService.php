@@ -25,8 +25,7 @@ class IdentResultsService extends ProductService
                 $attachments = $p->attachments;
                 if (!empty($attachments)) {
                     foreach ($attachments as $attachment) {
-                        $attachment->setHttpClient($this->httpClient);
-                        $attachment->setStore($this->storage);
+                        $this->initMediaResource($attachment);
                     }
                 }
             }
