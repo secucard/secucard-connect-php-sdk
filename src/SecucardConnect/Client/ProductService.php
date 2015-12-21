@@ -47,6 +47,11 @@ abstract class ProductService
      */
     protected $logger;
 
+    /**
+     * @var StorageInterface
+     */
+    protected $storage;
+
 
     public static function create($product, $resource, ClientContext $context)
     {
@@ -67,6 +72,7 @@ abstract class ProductService
             $this->httpClient = $context->httpClient;
             $this->logger = $context->logger;
             $this->config = $context->config;
+            $this->storage = $context->storage;
         }
     }
 
@@ -161,6 +167,8 @@ abstract class ProductService
             $list->reachedEnd = true;
         }
 
+        $this->postProcess($list);
+
         return $list;
     }
 
@@ -185,7 +193,11 @@ abstract class ProductService
             throw new Exception('Error retrieving data');
         }
 
-        return $this->createResourceInst($jsonResponse, $this->resourceMetadata->resourceClass);
+        $inst = $this->createResourceInst($jsonResponse, $this->resourceMetadata->resourceClass);
+
+        $this->postProcess($inst);
+
+        return $inst;
     }
 
     /**
@@ -209,6 +221,8 @@ abstract class ProductService
         if ($jsonResponse == false) {
             throw new Exception('Error deleting data');
         }
+
+        $this->postProcess($jsonResponse);
 
         return $jsonResponse;
     }
@@ -250,7 +264,11 @@ abstract class ProductService
             throw new Exception('Error updating model');
         }
 
-        return $this->createResourceInst($jsonResponse, $this->resourceMetadata->resourceClass);
+        $inst = $this->createResourceInst($jsonResponse, $this->resourceMetadata->resourceClass);
+
+        $this->postProcess($inst);
+
+        return $inst;
     }
 
     protected function updateWithAction($id, $action, $actionArg = null, $object = null, $class = null)
@@ -273,6 +291,17 @@ abstract class ProductService
         return $this->requestAction(RequestOps::EXECUTE, null, $action, null, $object, $class, $appId);
     }
 
+    /**
+     * @return array Array with request options to apply. Override in sub classes.<br/>
+     * Valid options are: <br/>
+     * -
+     * -
+     */
+    protected function getRequestOptions()
+    {
+        return array();
+    }
+
     private function requestAction(
         $op,
         $id = null,
@@ -289,8 +318,14 @@ abstract class ProductService
         }
         $json = $this->request($params);
         if ($class != null) {
-            return MapperUtil::map($json, $class);
+
+            $obj = MapperUtil::map($json, $class);
+            $this->postProcess($obj);
+            return $obj;
         }
+
+        $this->postProcess($json);
+
         return $json;
     }
 
@@ -410,9 +445,14 @@ abstract class ProductService
             try {
                 // try to map to known server error response
                 $body = MapperUtil::mapResponse($e->getResponse());
-                if (isset($body->error) && strtolower($body->error) === 'productinternalexception') {
-                    $err = new ApiError($body->error, $body->code, $body->error_details,
-                        $body->error_user, $body->supportId);
+                if (isset($body->status) && $body->status === 'error') {
+                    if (strtolower($body->error) === 'productinternalexception') {
+                        // better map this to an internal error because it's caused by wrong api usage.
+                        $err = new ClientError($body->error_details, $e);
+                    } else {
+                        $err = new ApiError($body->error, $body->code, $body->error_details,
+                            $body->error_user, $body->supportId);
+                    }
                     return $err;
                 }
             } catch (Exception $e) {
@@ -438,20 +478,50 @@ abstract class ProductService
         }
     }
 
-
+    /**
+     * @param $arg
+     */
+    private function postProcess(&$arg)
+    {
+        $opts = $this->getRequestOptions();
+        if (isset($opts[RequestOptions::RESULT_PROCESSING])) {
+            $fn = $opts[RequestOptions::RESULT_PROCESSING];
+            if (!is_callable($fn)) {
+                throw new \BadFunctionCallException("$fn is not a valid callback for result post processing.");
+            }
+            $fn($arg);
+        }
+    }
 }
 
-class RequestOps
+/**
+ * Defines all supported request operations.
+ * @package SecucardConnect\Client
+ */
+final class RequestOps
 {
     const CREATE = 'POST';
     const UPDATE = 'PUT';
     const DELETE = 'DELETE';
     const GET = 'GET';
-    const EXECUTE = '???';
-    const CUSTOM = 'APP';
+    const EXECUTE = 'POST';
+    const CUSTOM = 'POST';
 }
 
-class RequestParams
+/**
+ * Defines all supported  options for API requests.
+ * @package SecucardConnect\Client
+ */
+final class RequestOptions
+{
+    /**
+     * Allows request result post processing by calling a callback with results of a request.
+     * The results should be passed by reference.
+     */
+    const RESULT_PROCESSING = 'resultprocessing';
+}
+
+final class RequestParams
 {
     /**
      * The operation to perform. See {@link RequestOps} for valid values.
@@ -468,7 +538,6 @@ class RequestParams
      * @var string
      */
     public $id;
-
 
     /**
      * App identifier for custom actions.
@@ -533,7 +602,7 @@ class RequestParams
     }
 }
 
-class SearchParams
+final class SearchParams
 {
     /**
      * @var QueryParams
@@ -562,6 +631,4 @@ class SearchParams
         $this->scrollExpire = $scrollExpire;
         $this->scrollId = $scrollId;
     }
-
-
 }
