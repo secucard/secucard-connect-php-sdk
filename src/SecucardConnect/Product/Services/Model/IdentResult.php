@@ -39,7 +39,7 @@ class IdentResult extends BaseModel
     public $contract;
 
     /**
-     * @var ResultPerson
+     * @var ResultPerson[]
      */
     public $person;
 }

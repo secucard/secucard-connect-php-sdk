@@ -3,6 +3,7 @@
 namespace SecucardConnect\Product\Services;
 
 use SecucardConnect\BaseClientTest;
+use SecucardConnect\Client\QueryParams;
 
 /**
  * @covers secucard\models\Services\Identresults
@@ -14,7 +15,7 @@ class IdentresultsTest extends BaseClientTest
      */
     public function testGetList()
     {
-        $list = $this->client->services->identresults->getList(array());
+        $list = $this->client->services->identresults->getList();
 
         $this->assertFalse(empty($list));
     }
@@ -24,10 +25,10 @@ class IdentresultsTest extends BaseClientTest
      */
     public function testGetItem()
     {
-        $list = $this->client->services->identresults->getList(array());
+        $list = $this->client->services->identresults->getList(new QueryParams(1));
 
-        $this->assertFalse(empty($list) || $list->count() < 1, 'Cannot get any item, because list is empty');
-        $sample_item_id = $list[0]->id;
+        $this->assertTrue($list->count == 1, 'Cannot get any item, because list is empty');
+        $sample_item_id = $list->items[0]->id;
         $this->assertFalse(empty($sample_item_id));
 
         if ($sample_item_id) {
