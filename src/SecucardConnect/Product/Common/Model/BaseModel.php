@@ -66,7 +66,6 @@ abstract class BaseModel
     public $object;
 
 
-
     /**
      * Constructor
      */
@@ -121,7 +120,6 @@ abstract class BaseModel
     }
 
 
-
     /**
      * Magic getter
      * @param string $name
@@ -133,9 +131,12 @@ abstract class BaseModel
         }
         if ($this->hasAttributeValue($name)) {
             // Create DateTime object if necessary
-            if ($this->hasAttribute($name) && in_array($this->_attribute_defs[$name]['type'], array(self::DATA_TYPE_DATETIME, self::DATA_TYPE_DATE))) {
+            if ($this->hasAttribute($name) && in_array($this->_attribute_defs[$name]['type'],
+                    array(self::DATA_TYPE_DATETIME, self::DATA_TYPE_DATE))
+            ) {
                 $timezone = new DateTimeZone('UTC');
-                return DateTime::createFromFormat($this->getDateFormatForAttribute($name), $this->_attributes[$name], $timezone);
+                return DateTime::createFromFormat($this->getDateFormatForAttribute($name), $this->_attributes[$name],
+                    $timezone);
             }
 
             return $this->_attributes[$name];
@@ -371,5 +372,29 @@ abstract class BaseModel
         }
 
         return $return_encoded ? json_encode($result) : $result;
+    }
+
+    /**
+     * Returns an array with property names to exclude from JSON encoding when they have a null value. This method
+     * will be called when this model object is marshaled to JSON (e.g. when submitted to server) and is necessary to
+     * prevent submitting properties which are not set yet (results in server errors else).
+     * Override in model classes with the actual names.
+     * @return array Array with property names.
+     */
+    public function jsonFilterNullProperties()
+    {
+        return null;
+    }
+
+    /**
+     * Returns an array with property names to exclude from JSON encoding.
+     * This method will be called when this model object is marshaled to JSON (e.g. when submitted to server)
+     * and may be used to prevent submitting (private) properties.
+     * Override in model classes with the actual names.
+     * @return array Array with property names.
+     */
+    public function jsonFilterProperties()
+    {
+        return null;
     }
 }

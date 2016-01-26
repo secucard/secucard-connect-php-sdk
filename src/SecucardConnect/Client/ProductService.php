@@ -258,7 +258,7 @@ abstract class ProductService
         }
 
         $params = new RequestParams($method, $this->resourceMetadata, $id, null, null, null,
-            MapperUtil::jsonEncode($model));
+            MapperUtil::jsonEncode($model, $model->jsonFilterProperties(), $model->jsonFilterNullProperties()));
         $jsonResponse = $this->request($params);
 
         if ($jsonResponse == false) {
@@ -312,7 +312,9 @@ abstract class ProductService
         $class = null,
         $appId = null
     ) {
+        // todo: should property filtering for json also apply here?
         $json = $object == null ? null : MapperUtil::jsonEncode($object);
+
         $params = new RequestParams($op, $this->resourceMetadata, $id, null, $action, $actionArg, $json);
         if ($appId != null) {
             $params->appId = $appId;
@@ -392,12 +394,18 @@ abstract class ProductService
 
 
         if (count($p) != 0) {
-            $options['query'] = $p;
+            $options[\GuzzleHttp\RequestOptions::QUERY] = $p;
         }
 
         if (!empty($params->jsonData)) {
-            $options['json'] = $params->jsonData;
+            $options[\GuzzleHttp\RequestOptions::BODY] = $params->jsonData;
+
+            if (!array_key_exists(\GuzzleHttp\RequestOptions::HEADERS, $options)) {
+                $options[\GuzzleHttp\RequestOptions::HEADERS] = [];
+            }
+            $options[\GuzzleHttp\RequestOptions::HEADERS]['Content-Type'] = 'application/json';
         };
+
 
         try {
             $response = $this->httpClient->request($params->operation, $url, $options);

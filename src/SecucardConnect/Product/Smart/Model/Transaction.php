@@ -63,6 +63,16 @@ class Transaction extends BaseModel
     public $receipt;
 
     /**
+     * @var \SecucardConnect\Product\Smart\Model\ReceiptLine[]
+     */
+    public $receipt_merchant;
+
+    /**
+     * @var boolean
+     */
+    public $receipt_merchant_print;
+
+    /**
      * @var \SecucardConnect\Product\Smart\Model\BasketInfo
      */
     public $basket_info;
@@ -96,4 +106,19 @@ class Transaction extends BaseModel
      * @var string
      */
     public $error;
+
+    public function jsonFilterNullProperties()
+    {
+        return [
+            'device_source',
+            'target_device',
+            'receipt',
+            'receipt_merchant',
+            'payment_method',
+            'payment_requested',
+            'payment_executed',
+            'receipt_merchant_print',
+            'error'
+        ];
+    }
 }

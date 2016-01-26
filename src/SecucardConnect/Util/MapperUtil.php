@@ -42,10 +42,33 @@ final class MapperUtil
     /**
      * Encodes the given instance to a JSON string.
      * @param mixed $object The instance to encode.
+     * @param array|null $filter Array with properties of the given instance to filter.
+     * @param array|null $nullFilter Array with properties of the given instance to filter when null.
      * @return string The encoded string or false on failure.
      */
-    public static function jsonEncode($object)
+    public static function jsonEncode($object, $filter = null, $nullFilter = null)
     {
+        if (!empty($filter) || !empty($nullFilter)) {
+            $object = clone $object;
+            $vars = get_object_vars($object);
+
+            if (!empty ($filter)) {
+                foreach ($filter as $prop) {
+                    if (array_key_exists($prop, $vars)) {
+                        unset($object->{$prop});
+                    }
+                }
+            }
+
+            if (!empty ($nullFilter)) {
+                foreach ($nullFilter as $prop) {
+                    if (array_key_exists($prop, $vars) && $vars[$prop] === null) {
+                        unset($object->{$prop});
+                    }
+                }
+            }
+        }
+
         return json_encode($object);
     }
 
