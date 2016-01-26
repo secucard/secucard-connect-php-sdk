@@ -83,10 +83,11 @@ final class SecucardConnect
 
     /**
      * Constructor
-     * @param array $config - options to correctly initialize Guzzle Client
-     * @param LoggerInterface $logger - pass here LoggerInterface to use for logging
-     * @param StorageInterface $dataStorage - pass here StorageInterface for storing runtime data (like oauth-tokens)
-     * @param StorageInterface $tokenStorage
+     * @param array $config Options to correctly initialize the client.
+     * @param LoggerInterface $logger Pass here LoggerInterface to use for logging
+     * @param StorageInterface $dataStorage Pass here StorageInterface for storing any runtime data (like images)
+     * @param StorageInterface $tokenStorage Pass here StorageInterface for storing authentication data like auth.
+     * tokens.
      * @param GrantTypeInterface $credentials The credentials to use when operations need authorization
      */
     public function __construct(
@@ -117,6 +118,8 @@ final class SecucardConnect
 
         // initialize default logger with logging disabled if not provided
         $this->logger = $logger == null ? new Logger(null, false) : $logger;
+
+        $this->logger->debug('Using config: ' . print_r($this->config, true));
 
         // Create the default common storage if necessary
         if ($dataStorage == null) {
