@@ -31,7 +31,7 @@ class ResourceMetadata
     public function __construct($product, $resource = null)
     {
         $this->product = ucfirst(strtolower($product));
-        $this->productClass = '\\SecucardConnect\\Product\\' . $this->product;
+        $this->productClass = 'SecucardConnect\\Product\\' . $this->product;
         $this->productDir = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Product' .
             DIRECTORY_SEPARATOR . $this->product;
         $this->modelDir = $this->productDir . DIRECTORY_SEPARATOR . 'Model';
