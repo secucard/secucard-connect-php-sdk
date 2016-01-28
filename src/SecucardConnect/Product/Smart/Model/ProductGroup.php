@@ -19,4 +19,19 @@ class ProductGroup
      * @var int
      */
     public $level;
+
+    /**
+     * ProductGroup constructor.
+     * @param string $id
+     * @param string $desc
+     * @param int $level
+     */
+    public function __construct($id = null, $desc = null, $level = null)
+    {
+        $this->id = $id;
+        $this->desc = $desc;
+        $this->level = $level;
+    }
+
+
 }

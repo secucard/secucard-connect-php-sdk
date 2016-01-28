@@ -46,8 +46,7 @@ class ReceiptLineValue
 
     function __toString()
     {
-        return "caption='$this->caption', text='$this->text', name='$this->name', value='$this->value'"
-        . ", decocation='$this->decoration'";
+        return print_r($this, true);
     }
 
 
