@@ -23,6 +23,11 @@ class ApiError extends \Exception
     /**
      * @var string
      */
+    private $details;
+
+    /**
+     * @var string
+     */
     private $supportId;
 
     /**
@@ -62,15 +67,21 @@ class ApiError extends \Exception
     public function __construct(
         $serverError,
         $code,
-        $message,
+        $details,
         $userMessage,
         $supportId,
         Exception $previous = null
     ) {
-        parent::__construct($message, $code, $previous);
+        $msg = 'API Error: type=' . $serverError
+            . ', code=' . $code
+            . ', details="' . $details
+            . '", user-message="' . $userMessage
+            . '", support-id=' . $supportId;
+        parent::__construct($msg, $code, $previous);
         $this->serverError = $serverError;
         $this->userMessage = $userMessage;
         $this->supportId = $supportId;
+        $this->details = $details;
     }
 
 
