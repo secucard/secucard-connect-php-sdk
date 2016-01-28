@@ -231,11 +231,12 @@ abstract class ProductService
 
     /**
      * Function to save object
-     * It can update existing or create new object
+     * It can update existing or create new object, if the given object has an id with value null ist will create a
+     * new object.
      *
-     * @param BaseModel $model
-     * @return bool true on success
-     * @throws Exception
+     * @param BaseModel $model The object to save.
+     * @return BaseModel The created object, has same type as the given input.
+     * @throws Exception If an error happens.
      */
     public function save(BaseModel $model)
     {
@@ -243,7 +244,7 @@ abstract class ProductService
             throw new Exception('Unable save data, data type and service must match.');
         }
 
-        $id = $model->getId();
+        $id = $model->id;
 
         // default add new object
         $method = RequestOps::CREATE;
@@ -251,17 +252,13 @@ abstract class ProductService
         if (!empty($id)) {
             // update the existing record
             $method = RequestOps::UPDATE;
-
-            if (!$model->isInitialized()) {
-                throw new Exception('Trying to save not initialized item');
-            }
         }
 
         $params = new RequestParams($method, $this->resourceMetadata, $id, null, null, null,
             MapperUtil::jsonEncode($model, $model->jsonFilterProperties(), $model->jsonFilterNullProperties()));
         $jsonResponse = $this->request($params);
 
-        if ($jsonResponse == false) {
+        if ($jsonResponse === false) {
             throw new Exception('Error updating model');
         }
 
@@ -322,7 +319,11 @@ abstract class ProductService
         $json = $this->request($params);
         if ($class != null) {
 
-            $obj = MapperUtil::map($json, $class);
+            if ($class === 'array') {
+                $obj = MapperUtil::jsonDecode($json, true);
+            } else {
+                $obj = MapperUtil::map($json, $class);
+            }
             $this->postProcess($obj);
             return $obj;
         }
@@ -488,18 +489,11 @@ abstract class ProductService
 
     private function createResourceInst($json, $class)
     {
-
         if (empty($json)) {
             return null;
-        } else {
-            $inst = MapperUtil::map($json, $class);
-            // set initialized flag for item to true (we expect all data to be available in the server response)
-//            $ok = $inst->initValues($json, true);
-//            if (!$ok) {
-//                throw new Exception('Error initializing model.');
-//            }
-            return $inst;
         }
+
+        return MapperUtil::map($json, $class);
     }
 
     /**
