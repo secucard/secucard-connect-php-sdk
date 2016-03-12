@@ -73,9 +73,16 @@ class ResourceMetadata
             if (strpos($lcres, strtolower($name)) !== false) {
                 $cls = $classPrefix . 'Model\\' . $name;
                 $rc = new \ReflectionClass($cls);
-                $parents = $rc->getParentClass();
+
+                // collect all in hierarchy
+                $parents = array();
+                while ($parent = $rc->getParentClass()) {
+                    $parents[] = $parent;
+                    $rc = new \ReflectionClass($parent->getName());
+                }
+
                 foreach ($parents as $parent) {
-                    if ($parent === BaseModel::class) {
+                    if (BaseModel::class === $parent->getName()) {
                         return $cls;
                     }
                 }
@@ -95,9 +102,16 @@ class ResourceMetadata
             if (strpos(strtolower($name), $lcres) !== false) {
                 $cls = $classPrefix . $name;
                 $rc = new \ReflectionClass($cls);
-                $parents = $rc->getParentClass();
+
+                // collect all in hierarchy
+                $parents = array();
+                while ($parent = $rc->getParentClass()) {
+                    $parents[] = $parent;
+                    $rc = new \ReflectionClass($parent->getName());
+                }
+
                 foreach ($parents as $parent) {
-                    if ($parent === ProductService::class) {
+                    if (ProductService::class === $parent->getName()) {
                         return $cls;
                     }
                 }
