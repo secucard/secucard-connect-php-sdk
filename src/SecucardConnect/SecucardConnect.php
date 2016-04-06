@@ -96,7 +96,8 @@ final class SecucardConnect
         StorageInterface $dataStorage = null,
         StorageInterface $tokenStorage,
         GrantTypeInterface $credentials
-    ) {
+    )
+    {
         // array of base configuration
         $default = array(
             'base_url' => 'https://connect.secucard.com',
@@ -139,7 +140,7 @@ final class SecucardConnect
         }
 
         $c = new ClientContext();
-        $c->httpClient  = $this->httpClient;
+        $c->httpClient = $this->httpClient;
         $c->storage = $this->storage;
         $c->config = $this->config;
         $c->logger = $this->logger;
@@ -183,6 +184,25 @@ final class SecucardConnect
         } else {
             return $result;
         }
+    }
+
+    /**
+     * Return the current access token for external browser usage.
+     * Authentication takes place if no authentication was done before, so if you are using Auth\DeviceCredentials
+     * make sure to call authenticate() before this to go trough the required initial auth steps!
+     *
+     * NOTE: Usually when using this SDK it is never required to know the token since all auth aspects are handled
+     * inside this SDK. But some in cases obtaining the token via this method may be useful for example when generating
+     * JS code for using the secucard connect JS SDK and providing the token for it.
+     * @return null|string Null if no token is used, the token string else.
+     */
+    public function accessTokenForJS()
+    {
+        if ($this->oauthProvider == null) {
+            return null;
+        }
+
+        return $this->oauthProvider->getAccessToken();
     }
 
 
