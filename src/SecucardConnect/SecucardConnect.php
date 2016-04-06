@@ -194,7 +194,9 @@ final class SecucardConnect
      * NOTE: Usually when using this SDK it is never required to know the token since all auth aspects are handled
      * inside this SDK. But some in cases obtaining the token via this method may be useful for example when generating
      * JS code for using the secucard connect JS SDK and providing the token for it.
-     * @return null|string Null if no token is used, the token string else.
+     * @return null|string Null if no token is used, the token data as JSON like: {"access_token":"abc", "expires_in":500}.
+     * Expire time is in s.
+     *
      */
     public function accessTokenForJS()
     {
@@ -202,7 +204,7 @@ final class SecucardConnect
             return null;
         }
 
-        return $this->oauthProvider->getAccessToken();
+        return $this->oauthProvider->getAccessToken(null, true);
     }
 
 

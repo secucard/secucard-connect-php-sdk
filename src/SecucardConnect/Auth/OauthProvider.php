@@ -76,9 +76,10 @@ class OauthProvider extends ProductService
      * @param StorageInterface $storage
      * @param GrantTypeInterface $credentials
      */
-    public function __construct( $auth_path, StorageInterface $storage,
-        GrantTypeInterface $credentials
-    ) {
+    public function __construct($auth_path, StorageInterface $storage,
+                                GrantTypeInterface $credentials
+    )
+    {
         parent::__construct();
         $this->auth_path = $auth_path;
         $this->storage = $storage;
@@ -120,10 +121,15 @@ class OauthProvider extends ProductService
      * In case no valid token was found, tries to acquire a new one
      *
      * @param string $deviceCode
+     * @param bool $json Set to true to return the token and the expire time as JSON like
+     * {"access_token":"abc", "expires_in":500}
      * @return string
      * @throws ClientError
+     * @throws \SecucardConnect\Client\ApiError
+     * @throws \SecucardConnect\Client\ApiError|\SecucardConnect\Client\AuthError|ClientError
+     * @throws \SecucardConnect\Client\AuthError
      */
-    public function getAccessToken($deviceCode = null)
+    public function getAccessToken($deviceCode = null, $json = false)
     {
         if (isset($this->accessToken['expires_in']) && $this->accessToken['expires_in'] < time() && $this->refreshToken) {
             // The access token has expired
@@ -156,8 +162,14 @@ class OauthProvider extends ProductService
                 $this->updateToken();
             }
         }
+        $at = $this->accessToken['access_token'];
 
-        return $this->accessToken['access_token'];
+        if ($json === true) {
+            return json_encode(array('access_token' => $at, 'expires_in' => $this->accessToken['expires_in'] - time()));
+        } else {
+            return $at;
+        }
+
     }
 
     /**
