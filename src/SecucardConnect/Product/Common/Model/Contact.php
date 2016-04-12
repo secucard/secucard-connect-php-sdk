@@ -94,7 +94,7 @@ class Contact
     public $url_website;
 
     /**
-     * @var \SecucardConnect\Product\Common\Model\Address[]
+     * @var \SecucardConnect\Product\Common\Model\Address
      */
     public $address;
 }
