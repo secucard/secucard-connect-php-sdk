@@ -5,6 +5,7 @@
 
 namespace SecucardConnect\Util;
 
+use Exception;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LoggerTrait;
 use Psr\Log\LogLevel;
@@ -111,7 +112,13 @@ class Logger implements LoggerInterface
     {
         $replace = array();
         foreach ($context as $key => $val) {
-            $replace['{' . $key . '}'] = $val;
+
+            try {
+                $str = (string)$val;
+            } catch (Exception $e) {
+                $str = '?';
+            }
+            $replace['{' . $key . '}'] = $str;
         }
 
         return strtr($message, $replace);
