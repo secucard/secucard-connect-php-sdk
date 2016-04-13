@@ -25,4 +25,11 @@ class Data
      */
     public $bankname;
 
+    public function __construct($iban = null, $owner = null, $bic = null, $bankname = null)
+    {
+        $this->owner = $owner;
+        $this->iban = $iban;
+        $this->bic = $bic;
+        $this->bankname = $bankname;
+    }
 }
