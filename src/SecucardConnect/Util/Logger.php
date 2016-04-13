@@ -51,6 +51,7 @@ class Logger implements LoggerInterface
         if (!$this->enabled) {
             return;
         }
+        $message = self::replace($message, $context);
         if (is_resource($this->resource)) {
             fwrite($this->resource, "[{$level}] {$message}\n");
         } elseif (is_callable($this->resource)) {
@@ -95,7 +96,7 @@ class Logger implements LoggerInterface
      * @param $message
      * @param \Exception $exception
      */
-    public static function doLog($level, LoggerInterface $logger, $message, \Exception $exception = null)
+    private static function doLog($level, LoggerInterface $logger, $message, \Exception $exception = null)
     {
         if (!empty($logger)) {
             $context = [];
@@ -104,5 +105,15 @@ class Logger implements LoggerInterface
             }
             $logger->log($level, $message, $context);
         }
+    }
+
+    private static function replace($message, $context)
+    {
+        $replace = array();
+        foreach ($context as $key => $val) {
+            $replace['{' . $key . '}'] = $val;
+        }
+
+        return strtr($message, $replace);
     }
 }
