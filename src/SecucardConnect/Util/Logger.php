@@ -110,17 +110,22 @@ class Logger implements LoggerInterface
 
     private static function replace($message, $context)
     {
-        $replace = array();
         foreach ($context as $key => $val) {
-
-            try {
-                $str = (string)$val;
-            } catch (Exception $e) {
-                $str = '?';
+            $placeholder = '{' . $key . '}';
+            if ($key === 'exception' && is_a($val, Exception::class)) {
+                if (strpos($message, $placeholder) == false) {
+                    $message .= "\n" . strval($val);
+                } else {
+                    $message = str_replace($placeholder, "\n" . strval($val), $message);
+                }
+                continue;
             }
-            $replace['{' . $key . '}'] = $str;
+
+            if (strpos($message, $placeholder) != false) {
+                $message = str_replace($placeholder, print_r($val, true), $message);
+            }
         }
 
-        return strtr($message, $replace);
+        return $message;
     }
 }
