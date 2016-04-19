@@ -10,6 +10,8 @@ use GuzzleHttp\Exception\ServerException;
 use Psr\Log\LoggerInterface;
 use SecucardConnect\Auth\AuthDeniedException;
 use SecucardConnect\Auth\BadAuthException;
+use SecucardConnect\Event\EventDispatcher;
+use SecucardConnect\Event\EventHandler;
 use SecucardConnect\Product\Common\Model\BaseCollection;
 use SecucardConnect\Product\Common\Model\BaseModel;
 use SecucardConnect\Product\Common\Model\Error;
@@ -31,7 +33,7 @@ abstract class ProductService
     /**
      * @var ResourceMetadata
      */
-    private $resourceMetadata;
+    protected $resourceMetadata;
 
     /**
      * @var Client
@@ -54,6 +56,12 @@ abstract class ProductService
     protected $storage;
 
 
+    /**
+     * @var EventDispatcher
+     */
+    protected $eventDispatcher;
+
+
     public static function create($product, $resource, ClientContext $context)
     {
         $rm = new ResourceMetadata($product, $resource);
@@ -74,6 +82,7 @@ abstract class ProductService
             $this->logger = $context->logger;
             $this->config = $context->config;
             $this->storage = $context->storage;
+            $this->eventDispatcher = $context->eventDispatcher;
         }
     }
 
@@ -308,7 +317,8 @@ abstract class ProductService
         $object = null,
         $class = null,
         $appId = null
-    ) {
+    )
+    {
         // todo: should property filtering for json also apply here?
         $json = $object == null ? null : MapperUtil::jsonEncode($object);
 
@@ -474,17 +484,21 @@ abstract class ProductService
 
     /**
      * Create new or complete a media resource object.
-     * @param null $resource
-     * @return null|MediaResource
+     * @param MediaResource|string $arg The media resource to initialize or a url of a resource.
+     * @return MediaResource The initialized media resource instance.
      */
-    protected function initMediaResource(&$resource = null)
+    protected function initMediaResource(&$arg)
     {
-        if ($resource == null) {
-            $resource = new MediaResource();
+        if (is_string($arg)) {
+            $mr = new MediaResource();
+            $mr->setUrl($arg);
+        } else {
+            $mr = $arg;
         }
-        $resource->setHttpClient($this->httpClient);
-        $resource->setStore($this->storage);
-        return $resource;
+
+        $mr->setHttpClient($this->httpClient);
+        $mr->setStore($this->storage);
+        return $mr;
     }
 
     private function createResourceInst($json, $class)
@@ -509,6 +523,15 @@ abstract class ProductService
             }
             $fn($arg);
         }
+    }
+
+    /**
+     * @param string $id
+     * @param EventHandler $handler
+     */
+    protected function registerEventHandler($id, $handler)
+    {
+        $this->eventDispatcher->registerEventHandler($id, $handler);
     }
 }
 
@@ -608,7 +631,8 @@ final class RequestParams
         $actionArg = null,
         $jsonData = null,
         array $options = array()
-    ) {
+    )
+    {
         $this->operation = $operation;
         $this->id = $id;
         $this->searchParams = $searchParams;

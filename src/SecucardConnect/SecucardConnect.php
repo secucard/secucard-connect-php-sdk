@@ -17,6 +17,7 @@ use SecucardConnect\Client\DummyStorage;
 use SecucardConnect\Client\Product;
 use SecucardConnect\Client\ResourceMetadata;
 use SecucardConnect\Client\StorageInterface;
+use SecucardConnect\Event\EventDispatcher;
 use SecucardConnect\Util\GuzzleLogger;
 use SecucardConnect\Util\Logger;
 
@@ -68,10 +69,9 @@ final class SecucardConnect
     public $storage;
 
     /**
-     * Object to call when the push is called
-     * @var mixed
+     * @var EventDispatcher
      */
-    protected $callback_push_object;
+    private $eventDispatcher;
 
     /**
      * Api version
@@ -139,11 +139,14 @@ final class SecucardConnect
             $this->oauthProvider->setHttpClient($this->httpClient);
         }
 
+        $this->eventDispatcher = new EventDispatcher();
+
         $c = new ClientContext();
         $c->httpClient = $this->httpClient;
         $c->storage = $this->storage;
         $c->config = $this->config;
         $c->logger = $this->logger;
+        $c->eventDispatcher = $this->eventDispatcher;
         $this->clientContext = $c;
     }
 
@@ -172,7 +175,7 @@ final class SecucardConnect
      * Auth\AuthCodes is returned when passing no parameter, when passing 'devicecode' key either true or false
      * if the authentication is still pending. In the pending case just repeat the call until true.<br/>
      * For other credential types true is returned.
-     * @throws Exception If an error happens during the process. Inspect the exception type to get further details
+     * @throws \Exception If an error happens during the process. Inspect the exception type to get further details
      * about the cause.
      * @see \SecucardConnect\Client\AuthError
      */
@@ -240,94 +243,15 @@ final class SecucardConnect
     }
 
     /**
-     * Function to register callback object
-     * @param mixed $callable
-     */
-    public function registerCallbackObject($callable)
-    {
-        $this->callback_push_object = $callable;
-    }
-
-    /**
-     * Function that will be called to process Push request from API
      *
-     * @param array $get
-     * @param array $post
-     * @param object $postRaw
-     * @throws \Exception
+     * @param $eventData string A string containing the event JSON.
+     * @return void
+     * @throws \Exception If an error happens during processing.
      */
-    public function processPush($get = null, $post = null, $postRaw = null)
+    public function handleEvent($eventData)
     {
-        // GET
-        if (!$get) {
-            $get = $_GET;
-        }
-
-        // POST
-        if (!$post) {
-            $post = $_POST;
-        }
-
-        $post_data = null;
-        // POST-RAW
-        if (!$postRaw) {
-            $postRaw = @file_get_contents('php://input');
-            $post_data = json_decode($postRaw);
-        } else {
-            $post_data = $postRaw;
-        }
-
-        $this->logger->info('Received Push with Posted data: ' . json_encode($post_data));
-
-        $referenced_objects = [];
-
-        if ($post_data && $post_data->object) {
-            // process the post_data
-            $event_info = $post_data->object;   // normally 'event.pushes'
-            $event_id = $post_data->id;         // event_id
-
-            $event_action = $post_data->type;
-            if ($event_action == 'deleted') {
-                return;
-            }
-
-            $event_data = $post_data->data;
-            if (empty($event_data) || !is_array($event_data)) {
-                throw new \Exception('Invalid empty or not array event[data] field from post_data: ' . json_encode($post_data));
-            }
-
-            foreach ($event_data as $event_object) {
-                if (empty($event_object)) {
-                    throw new \Exception('Invalid empty event object in post_data: ' . json_encode($post_data));
-                }
-                if (is_array($event_object)) {
-                    // cast $event_object to object
-                    $event_object = json_decode(json_encode($event_object), false);
-                }
-                // get the category and model from $event_object, the category and model delimiter is '.' or '/'
-                $model_info = explode('.', $event_object->object);
-                if (count($model_info) <= 1) {
-                    $model_info = explode('/', $event_object->object);
-                }
-
-                $object_id = $event_object->id;
-                $category = strtolower($model_info[0]);
-                $model = strtolower($model_info[1]);
-                if (count($model_info) != 2 || empty($object_id) || empty($category) || empty($model)) {
-                    throw new \Exception('Unknown event_object definition with value: ' . json_encode($event_object));
-                }
-
-                // load referenced object
-                $referenced_objects[] = $this->__get($category)->$model->get($object_id);
-            }
-        }
-
-        if ($this->callback_push_object) {
-            // Call callback on all objects in event->data array
-            foreach ($referenced_objects as $referenced_object) {
-                call_user_func($this->callback_push_object, $referenced_object);
-            }
-        }
+        $this->logger->info('Received Push with data: ' . $eventData);
+        $this->eventDispatcher->dispatch($eventData);
     }
 
     private function initHttpClient()

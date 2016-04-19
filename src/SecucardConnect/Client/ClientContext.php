@@ -5,6 +5,7 @@ namespace SecucardConnect\Client;
 
 use GuzzleHttp\Client;
 use Psr\Log\LoggerInterface;
+use SecucardConnect\Event\EventDispatcher;
 
 /**
  * Gathers all resources shared across different layers and components of the application.
@@ -31,4 +32,9 @@ class ClientContext
      * @var StorageInterface
      */
     public $storage;
+
+    /**
+     * @var EventDispatcher
+     */
+    public $eventDispatcher;
 }
