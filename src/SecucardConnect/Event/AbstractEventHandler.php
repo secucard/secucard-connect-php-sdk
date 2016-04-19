@@ -47,12 +47,4 @@ abstract class AbstractEventHandler implements EventHandler
     {
         return $event->target === $this->eventTarget && $event->type === $this->eventType;
     }
-
-    /**
-     * Handles a given event.
-     * @param $event Event The event to handle.
-     * @return bool True if the event was handled, false else. In the latter case another available handler may be
-     * invoked with the given event.
-     */
-    abstract function handle($event);
 }
