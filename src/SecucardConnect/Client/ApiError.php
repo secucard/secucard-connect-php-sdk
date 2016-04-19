@@ -13,7 +13,7 @@ use Exception;
  * Holds detailed information about the cause which should presented to the end user like a error code or a support id.
  * @package SecucardConnect\Client
  */
-class ApiError extends \Exception
+class ApiError extends AbstractError
 {
     /**
      * @var string

@@ -8,7 +8,7 @@ namespace SecucardConnect\Client;
  * later when the network connection is established again.
  * @package SecucardConnect\Client
  */
-class NetworkError extends \Exception
+class NetworkError extends AbstractError
 {
 
 }

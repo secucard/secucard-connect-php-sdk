@@ -10,7 +10,7 @@ use SecucardConnect\Product\Common\Model\Error;
  * The $error property may contain details.
  * @package SecucardConnect\Client
  */
-class AuthError extends \Exception
+class AuthError extends AbstractError
 {
     /**
      * {@inheritDoc}

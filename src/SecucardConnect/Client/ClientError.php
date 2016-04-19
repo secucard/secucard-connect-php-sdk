@@ -10,7 +10,7 @@ use Exception;
  * and is  most likely not recoverable.
  * @package SecucardConnect\Client
  */
-class ClientError extends \Exception
+class ClientError extends AbstractError
 {
     public function __construct($message = "", Exception $previous = null)
     {
