@@ -19,6 +19,7 @@ class ResourceMetadata
     public $modelDir;
     public $resource;
     public $resourceUrlPath;
+    public $resourceId;
     public $resourceClass;
     public $resourceServiceClass;
 
@@ -51,7 +52,8 @@ class ResourceMetadata
         }
         $this->resourceServiceClass = $cls;
 
-
+        $this->resourceId = $this->product . '.' . $this->resource;
+        
         $cls = $this->findModelClass($this->modelDir, $this->resource, $classPrefix);
         if ($cls == null) {
             throw new ClientError('Unable to find a class for resource ' . $this->resource
