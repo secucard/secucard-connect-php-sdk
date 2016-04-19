@@ -1,7 +1,8 @@
 <?php
 namespace SecucardConnect\Event;
 
-use SecucardConnect\Product\General\Event;
+
+use SecucardConnect\Product\General\Model\Event;
 
 interface EventHandler
 {

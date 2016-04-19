@@ -2,7 +2,8 @@
 
 namespace SecucardConnect\Event;
 
-use SecucardConnect\Product\General\Event;
+
+use SecucardConnect\Product\General\Model\Event;
 
 abstract class AbstractEventHandler implements EventHandler
 {
