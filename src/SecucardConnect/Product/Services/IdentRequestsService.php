@@ -24,7 +24,7 @@ class IdentRequestsService extends ProductService
             foreach ($request->person as $p) {
                 $contact = $p->contact;
                 if (!empty($contact) && !empty($contact->picture)) {
-                    $contact->pictureObject = $this->initMediaResource();
+                    $contact->pictureObject = $this->initMediaResource($contact->picture);
                 }
             }
         }
