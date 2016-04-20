@@ -16,9 +16,9 @@ class Container extends BaseModel
     const TYPE_BANK_ACCOUNT = "bank_account";
 
     /**
-     * @var \SecucardConnect\Product\General\Model\Merchant
+     * @var \SecucardConnect\Product\Payment\Model\Customer
      */
-    public $merchant;
+    public $customer;
 
     /**
      * @var \SecucardConnect\Product\Payment\Model\Data
@@ -31,7 +31,8 @@ class Container extends BaseModel
     public $private;
 
     /**
-     * @var \SecucardConnect\Product\Payment\Model\Customer
+     * @not used
+     * @var \SecucardConnect\Product\Payment\Model\Customer[]
      */
     public $assign;
 
