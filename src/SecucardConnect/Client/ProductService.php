@@ -464,8 +464,12 @@ abstract class ProductService
             }
 
             if ($e->getCode() == 404) {
-                return new ApiError($json->error, $json->code, $json->error_details,
-                    $json->error_user, $json->supportId);
+                try {
+                    return new ApiError($json->error, $json->code, $json->error_details, $json->error_user,
+                        $json->supportId);
+                } catch (Exception $e) {
+                    Logger::logWarn($this->logger, 'Failed to get error details from response.', $e);
+                }
             }
         }
 
