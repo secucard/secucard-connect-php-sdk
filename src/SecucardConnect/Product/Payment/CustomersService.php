@@ -2,6 +2,7 @@
 
 namespace SecucardConnect\Product\Payment;
 
+use SecucardConnect\Client\ClientError;
 use SecucardConnect\Client\ProductService;
 use SecucardConnect\Client\RequestOptions;
 use SecucardConnect\Event\DefaultEventHandler;
@@ -67,9 +68,10 @@ class CustChanged extends DefaultEventHandler
 {
     function onEvent($event)
     {
-        if (!empty($event->data) && count($event->data) != 0) {
-            call_user_func($this->callback, $this->service->get($event->data[0]['id']));
+        if (empty($event->data) || count($event->data) == 0) {
+            throw new ClientError('Invalid event data, no customer id found.');
         }
+        call_user_func($this->callback, $this->service->get($event->data[0]['id']));
     }
 }
 
