@@ -277,7 +277,7 @@ abstract class ProductService
 
         return $inst;
     }
-    
+
     public function getResourceId(){
         return $this->resourceMetadata->resourceId;
     }
@@ -461,6 +461,11 @@ abstract class ProductService
 
             if ($e->getCode() == 400) {
                 return new BadAuthException($error, $msg, 400, $e);
+            }
+
+            if ($e->getCode() == 404) {
+                return new ApiError($json->error, $json->code, $json->error_details,
+                    $json->error_user, $json->supportId);
             }
         }
 
