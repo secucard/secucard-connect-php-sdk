@@ -250,7 +250,7 @@ final class SecucardConnect
      */
     public function handleEvent($eventData)
     {
-        $this->logger->info('Received Push with data: ' . $eventData);
+        $this->logger->debug('Received Push with data: ' . $eventData);
         $this->eventDispatcher->dispatch($eventData);
     }
 
