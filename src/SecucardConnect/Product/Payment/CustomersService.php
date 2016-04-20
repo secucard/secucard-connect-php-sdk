@@ -4,9 +4,8 @@ namespace SecucardConnect\Product\Payment;
 
 use SecucardConnect\Client\ProductService;
 use SecucardConnect\Client\RequestOptions;
-use SecucardConnect\Event\AbstractEventHandler;
+use SecucardConnect\Event\DefaultEventHandler;
 use SecucardConnect\Product\Common\Model\BaseCollection;
-use SecucardConnect\Product\General\Model\Event;
 use SecucardConnect\Product\Payment\Model\Customer;
 
 
@@ -23,8 +22,7 @@ class CustomersService extends ProductService
      */
     public function onCustomerChanged($fn)
     {
-        $this->registerEventHandler('h2k0sh6lm1w',
-            $fn === null ? null : new CustChange($this->resourceMetadata->resourceId, Event::TYPE_CHANGED, $fn, $this));
+        $this->registerEventHandler('paymentcustchanged', $fn === null ? null : new CustChanged($fn, $this));
     }
 
     /**
@@ -65,36 +63,13 @@ class CustomersService extends ProductService
  * Internal class to handle a customer change event.
  * @package SecucardConnect\Product\Payment
  */
-class CustChange extends AbstractEventHandler
+class CustChanged extends DefaultEventHandler
 {
-    /**
-     * @var CustomersService
-     */
-    private $service;
-
-    /**
-     * CustomerChangedHandler constructor.
-     * @param null|string $eventTarget
-     * @param null|string $eventType
-     * @param callable $callback
-     * @param $service CustomersService
-     */
-    public function __construct($eventTarget, $eventType, callable $callback, $service)
+    function onEvent($event)
     {
-        parent::__construct($eventTarget, $eventType, $callback);
-        $this->service = $service;
-    }
-
-    function handle($event)
-    {
-        if ($this->accept($event)) {
-            if (!empty($event->data) && count($event->data) != 0) {
-                call_user_func($this->callback, $this->service->get($event->data[0]['id']));
-            }
-            return true;
+        if (!empty($event->data) && count($event->data) != 0) {
+            call_user_func($this->callback, $this->service->get($event->data[0]['id']));
         }
-
-        return false;
     }
 }
 

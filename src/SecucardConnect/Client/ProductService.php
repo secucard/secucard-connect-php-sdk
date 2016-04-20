@@ -277,6 +277,10 @@ abstract class ProductService
 
         return $inst;
     }
+    
+    public function getResourceId(){
+        return $this->resourceMetadata->resourceId;
+    }
 
     protected function updateWithAction($id, $action, $actionArg = null, $object = null, $class = null)
     {
