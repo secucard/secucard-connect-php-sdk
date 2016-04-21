@@ -131,20 +131,6 @@ class OauthProvider extends ProductService
      */
     public function getAccessToken($deviceCode = null, $json = false)
     {
-        if (isset($this->accessToken['expires_in']) && $this->accessToken['expires_in'] < time() && $this->refreshToken) {
-            // The access token has expired
-            if (!$this->credentials instanceof ClientCredentials) {
-                throw new ClientError('Invalid credentials type supplied, must be of type ' . ClientCredentials::class);
-            }
-
-            if ($this->credentials instanceof RefreshTokenCredentials) {
-                $this->updateToken($this->credentials);
-            } else {
-                $this->updateToken(new RefreshTokenCredentials($this->credentials->client_id,
-                    $this->credentials->client_secret, $this->refreshToken));
-            }
-        }
-
         if (!$this->accessToken) {
             // Try to acquire a new access token from the server
             if ($this->credentials instanceof DeviceCredentials) {
@@ -161,7 +147,25 @@ class OauthProvider extends ProductService
             } else {
                 $this->updateToken();
             }
+        } else {
+            if (isset($this->accessToken['expires_in']) && $this->accessToken['expires_in'] < time()) {
+                // The access token has expired
+
+                if ($this->credentials instanceof RefreshTokenCredentials) {
+                    $this->updateToken($this->credentials);
+                } else if ($this->refreshToken) {
+                    if (!$this->credentials instanceof ClientCredentials) {
+                        throw new ClientError('Invalid credentials type supplied, must be of type ' . ClientCredentials::class);
+                    }
+                    $this->updateToken(new RefreshTokenCredentials($this->credentials->client_id,
+                        $this->credentials->client_secret, $this->refreshToken));
+
+                } else {
+                    $this->updateToken();
+                }
+            }
         }
+
         $at = $this->accessToken['access_token'];
 
         if ($json === true) {
