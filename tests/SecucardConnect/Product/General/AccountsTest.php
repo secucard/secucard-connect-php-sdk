@@ -18,9 +18,9 @@ class AccountsTest extends BaseClientTest
         $service = $this->client->general->accounts;
         $query = new QueryParams(3, 2);
         $list = $service->getList($query);
-        $this->assertFalse(empty($list));
-        $this->assertTrue($list->count == 3);
-        $this->assertTrue($list->count <= $list->totalCount);
+        $this->assertFalse(count($list) == 0);
+        $this->assertTrue(count($list) == 3);
+        $this->assertTrue(count($list) <= $list->totalCount);
     }
 
     public function testGetListScroll()
@@ -29,13 +29,13 @@ class AccountsTest extends BaseClientTest
         $query = new QueryParams(2);
         $list = $service->getScrollableList($query, '1m');
         $this->assertFalse(empty($list->scrollId));
-        $this->assertTrue($list->count == 2);
+        $this->assertTrue(count($list) == 2);
         $list = $service->getNextBatch($list->scrollId);
-        $this->assertFalse(empty($list));
-        $this->assertTrue($list->count == 2);
+        $this->assertFalse(count($list) == 0);
+        $this->assertTrue(count($list) == 2);
         $list = $service->getNextBatch($list->scrollId);
-        $this->assertFalse(empty($list));
-        $this->assertTrue($list->count == 2);
+        $this->assertFalse(count($list) == 0);
+        $this->assertTrue(count($list) == 2);
     }
 
     /**

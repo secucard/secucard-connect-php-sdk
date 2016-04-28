@@ -120,13 +120,12 @@ abstract class ProductService
         return $this->getListInternal($params, $expireTime);
     }
 
-    // todo
     /**
      * Returns the next batch of results initially requested by getScrollableList() call.
      * @param string $id The id of the result set snapshot to access. Get this id from the collection returned by
      * getScrollableList().
      * @return BaseCollection The collection of result items. The number of returned items may be less as requested
-     * by the initial count parameter at the end of the result set. Will return null if no data is available anymore.
+     * by the initial count parameter at the end of the result set. Has count of 0 if no data is available anymore.
      * The total count of items in result is not set here.
      * todo: what happens on expiring
      */
@@ -147,7 +146,7 @@ abstract class ProductService
             throw new ClientError('Error retrieving data list.');
         }
 
-        $list = new BaseCollection(null, $this->resourceMetadata->resourceClass, null);
+        $list = new BaseCollection();
 
         if (is_object($jsonResponse)) {
             $jsonResponse = (array)$jsonResponse;
@@ -171,10 +170,8 @@ abstract class ProductService
             $list->items[] = $this->createResourceInst($item, $this->resourceMetadata->resourceClass);
         }
 
-        // check if we reached end of all items for iteration
         if ($list->count == $list->totalCount) {
-            $this->logger->info('reached end of a collection');
-            $list->reachedEnd = true;
+            $this->logger->debug('reached end of a collection');
         }
 
         $this->postProcess($list);
