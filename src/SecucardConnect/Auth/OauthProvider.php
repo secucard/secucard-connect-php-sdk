@@ -169,7 +169,12 @@ class OauthProvider extends ProductService
         $at = $this->accessToken['access_token'];
 
         if ($json === true) {
-            return json_encode(array('access_token' => $at, 'expires_in' => $this->accessToken['expires_in'] - time()));
+            $arr = array(
+                'access_token' => $at,
+                'expires_in' => $this->accessToken['expires_in'] - time(),
+                'expireTime' => $this->accessToken['expires_in']
+            );
+            return json_encode($arr);
         } else {
             return $at;
         }
