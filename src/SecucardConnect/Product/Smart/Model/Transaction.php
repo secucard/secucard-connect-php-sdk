@@ -95,17 +95,8 @@ class Transaction extends BaseModel
     /**
      * @var string
      */
-    public $payment_requested;
-
-    /**
-     * @var string
-     */
-    public $payment_executed;
-
-    /**
-     * @var string
-     */
     public $error;
+
 
     public function jsonFilterNullProperties()
     {
@@ -115,8 +106,6 @@ class Transaction extends BaseModel
             'receipt',
             'receipt_merchant',
             'payment_method',
-            'payment_requested',
-            'payment_executed',
             'receipt_merchant_print',
             'error'
         ];
