@@ -1,12 +1,11 @@
 <?php
-/**
- * Address Common model class
- */
 
-namespace SecucardConnect\Product\Common\Model;
+namespace SecucardConnect\Product\Payment\Model;
+
+use SecucardConnect\Product\Common\Model\BaseModel;
 
 /**
- * Address Data Model class
+ * Basket Data Model class
  *
  */
 class Basket extends BaseModel

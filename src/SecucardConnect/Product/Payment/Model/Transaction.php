@@ -8,9 +8,12 @@
 
 namespace SecucardConnect\Product\Payment\Model;
 
-
 use SecucardConnect\Product\Common\Model\BaseModel;
 
+/**
+ * Class Transaction
+ * @package SecucardConnect\Product\Payment\Model
+ */
 class Transaction extends BaseModel
 {
     const STATUS_ACCEPTED = "accepted"; // status for accepted debit transactions and finished prepay transactions
@@ -61,4 +64,9 @@ class Transaction extends BaseModel
      * @var string
      */
     public $transaction_status;
+
+    /**
+     * @var Basket
+     */
+    public $basket;
 }
