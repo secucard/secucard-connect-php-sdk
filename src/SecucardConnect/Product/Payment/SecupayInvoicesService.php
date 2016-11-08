@@ -39,7 +39,7 @@ class SecupayInvoicesService extends ProductService
 }
 
 /**
- * Internal class to handle a debit change event.
+ * Internal class to handle a invoice change event.
  * @package SecucardConnect\Product\Payment
  */
 class InvoiceChanged extends DefaultEventHandler
