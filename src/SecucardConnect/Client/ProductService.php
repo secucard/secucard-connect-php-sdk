@@ -61,6 +61,7 @@ abstract class ProductService
      */
     protected $eventDispatcher;
 
+    private $actionId;
 
     public static function create($product, $resource, ClientContext $context)
     {
@@ -279,6 +280,21 @@ abstract class ProductService
         return $this->resourceMetadata->resourceId;
     }
 
+    /**
+     * Set an ID to submit with the NEXT service call.
+     * If provided the server will prevent multiple executions of a service call with the same action ID.
+     * This ensures idempotent requests. Multiple service calls will not fail, the server just ignores and returns
+     * the same result as returned the first time.
+     * But NOTE, this behaviour has a timeout, an assigned ID is only kept for 3 minutes on server, after that treated as
+     * new.
+     *
+     * The given ID is immediately cleared (null) after applied for a service call, even after a failure.
+     * @param $id string Any unique id.
+     */
+    public function setActionId($id){
+        $this->actionId = $id;
+    }
+
     protected function updateWithAction($id, $action, $actionArg = null, $object = null, $class = null)
     {
         return $this->requestAction(RequestOps::UPDATE, $id, $action, $actionArg, $object, $class);
@@ -417,6 +433,11 @@ abstract class ProductService
             }
             $options[\GuzzleHttp\RequestOptions::HEADERS]['Content-Type'] = 'application/json';
         };
+
+        if ($this->actionId !== null) {
+            $options[\GuzzleHttp\RequestOptions::HEADERS]['X-Action'] = $this->actionId;
+            $this->setActionId(null);
+        }
 
 
         try {
@@ -610,6 +631,11 @@ final class RequestParams
      * @var string
      */
     public $actionArg;
+
+    /**
+     * @var string
+     */
+    public $actionId;
 
     /**
      * @var string

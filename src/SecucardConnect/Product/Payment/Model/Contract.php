@@ -29,19 +29,9 @@ class Contract extends BaseModel
     public $parent;
 
     /**
-     * @var \SecucardConnect\Product\General\Model\Merchant
-     */
-    public $merchant;
-
-    /**
      * @var boolean
      */
     public $allow_cloning;
-
-    /**
-     * @var string
-     */
-    public $sepa_mandate_inform;
 }
 
 /**
