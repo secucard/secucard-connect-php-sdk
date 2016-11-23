@@ -10,6 +10,11 @@ use SecucardConnect\Product\Common\Model\BaseModel;
  */
 class Basket extends BaseModel
 {
+	const ITEM_TYPE_ARTICLE = 'article';
+	const ITEM_TYPE_SHIPPING = 'shipping';
+	const ITEM_TYPE_DONATION = 'donation';
+	const ITEM_TYPE_STAKEHOLDER_PAYMENT = 'stakeholder_payment';
+
     /**
      * @var int
      */
