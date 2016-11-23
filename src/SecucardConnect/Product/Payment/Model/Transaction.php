@@ -66,7 +66,8 @@ class Transaction extends BaseModel
     public $transaction_status;
 
     /**
-     * @var Basket
+     * A list of basket items
+     * @var Basket[]
      */
     public $basket;
 }
