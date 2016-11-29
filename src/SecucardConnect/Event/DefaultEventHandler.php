@@ -2,10 +2,13 @@
 
 namespace SecucardConnect\Event;
 
-
 use SecucardConnect\Client\ProductService;
 use SecucardConnect\Product\General\Model\Event;
 
+/**
+ * Class DefaultEventHandler
+ * @package SecucardConnect\Event
+ */
 abstract class DefaultEventHandler implements EventHandler
 {
     /**
@@ -34,7 +37,7 @@ abstract class DefaultEventHandler implements EventHandler
      * @param ProductService $service
      * @param string $eventType
      */
-    public function __construct(callable $callback, $service, $eventType = 'changed')
+    public function __construct(callable $callback, ProductService $service, $eventType = 'changed')
     {
         $this->callback = $callback;
         $this->eventTarget = $service->getResourceId();
@@ -49,12 +52,17 @@ abstract class DefaultEventHandler implements EventHandler
      * @param Event $event The event to process.
      * @return bool True if can handle, false else.
      */
-    protected function accept($event)
+    protected function accept(Event $event)
     {
         return $event->target === $this->eventTarget && $event->type === $this->eventType;
     }
 
-    function handle($event)
+	/**
+	 * @param Event $event
+	 *
+	 * @return bool
+	 */
+    function handle(Event $event)
     {
         if ($this->accept($event)) {
             $this->onEvent($event);
