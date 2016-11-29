@@ -63,6 +63,13 @@ abstract class ProductService
 
     private $actionId;
 
+	/**
+	 * @param string $product
+	 * @param string $resource
+	 * @param ClientContext $context
+	 *
+	 * @return mixed
+	 */
     public static function create($product, $resource, ClientContext $context)
     {
         $rm = new ResourceMetadata($product, $resource);
@@ -135,6 +142,14 @@ abstract class ProductService
         return $this->getListInternal(null, null, $id);
     }
 
+	/**
+	 * @param QueryParams|null $query
+	 * @param null $expireTime
+	 * @param null $scrollId
+	 *
+	 * @return BaseCollection
+	 * @throws ClientError
+	 */
     private function getListInternal(QueryParams $query = null, $expireTime = null, $scrollId = null)
     {
         $sp = new SearchParams($query, $expireTime, $scrollId);
@@ -218,12 +233,11 @@ abstract class ProductService
      */
     public function delete(BaseModel $model)
     {
-        $id = $model->getId();
-        if (empty($id)) {
+        if (empty($model->id)) {
             throw new Exception('Cannot delete object with empty primary key value');
         }
 
-        $params = new RequestParams(RequestOps::DELETE, $this->resourceMetadata, $id);
+        $params = new RequestParams(RequestOps::DELETE, $this->resourceMetadata, $model->id);
         $jsonResponse = $this->request($params);
 
         if ($jsonResponse == false) {
@@ -251,17 +265,15 @@ abstract class ProductService
             throw new Exception('Unable save data, data type and service must match.');
         }
 
-        $id = $model->id;
-
         // default add new object
         $method = RequestOps::CREATE;
 
-        if (!empty($id)) {
+        if (!empty($model->id)) {
             // update the existing record
             $method = RequestOps::UPDATE;
         }
 
-        $params = new RequestParams($method, $this->resourceMetadata, $id, null, null, null,
+        $params = new RequestParams($method, $this->resourceMetadata, $model->id, null, null, null,
             MapperUtil::jsonEncode($model, $model->jsonFilterProperties(), $model->jsonFilterNullProperties()));
         $jsonResponse = $this->request($params);
 
@@ -276,6 +288,9 @@ abstract class ProductService
         return $inst;
     }
 
+	/**
+	 * @return string
+	 */
     public function getResourceId(){
         return $this->resourceMetadata->resourceId;
     }
@@ -295,21 +310,56 @@ abstract class ProductService
         $this->actionId = $id;
     }
 
+	/**
+	 * @param $id
+	 * @param $action
+	 * @param null $actionArg
+	 * @param null $object
+	 * @param null $class
+	 *
+	 * @return bool|mixed|null|string
+	 */
     protected function updateWithAction($id, $action, $actionArg = null, $object = null, $class = null)
     {
         return $this->requestAction(RequestOps::UPDATE, $id, $action, $actionArg, $object, $class);
     }
 
+	/**
+	 * @param $id
+	 * @param $action
+	 * @param null $actionArg
+	 * @param null $object
+	 * @param null $class
+	 *
+	 * @return bool|mixed|null|string
+	 */
     protected function deleteWithAction($id, $action, $actionArg = null, $object = null, $class = null)
     {
         return $this->requestAction(RequestOps::DELETE, $id, $action, $actionArg, $object, $class);
     }
 
+	/**
+	 * @param $id
+	 * @param $action
+	 * @param null $actionArg
+	 * @param null $object
+	 * @param null $class
+	 *
+	 * @return bool|mixed|null|string
+	 */
     protected function execute($id, $action, $actionArg = null, $object = null, $class = null)
     {
         return $this->requestAction(RequestOps::EXECUTE, $id, $action, $actionArg, $object, $class);
     }
 
+	/**
+	 * @param $appId
+	 * @param $action
+	 * @param null $object
+	 * @param null $class
+	 *
+	 * @return bool|mixed|null|string
+	 */
     protected function executeCustom($appId, $action, $object = null, $class = null)
     {
         return $this->requestAction(RequestOps::EXECUTE, null, $action, null, $object, $class, $appId);
@@ -323,9 +373,20 @@ abstract class ProductService
      */
     protected function getRequestOptions()
     {
-        return array();
+        return [];
     }
 
+	/**
+	 * @param $op
+	 * @param null $id
+	 * @param $action
+	 * @param null $actionArg
+	 * @param null $object
+	 * @param null $class
+	 * @param null $appId
+	 *
+	 * @return bool|mixed|null|string
+	 */
     private function requestAction(
         $op,
         $id = null,
@@ -360,6 +421,14 @@ abstract class ProductService
         return $json;
     }
 
+	/**
+	 * @param RequestParams $params
+	 *
+	 * @return bool|mixed
+	 * @throws ApiError
+	 * @throws AuthError
+	 * @throws ClientError
+	 */
     private function request(RequestParams $params)
     {
         $rm = $params->resourceMetadata;
@@ -385,7 +454,7 @@ abstract class ProductService
 
         $options = array_merge(['auth' => 'oauth'], $params->options);
 
-        $p = array();
+        $p = [];
         if (!empty($params->searchParams->query)) {
             $q = $params->searchParams->query;
 
@@ -456,7 +525,7 @@ abstract class ProductService
     /**
      * @param Exception $e
      * @param string $msg
-     * @return ApiError|AuthError|ClientError
+     * @return ApiError|AuthError|ClientError|Exception
      */
     protected function mapError(Exception $e, $msg)
     {
@@ -532,6 +601,12 @@ abstract class ProductService
         return $mr;
     }
 
+	/**
+	 * @param $json
+	 * @param $class
+	 *
+	 * @return mixed|null
+	 */
     private function createResourceInst($json, $class)
     {
         if (empty($json)) {
@@ -593,6 +668,10 @@ final class RequestOptions
     const RESULT_PROCESSING = 'resultprocessing';
 }
 
+/**
+ * Class RequestParams
+ * @package SecucardConnect\Client
+ */
 final class RequestParams
 {
     /**
@@ -666,7 +745,7 @@ final class RequestParams
         $action = null,
         $actionArg = null,
         $jsonData = null,
-        array $options = array()
+        array $options = []
     )
     {
         $this->operation = $operation;
@@ -680,6 +759,10 @@ final class RequestParams
     }
 }
 
+/**
+ * Class SearchParams
+ * @package SecucardConnect\Client
+ */
 final class SearchParams
 {
     /**
