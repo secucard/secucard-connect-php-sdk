@@ -20,9 +20,9 @@ class SecupayPrepaysService extends ProductService
      * contract is an parent contract (not cloned).
      * @return bool True if successful false else.
      */
-    public function cancel($prepayId, $contractId)
+    public function cancel($prepayId, $contractId = null)
     {
-        $o = array(['contract' => $contractId]);
+        $o = [['contract' => $contractId]];
         $res = $this->execute($prepayId, 'cancel', null, $o);
         return (bool)$res['result'];
     }
@@ -44,6 +44,11 @@ class SecupayPrepaysService extends ProductService
  */
 class PrepayChanged extends DefaultEventHandler
 {
+	/**
+	 * @param $event
+	 *
+	 * @throws ClientError
+	 */
     function onEvent($event)
     {
         if (empty($event->data) || count($event->data) == 0) {

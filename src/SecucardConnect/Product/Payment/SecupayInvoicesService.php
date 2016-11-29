@@ -20,9 +20,9 @@ class SecupayInvoicesService extends ProductService
      * contract is an parent contract (not cloned).
      * @return bool True if successful false else.
      */
-    public function cancel($invoiceId, $contractId)
+    public function cancel($invoiceId, $contractId = null)
     {
-        $o = array(['contract' => $contractId]);
+        $o = [['contract' => $contractId]];
         $res = $this->execute($invoiceId, 'cancel', null, $o);
         return (bool)$res['result'];
     }
@@ -44,6 +44,11 @@ class SecupayInvoicesService extends ProductService
  */
 class InvoiceChanged extends DefaultEventHandler
 {
+	/**
+	 * @param $event
+	 *
+	 * @throws ClientError
+	 */
     function onEvent($event)
     {
         if (empty($event->data) || count($event->data) == 0) {

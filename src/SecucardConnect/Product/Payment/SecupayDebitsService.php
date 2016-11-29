@@ -20,9 +20,9 @@ class SecupayDebitsService extends ProductService
      * contract is an parent contract (not cloned).
      * @return bool True if successful false else.
      */
-    public function cancel($debitId, $contractId)
+    public function cancel($debitId, $contractId = null)
     {
-        $o = array(['contract' => $contractId]);
+        $o = [['contract' => $contractId]];
         $res = $this->execute($debitId, 'cancel', null, $o);
         return (bool)$res['result'];
     }
@@ -44,6 +44,11 @@ class SecupayDebitsService extends ProductService
  */
 class DebitChanged extends DefaultEventHandler
 {
+	/**
+	 * @param $event
+	 *
+	 * @throws ClientError
+	 */
     function onEvent($event)
     {
         if (empty($event->data) || count($event->data) == 0) {
