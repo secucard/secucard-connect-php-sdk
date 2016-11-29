@@ -24,6 +24,11 @@ class SecupayInvoicesService extends ProductService
     {
         $o = [['contract' => $contractId]];
         $res = $this->execute($invoiceId, 'cancel', null, $o);
+
+	    if(is_object($res)) {
+		    return (bool)$res->result;
+	    }
+
         return (bool)$res['result'];
     }
 
