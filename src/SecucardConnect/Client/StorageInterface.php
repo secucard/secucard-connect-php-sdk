@@ -2,6 +2,10 @@
 
 namespace SecucardConnect\Client;
 
+/**
+ * Interface StorageInterface
+ * @package SecucardConnect\Client
+ */
 interface StorageInterface
 {
     /**

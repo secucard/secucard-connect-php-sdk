@@ -77,8 +77,8 @@ class ResourceMetadata
                 $rc = new \ReflectionClass($cls);
 
                 // collect all in hierarchy
-                $parents = array();
-                while ($parent = $rc->getParentClass()) {
+                $parents = [];
+                while (($parent = $rc->getParentClass()) && $parent) {
                     $parents[] = $parent;
                     $rc = new \ReflectionClass($parent->getName());
                 }
@@ -94,7 +94,13 @@ class ResourceMetadata
         return null;
     }
 
-
+	/**
+	 * @param $dir
+	 * @param $resource
+	 * @param $classPrefix
+	 *
+	 * @return null|string
+	 */
     private function findServiceClass($dir, $resource, $classPrefix)
     {
         $lcres = strtolower($resource);
@@ -106,8 +112,8 @@ class ResourceMetadata
                 $rc = new \ReflectionClass($cls);
 
                 // collect all in hierarchy
-                $parents = array();
-                while ($parent = $rc->getParentClass()) {
+                $parents = [];
+                while (($parent = $rc->getParentClass()) && $parent) {
                     $parents[] = $parent;
                     $rc = new \ReflectionClass($parent->getName());
                 }

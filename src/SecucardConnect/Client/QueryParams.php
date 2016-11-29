@@ -3,7 +3,10 @@
 
 namespace SecucardConnect\Client;
 
-
+/**
+ * Class QueryParams
+ * @package SecucardConnect\Client
+ */
 class QueryParams
 {
     const SORT_ASC = "asc";

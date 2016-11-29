@@ -2,13 +2,20 @@
 
 namespace SecucardConnect\Client;
 
+/**
+ * Class DummyStorage
+ * @package SecucardConnect\Client
+ */
 class DummyStorage implements StorageInterface {
     
     protected $storage;
-    
+
+	/**
+	 * DummyStorage constructor.
+	 */
     public function __construct() {
         // init dummy storage var
-        $this->storage = array();
+        $this->storage = [];
     }
     
     /**
@@ -51,6 +58,6 @@ class DummyStorage implements StorageInterface {
      * @return void
      */
     public function deleteAll() {
-        $this->storage = array();
+        $this->storage = [];
     }
 } 
