@@ -10,12 +10,5 @@ use SecucardConnect\Product\Payment\Service\PaymentService;
  */
 class SecupayCreditcardsService extends PaymentService
 {
-    /**
-     * @deprecated v1.1.0 Use now onStatusChange($fn).
-     */
-    public function onSecupayCreditcardChanged($fn)
-    {
-        $this->onStatusChange($fn);
-    }
 }
 
