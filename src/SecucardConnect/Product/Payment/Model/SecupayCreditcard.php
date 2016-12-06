@@ -16,4 +16,10 @@ class SecupayCreditcard extends Transaction
      */
     public $customer;
 
+    public $url_success;
+
+    public $url_push;
+
+    public $iframe_url;
+
 }
