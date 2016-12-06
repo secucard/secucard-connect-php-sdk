@@ -108,21 +108,23 @@ class ResourceMetadata
         foreach ($files as $file) {
             $name = basename($file, '.php');
             if (strpos(strtolower($name), $lcres) !== false) {
-                $cls = $classPrefix . $name;
-                $rc = new \ReflectionClass($cls);
+	            $parentClassName = $className = $classPrefix . $name;
 
-                // collect all in hierarchy
-                $parents = [];
-                while (($parent = $rc->getParentClass()) && $parent) {
-                    $parents[] = $parent;
-                    $rc = new \ReflectionClass($parent->getName());
-                }
+                do {
+	                $rc = new \ReflectionClass($parentClassName);
+	                $parent = $rc->getParentClass();
 
-                foreach ($parents as $parent) {
-                    if (ProductService::class === $parent->getName()) {
-                        return $cls;
-                    }
-                }
+	                if (!$parent) {
+	                	break;
+	                }
+
+	                $parentClassName = $parent->getName();
+
+	                if (ProductService::class === $parentClassName) {
+		                return $className;
+	                }
+
+                } while (true);
             }
         }
 

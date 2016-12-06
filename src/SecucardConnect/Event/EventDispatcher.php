@@ -2,19 +2,22 @@
 
 namespace SecucardConnect\Event;
 
-
 use Exception;
 use SecucardConnect\Client\AbstractError;
 use SecucardConnect\Client\ClientError;
 use SecucardConnect\Product\General\Model\Event;
 use SecucardConnect\Util\MapperUtil;
 
+/**
+ * Class EventDispatcher
+ * @package SecucardConnect\Event
+ */
 class EventDispatcher
 {
     /**
      * @var EventHandler[]
      */
-    private $handlerMap = array();
+    private $handlerMap = [];
 
     /**
      * Register/Unregister an event handler for a id.
