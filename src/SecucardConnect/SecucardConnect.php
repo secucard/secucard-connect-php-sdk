@@ -5,7 +5,6 @@
 
 namespace SecucardConnect;
 
-use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use Psr\Http\Message\RequestInterface;
@@ -25,6 +24,8 @@ use SecucardConnect\Util\Logger;
  * Secucard Api Client
  * Uses GuzzleHttp client library
  * @author Jakub Elias <j.elias@secupay.ag>
+ * @property Product payment
+ * @property Product service
  */
 final class SecucardConnect
 {
