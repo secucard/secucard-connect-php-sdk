@@ -23,6 +23,11 @@ abstract class BaseModel
      */
     public $object;
 
+	/**
+	 * @var ApiData
+	 */
+    public $api_data;
+
 
     /**
      * ToString Function

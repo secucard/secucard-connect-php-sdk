@@ -78,7 +78,9 @@ final class SecucardConnect
      * Api version
      * @var string
      */
-    const VERSION = '1.1.0';
+    const VERSION = '1.2.0';
+
+    const API_VERSION = 'v2';
 
     const HTTP_STATUS_CODE_OK = 200;
 

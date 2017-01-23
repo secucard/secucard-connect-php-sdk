@@ -11,9 +11,4 @@ namespace SecucardConnect\Product\Payment\Model;
  */
 class SecupayInvoice extends Transaction
 {
-    /**
-     * @var \SecucardConnect\Product\Payment\Model\Customer
-     */
-    public $customer;
-
 }

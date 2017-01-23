@@ -30,6 +30,16 @@ class Transaction extends BaseModel
      */
     public $contract;
 
+	/**
+	 * @var \SecucardConnect\Product\Payment\Model\Customer
+	 */
+	public $customer;
+
+	/**
+	 * @var \SecucardConnect\Product\Payment\Model\Customer (optional)
+	 */
+	public $recipient;
+
     /**
      * @var int
      */
@@ -67,7 +77,33 @@ class Transaction extends BaseModel
 
     /**
      * A list of basket items
+     *
      * @var Basket[]
      */
     public $basket;
+
+	/**
+	 * @var Experience
+	 */
+    public $experience;
+
+	/**
+	 * If TRUE the payment transaction will be only a pre-authorization
+	 * and a separate capture or cancel is needed to start the payment processing.
+	 *
+	 * @var bool (optional)
+	 */
+    public $accrual;
+
+	/**
+	 * @var Subscription (optional)
+	 */
+    public $subscription;
+
+	/**
+	 * A list of redirect urls used for the payment checkout page
+	 *
+	 * @var RedirectUrl
+	 */
+    public $redirect_url;
 }
