@@ -106,4 +106,11 @@ class Transaction extends BaseModel
 	 * @var RedirectUrl
 	 */
     public $redirect_url;
+
+	/**
+	 * A list optional settings and parameters to customize the checkout process
+	 *
+	 * @var OptData
+	 */
+    public $opt_data;
 }
