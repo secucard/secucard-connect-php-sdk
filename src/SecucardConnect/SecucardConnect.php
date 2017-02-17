@@ -78,7 +78,7 @@ final class SecucardConnect
      * SKD version
      * @var string
      */
-    const VERSION = '1.1.1';
+    const VERSION = '1.1.2';
 
     const HTTP_STATUS_CODE_OK = 200;
 
