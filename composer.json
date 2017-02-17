@@ -3,7 +3,7 @@
     "description": "secucard connect PHP client SDK",
 	"license": "Apache-2.0",
     "homepage": "https://github.com/secucard/secucard-connect-php-sdk",
-    "version": "v1.1.0",
+    "version": "v1.1.2",
     "require": {
         "php": ">=5.5.0",
         "guzzlehttp/guzzle": "~6.0",
