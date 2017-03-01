@@ -8,13 +8,13 @@
 
 namespace SecucardConnect\Product\Payment\Model;
 
-use SecucardConnect\Product\Common\Model\BaseModel;
+use SecucardConnect\Product\Common\Model\BaseModelMain;
 
 /**
  * Class Transaction
  * @package SecucardConnect\Product\Payment\Model
  */
-class Transaction extends BaseModel
+class Transaction extends BaseModelMain
 {
     const STATUS_ACCEPTED = "accepted"; // status for accepted debit transactions and finished prepay transactions
     const STATUS_AUTHORIZED = "authorized"; // prepay transaction after creation , before payment arrives

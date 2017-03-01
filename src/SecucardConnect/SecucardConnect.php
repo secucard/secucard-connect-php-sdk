@@ -75,12 +75,14 @@ final class SecucardConnect
     private $eventDispatcher;
 
     /**
-     * Api version
-     * @var string
+     * SDK version
      */
-    const VERSION = '1.2.0';
+    const VERSION = '1.2.0'; // 2017-03-01
 
-    const API_VERSION = 'v2';
+	/**
+	 * API version
+	 */
+    const API_VERSION = '2.1'; // 2017-03-01
 
     const HTTP_STATUS_CODE_OK = 200;
 
