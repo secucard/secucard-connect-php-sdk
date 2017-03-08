@@ -30,6 +30,24 @@ abstract class PaymentService extends ProductService implements PaymentServiceIn
 		return (bool)$res['result'];
 	}
 
+    /**
+     * @param string $paymentId The payment transaction id.
+     * @return bool TRUE if successful FALSE else.
+     */
+	public function capture($paymentId)
+    {
+        $class = $this->resourceMetadata->resourceClass;
+        $object = new $class();
+        $object->id = $paymentId;
+        $res = $this->updateWithAction($paymentId, null, null, $object, $class);
+
+        if(is_object($res)) {
+            return (bool)$res->result;
+        }
+
+        return (bool)$res['result'];
+    }
+
 
 	/**
 	 * Set a callback to be notified when a creditcard has changed. Pass null to remove a previous setting.
