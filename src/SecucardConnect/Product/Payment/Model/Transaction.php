@@ -25,6 +25,9 @@ class Transaction extends BaseModelMain
     const STATUS_REFUND = "refund"; // special status, saying that transaction was paid back (for some reason)
     const STATUS_INTERNAL_SERVER_STATUS = "internal_server_status"; // should not happen, but only when status would be empty, this status is used
 
+    const PAYMENT_ACTION_AUTHORIZATION = "authorization"; // Use the Authorization option to place a hold on the payer funds.
+    const PAYMENT_ACTION_SALE = "sale"; // Direct payment (immediate debit of the funds from the buyer's funding source)
+
     /**
      * @var \SecucardConnect\Product\Payment\Model\Contract
      */
@@ -113,4 +116,13 @@ class Transaction extends BaseModelMain
 	 * @var OptData
 	 */
     public $opt_data;
+
+    /**
+     * The "payment_action" parameter controls the processing of the transaction by secupay, for the time being,
+     * there are the values "sale" and "authorization". Sale is a direct payment.
+     * To perform the transaction later, you have to transmit “authorization” here.
+     *
+     * @var string
+     */
+    public $payment_action = self::PAYMENT_ACTION_SALE;
 }
