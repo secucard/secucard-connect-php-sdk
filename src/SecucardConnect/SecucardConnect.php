@@ -77,12 +77,7 @@ final class SecucardConnect
     /**
      * SDK version
      */
-    const VERSION = '1.2.0'; // 2017-03-01
-
-	/**
-	 * API version
-	 */
-    const API_VERSION = '2.1'; // 2017-03-01
+    const VERSION = '1.3.0'; // 2017-04-03
 
     const HTTP_STATUS_CODE_OK = 200;
 

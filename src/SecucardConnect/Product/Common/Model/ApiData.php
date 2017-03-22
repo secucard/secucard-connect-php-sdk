@@ -29,13 +29,6 @@ class ApiData extends BaseModel
 	public $language;
 
 	/**
-	 * Define the api version
-	 *
-	 * @var string
-	 */
-	public $api_version = SecucardConnect::API_VERSION;
-
-	/**
 	 * Define the api client id (it's like the user agent string for browsers)
 	 * Definition: "{name}/{version}", separator "; "
 	 * Example: "Wordpress/4.7.1; WooCommerce/2.6.11; PHP-SDK/1.2.0"
