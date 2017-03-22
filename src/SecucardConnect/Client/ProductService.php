@@ -55,6 +55,11 @@ abstract class ProductService
      */
     protected $storage;
 
+    /**
+     * The api version of the product (and there services)
+     * @var string
+     */
+    protected $version = 'v1';
 
     /**
      * @var EventDispatcher
@@ -435,9 +440,9 @@ abstract class ProductService
         $base = $this->config['base_url'] . $this->config['api_path'] . "/";
 
         if (!empty($params->appId)) {
-            $url = $base . 'General/Apps/' . $params->appId . '/callBackend';
+            $url = $base . 'General/' . $this->version . '/Apps/' . $params->appId . '/callBackend';
         } else {
-            $url = $base . $rm->product . '/' . $rm->resource;
+            $url = $base . $rm->product . '/' . $this->version . '/' . $rm->resource;
         }
 
         if (!empty($params->id)) {

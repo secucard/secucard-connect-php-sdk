@@ -102,7 +102,7 @@ final class SecucardConnect
         $default = array(
             'base_url' => 'https://connect.secucard.com',
             'auth_path' => '/oauth/token',
-            'api_path' => '/api/v2',
+            'api_path' => '/api',
             'debug' => false,
             'auth' => null
         );
