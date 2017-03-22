@@ -7,6 +7,7 @@ namespace SecucardConnect;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Utils;
 use Psr\Http\Message\RequestInterface;
 use Psr\Log\LoggerInterface;
 use SecucardConnect\Auth\GrantTypeInterface;
@@ -21,22 +22,28 @@ use SecucardConnect\Util\GuzzleLogger;
 use SecucardConnect\Util\Logger;
 
 /**
- * Secucard Api Client
+ * Secucard API Client
+ *
  * Uses GuzzleHttp client library
+ *
  * @author Jakub Elias <j.elias@secupay.ag>
- * @property Product payment
- * @property Product service
+ * @author Rico Simlinger <r.simlinger@secupay.ag>
  */
 final class SecucardConnect
 {
+    /**
+     * SDK version
+     */
+    const VERSION = '1.3.0'; // 2017-04-03
+
     /**
      * @var OAuthProvider
      */
     private $oauthProvider;
 
     /**
-     * Configuration
-     * @var array
+     * Api Client Configuration
+     * @var ApiClientConfiguration
      */
     protected $config;
 
@@ -75,15 +82,8 @@ final class SecucardConnect
     private $eventDispatcher;
 
     /**
-     * SDK version
-     */
-    const VERSION = '1.3.0'; // 2017-04-03
-
-    const HTTP_STATUS_CODE_OK = 200;
-
-    /**
      * Constructor
-     * @param array $config Options to correctly initialize the client.
+     * @param ApiClientConfiguration $config Options to correctly initialize the client.
      * @param LoggerInterface $logger Pass here LoggerInterface to use for logging
      * @param StorageInterface $dataStorage Pass here StorageInterface for storing any runtime data (like images)
      * @param StorageInterface $tokenStorage Pass here StorageInterface for storing authentication data like auth.
@@ -91,36 +91,28 @@ final class SecucardConnect
      * @param GrantTypeInterface $credentials The credentials to use when operations need authorization
      */
     public function __construct(
-        array $config,
+        $config,
         LoggerInterface $logger = null,
         StorageInterface $dataStorage = null,
         StorageInterface $tokenStorage,
         GrantTypeInterface $credentials
     )
     {
-        // array of base configuration
-        $default = array(
-            'base_url' => 'https://connect.secucard.com',
-            'auth_path' => '/oauth/token',
-            'api_path' => '/api',
-            'debug' => false,
-            'auth' => null
-        );
-
-        // The following fields are required when creating the client
-        $required = array(
-            'base_url',
-            'auth_path',
-            'api_path',
-        );
-
         // Merge in default settings and validate the config
-        $this->config = $this->mergeCfg($config, $default, $required);
+        if (is_array($config)) {
+            $config = ApiClientConfiguration::createFromArray($config);
+        }
+
+        if (!$config instanceof ApiClientConfiguration) {
+            throw new \InvalidArgumentException('API Client Configuration is missing');
+        }
+
+        $config->isValid();
+        $this->logger->debug('Using config: ' . json_encode($config->toArray(), JSON_PRETTY_PRINT));
+        $this->config = $config;
 
         // initialize default logger with logging disabled if not provided
         $this->logger = $logger == null ? new Logger(null, false) : $logger;
-
-        $this->logger->debug('Using config: ' . print_r($this->config, true));
 
         // Create the default common storage if necessary
         if ($dataStorage == null) {
@@ -129,7 +121,7 @@ final class SecucardConnect
 
         // create OAuthProvider, pass the separate token storage
         if ($credentials != null) {
-            $this->oauthProvider = new OauthProvider($this->config['auth_path'], $tokenStorage, $credentials);
+            $this->oauthProvider = new OauthProvider($this->config->getAuthPath(), $tokenStorage, $credentials);
             $this->oauthProvider->setLogger($this->logger);
         }
 
@@ -144,22 +136,10 @@ final class SecucardConnect
         $c = new ClientContext();
         $c->httpClient = $this->httpClient;
         $c->storage = $this->storage;
-        $c->config = $this->config;
+        $c->config = $this->config->toArray();
         $c->logger = $this->logger;
         $c->eventDispatcher = $this->eventDispatcher;
         $this->clientContext = $c;
-    }
-
-
-    private static function mergeCfg(array $config = [], array $defaults = [], array $required = [])
-    {
-        $data = $config + $defaults;
-
-        if ($missing = array_diff($required, array_keys($data))) {
-            throw new \InvalidArgumentException('Config is missing the following keys: ' . implode(', ', $missing));
-        }
-
-        return $data;
     }
 
 
@@ -257,9 +237,9 @@ final class SecucardConnect
     private function initHttpClient()
     {
         $stack = HandlerStack::create();
-        $options = ['base_uri' => $this->config['base_url'], 'handler' => $stack, 'auth' => null];
+        $options = ['base_uri' => $this->config->getBaseUrl(), 'handler' => $stack, 'auth' => null];
 
-        if (isset($this->config['debug']) && $this->config['debug'] === true) {
+        if ($this->config->getDebug() === true) {
             $options['debug'] = true;
             // Add HTTP-Requests to log
             $stack->push(new GuzzleLogger($this->logger));
@@ -275,8 +255,16 @@ final class SecucardConnect
             });
         }
 
+        // Add custom user-agent for statistic reasons
+        $options['headers']['User-Agent'] = trim(
+            $this->config->getApiClient()
+            . ' ' . 'PHP-SDK/' . self::VERSION
+            . ' ' . Utils::getDefaultUserAgent()
+        );
+
+        // Add language setting for the error messages
+        $options['headers']['Accept-Language'] = $this->config->getAcceptLanguage();
+
         $this->httpClient = new Client($options);
     }
-
-
 }
