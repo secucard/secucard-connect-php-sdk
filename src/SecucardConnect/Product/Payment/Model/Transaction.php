@@ -25,10 +25,23 @@ class Transaction extends BaseModel
     const STATUS_REFUND = "refund"; // special status, saying that transaction was paid back (for some reason)
     const STATUS_INTERNAL_SERVER_STATUS = "internal_server_status"; // should not happen, but only when status would be empty, this status is used
 
+    const PAYMENT_ACTION_AUTHORIZATION = "authorization"; // Use the Authorization option to place a hold on the payer funds.
+    const PAYMENT_ACTION_SALE = "sale"; // Direct payment (immediate debit of the funds from the buyer's funding source)
+
     /**
      * @var \SecucardConnect\Product\Payment\Model\Contract
      */
     public $contract;
+
+	/**
+	 * @var \SecucardConnect\Product\Payment\Model\Customer
+	 */
+	public $customer;
+
+	/**
+	 * @var \SecucardConnect\Product\Payment\Model\Customer (optional)
+	 */
+	public $recipient;
 
     /**
      * @var int
@@ -67,7 +80,73 @@ class Transaction extends BaseModel
 
     /**
      * A list of basket items
+     *
      * @var Basket[]
      */
     public $basket;
+
+	/**
+	 * @var Experience
+	 */
+    public $experience;
+
+	/**
+	 * If TRUE the payout of the payment transaction will be blocked until the flag was removed (by calling capture).
+	 *
+	 * @var bool (optional)
+	 */
+    public $accrual;
+
+	/**
+	 * @var Subscription (optional)
+	 */
+    public $subscription;
+
+	/**
+	 * A list of redirect urls used for the payment checkout page
+	 *
+	 * @var RedirectUrl
+	 */
+    public $redirect_url;
+
+	/**
+     * @deprecated use $redirect_url
+	 * @var string
+	 */
+    public $url_success;
+
+	/**
+     * @deprecated use $redirect_url
+	 * @var string
+	 */
+    public $url_failure;
+
+	/**
+     * @deprecated use $redirect_url
+	 * @var string
+	 */
+    public $iframe_url;
+
+	/**
+	 * A list optional settings and parameters to customize the checkout process
+	 *
+	 * @var OptData
+	 */
+    public $opt_data;
+
+    /**
+     * The "payment_action" parameter controls the processing of the transaction by secupay, for the time being,
+     * there are the values "sale" and "authorization". Sale is a direct payment.
+     * To perform the transaction later, you have to transmit “authorization” here.
+     *
+     * @var string
+     */
+    public $payment_action = self::PAYMENT_ACTION_SALE;
+
+    /**
+     * The payment data which has the payer used (like bank account, credit card, ...). This data is always masked.
+     *
+     * @var PaymentInstrument
+     */
+    public $used_payment_instrument;
 }

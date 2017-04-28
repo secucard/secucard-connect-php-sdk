@@ -5,8 +5,9 @@
 [![License](https://poser.pugx.org/secucard/secucard-connect/license)](https://packagist.org/packages/secucard/secucard-connect)
 
 ## Requirements
-
-PHP 5.5.0 and later.
+- PHP 5.5.0 and later.
+- Composer.
+- If you are using a bytecode cache, such as APC activate the storage and load of PHPDoc comments. (For more information see f.e.: http://php.net/manual/de/opcache.configuration.php#ini.opcache.save-comments ).
 
 ## Composer
 
@@ -58,7 +59,7 @@ $list = $secucard->Loyalty->Cards->getList();
 
 ## Documentation
 
-Please see http://developer.secucard.com/api/index.html for up-to-date documentation.
+Please see http://developer.secuconnect.com/doc/guide for up-to-date documentation.
 
 ## Tests
 
