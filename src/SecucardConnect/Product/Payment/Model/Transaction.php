@@ -8,13 +8,13 @@
 
 namespace SecucardConnect\Product\Payment\Model;
 
-use SecucardConnect\Product\Common\Model\BaseModelMain;
+use SecucardConnect\Product\Common\Model\BaseModel;
 
 /**
  * Class Transaction
  * @package SecucardConnect\Product\Payment\Model
  */
-class Transaction extends BaseModelMain
+class Transaction extends BaseModel
 {
     const STATUS_ACCEPTED = "accepted"; // status for accepted debit transactions and finished prepay transactions
     const STATUS_AUTHORIZED = "authorized"; // prepay transaction after creation , before payment arrives
@@ -125,4 +125,11 @@ class Transaction extends BaseModelMain
      * @var string
      */
     public $payment_action = self::PAYMENT_ACTION_SALE;
+
+    /**
+     * The payment data which has the payer used (like bank account, credit card, ...). This data is always masked.
+     *
+     * @var PaymentInstrument
+     */
+    public $used_payment_instrument;
 }

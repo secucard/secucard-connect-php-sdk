@@ -64,4 +64,10 @@ class Basket extends BaseModel
      * @var string
      */
     public $item_type;
+
+    /**
+     * @deprecated used/needed only for migrations from the old flex.API
+     * @var string
+     */
+    public $apikey;
 }

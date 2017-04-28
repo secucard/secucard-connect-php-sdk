@@ -40,7 +40,7 @@ class ApiClientConfiguration
      *
      * @var string
      */
-    private $api_path = '/api';
+    private $api_path = '/api/v2';
 
     /**
      * Debugging mode

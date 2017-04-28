@@ -97,12 +97,4 @@ class Contact
      * @var \SecucardConnect\Product\Common\Model\Address
      */
     public $address;
-
-	/**
-	 * A (indexed) list of ids for completed identification results
-	 * (f.e. from SecuIdent-Service with 'POSTIDENT' or 'IDnow')
-	 *
-	 * @var array
-	 */
-    public $ident_service_ids = [];
 }

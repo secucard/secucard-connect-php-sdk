@@ -2,12 +2,10 @@
 /**
  * Api Client class
  */
-
 namespace SecucardConnect;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Utils;
 use Psr\Http\Message\RequestInterface;
 use Psr\Log\LoggerInterface;
 use SecucardConnect\Auth\GrantTypeInterface;
@@ -34,7 +32,7 @@ final class SecucardConnect
     /**
      * SDK version
      */
-    const VERSION = '1.3.0'; // 2017-04-03
+    const VERSION = '1.3.1'; // 2017-04-28
 
     /**
      * @var OAuthProvider
@@ -107,12 +105,12 @@ final class SecucardConnect
             throw new \InvalidArgumentException('API Client Configuration is missing');
         }
 
+        // initialize default logger with logging disabled if not provided
+        $this->logger = $logger == null ? new Logger(null, false) : $logger;
+
         $config->isValid();
         $this->logger->debug('Using config: ' . json_encode($config->toArray(), JSON_PRETTY_PRINT));
         $this->config = $config;
-
-        // initialize default logger with logging disabled if not provided
-        $this->logger = $logger == null ? new Logger(null, false) : $logger;
 
         // Create the default common storage if necessary
         if ($dataStorage == null) {
@@ -259,7 +257,7 @@ final class SecucardConnect
         $options['headers']['User-Agent'] = trim(
             $this->config->getApiClient()
             . ' ' . 'PHP-SDK/' . self::VERSION
-            . ' ' . Utils::getDefaultUserAgent()
+            . ' ' . \GuzzleHttp\default_user_agent()
         );
 
         // Add language setting for the error messages

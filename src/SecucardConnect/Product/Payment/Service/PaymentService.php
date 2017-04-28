@@ -12,7 +12,8 @@ use SecucardConnect\Product\Payment\Event\PaymentChanged;
 abstract class PaymentService extends ProductService implements PaymentServiceInterface
 {
 	/**
-	 * Cancel an existing transaction.
+	 * Cancel or Refund an existing transaction.
+     * Currently there are only full refunds allowed.
 	 * @param string $paymentId The payment transaction id.
 	 * @param string $contractId The id of the contract that was used to create this transaction. May be null if the
 	 * contract is an parent contract (not cloned).

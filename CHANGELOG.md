@@ -18,9 +18,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
+## [1.3.1] - 2017-04-28
+
+### Fixed
+- Get default User-Agent
 
 
-## [1.3.0] - 2017-04-03
+
+## [1.3.0] - 2017-04-26
 
 ### Security
 
