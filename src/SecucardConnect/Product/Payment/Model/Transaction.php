@@ -91,8 +91,7 @@ class Transaction extends BaseModel
     public $experience;
 
 	/**
-	 * If TRUE the payment transaction will be only a pre-authorization
-	 * and a separate capture or cancel is needed to start the payment processing.
+	 * If TRUE the payout of the payment transaction will be blocked until the flag was removed (by calling capture).
 	 *
 	 * @var bool (optional)
 	 */

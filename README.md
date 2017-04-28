@@ -59,7 +59,7 @@ $list = $secucard->Loyalty->Cards->getList();
 
 ## Documentation
 
-Please see http://developer.secucard.com/api/index.html for up-to-date documentation.
+Please see http://developer.secuconnect.com/doc/guide for up-to-date documentation.
 
 ## Tests
 

@@ -35,9 +35,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - "User-Agent" for our statistic diagnostics
 - "Accept-Language" for define the language of the error messages
+- Possibility to create individual sub-contracts
+- Possibility to use old "apikey" from the flex.API into the basket
+- Add attribute "merchant customer id" to the customer data
+- Add possibility to send customer experience statistics
+- Add IframeOptData and OptData for customize the checkout page
+- Add possibility to get the used payment instrument data for a successful payment
+- Add possibility to change the redirect urls for each request
+- Add supporting of subscriptions
+- Add supporting of pre-authorize payments
+- Add delivery address (recipient)
+- Add payment method "capture"
 
 ### Changed
-- API client configuration is now an object.
+- The API Client Configuration can now be filled by an object instead of an array. Setting the config as array is deprecated.
 
 ### Fixed
 
