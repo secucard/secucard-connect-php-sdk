@@ -5,7 +5,7 @@ namespace SecucardConnect;
 /**
  * Secucard API Client Configuration
  *
- * @author Rico Simlinger <jr.simlinger@secupay.ag>
+ * @author Rico Simlinger <r.simlinger@secupay.ag>
  */
 class ApiClientConfiguration
 {
@@ -72,7 +72,7 @@ class ApiClientConfiguration
      *
      * @var string
      */
-    private $accept_language = 'en';
+    private $accept_language = self::ACCEPT_LANGUAGE_EN;
 
     /**
      * Create a new instace with the given (array) config attributes

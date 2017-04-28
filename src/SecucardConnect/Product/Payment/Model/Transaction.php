@@ -110,6 +110,24 @@ class Transaction extends BaseModel
     public $redirect_url;
 
 	/**
+     * @deprecated use $redirect_url
+	 * @var string
+	 */
+    public $url_success;
+
+	/**
+     * @deprecated use $redirect_url
+	 * @var string
+	 */
+    public $url_failure;
+
+	/**
+     * @deprecated use $redirect_url
+	 * @var string
+	 */
+    public $iframe_url;
+
+	/**
 	 * A list optional settings and parameters to customize the checkout process
 	 *
 	 * @var OptData

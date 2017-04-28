@@ -27,8 +27,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [1.3.0] - 2017-04-26
 
-### Security
-
 ### Deprecated
 - Pass an array for API client configuration in the constructor of the class "SecucardConnect" is deprecated.
 
@@ -49,10 +47,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - The API Client Configuration can now be filled by an object instead of an array. Setting the config as array is deprecated.
-
-### Fixed
-
-### Removed
 
 
 
