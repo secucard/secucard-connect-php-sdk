@@ -4,6 +4,8 @@ namespace SecucardConnect\Product\Payment;
 
 use SecucardConnect\Client\ProductService;
 use SecucardConnect\Product\Payment\Model\CloneParams;
+use SecucardConnect\Product\Payment\Model\CreateSubContractRequest;
+use SecucardConnect\Product\Payment\Model\CreateSubContractResponse;
 use SecucardConnect\Product\Services\Model\Contract;
 
 
@@ -33,6 +35,11 @@ class ContractsService extends ProductService
     public function cloneMyContract($param)
     {
         return $this->cloneContract('me', $param);
+    }
+
+    public function createSubContract(CreateSubContractRequest $param)
+    {
+        return $this->execute('me', 'requestId', null, $param, CreateSubContractResponse::class);
     }
 
 }

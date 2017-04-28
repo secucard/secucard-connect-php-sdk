@@ -431,6 +431,9 @@ abstract class ProductService
 	 */
     private function request(RequestParams $params)
     {
+        /*
+         * Build Resource URI
+         */
         $rm = $params->resourceMetadata;
         $base = $this->config['base_url'] . $this->config['api_path'] . "/";
 
@@ -454,6 +457,13 @@ abstract class ProductService
 
         $options = array_merge(['auth' => 'oauth'], $params->options);
 
+        if (!array_key_exists(\GuzzleHttp\RequestOptions::HEADERS, $options)) {
+            $options[\GuzzleHttp\RequestOptions::HEADERS] = [];
+        }
+
+        /*
+         * Result filtering, sorting & searching
+         */
         $p = [];
         if (!empty($params->searchParams->query)) {
             $q = $params->searchParams->query;
@@ -489,26 +499,30 @@ abstract class ProductService
             $p['scroll_expire'] = $params->searchParams->scrollExpire;
         }
 
-
         if (count($p) != 0) {
             $options[\GuzzleHttp\RequestOptions::QUERY] = $p;
         }
 
+        /*
+         * JSON Body
+         */
+
         if (!empty($params->jsonData)) {
             $options[\GuzzleHttp\RequestOptions::BODY] = $params->jsonData;
-
-            if (!array_key_exists(\GuzzleHttp\RequestOptions::HEADERS, $options)) {
-                $options[\GuzzleHttp\RequestOptions::HEADERS] = [];
-            }
             $options[\GuzzleHttp\RequestOptions::HEADERS]['Content-Type'] = 'application/json';
         };
 
+        /*
+         * Idempotence (avoid double execution of the same request)
+         */
         if ($this->actionId !== null) {
             $options[\GuzzleHttp\RequestOptions::HEADERS]['X-Action'] = $this->actionId;
             $this->setActionId(null);
         }
 
-
+        /*
+         * Run request
+         */
         try {
             $response = $this->httpClient->request($params->operation, $url, $options);
         } catch (Exception $e) {

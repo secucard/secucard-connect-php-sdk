@@ -12,11 +12,6 @@ namespace SecucardConnect\Product\Payment\Model;
 class SecupayPrepay extends Transaction
 {
     /**
-     * @var \SecucardConnect\Product\Payment\Model\Customer
-     */
-    public $customer;
-
-    /**
      * @var string
      */
     public $transfer_purpose;
