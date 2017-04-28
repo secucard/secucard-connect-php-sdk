@@ -94,6 +94,14 @@ class IdentResultsService extends ProductService
 class IdentResChanged extends DefaultEventHandler
 {
     /**
+     * Overwrite the accept function, so the event with identrequest can be handled by identresults service
+     */
+    protected function accept(Event $event)
+    {
+        return $event->target === 'services.identrequests' && $event->type === $this->eventType;
+    }
+
+    /**
      * @param Event $event
      * @throws ClientError
      * @throws \Exception
