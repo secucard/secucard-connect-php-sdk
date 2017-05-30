@@ -63,16 +63,16 @@ class ApiError extends AbstractError
         return $this->serverError;
     }
 
-	/**
-	 * ApiError constructor.
-	 *
-	 * @param string $serverError
-	 * @param int $code
-	 * @param Exception $details
-	 * @param $userMessage
-	 * @param $supportId
-	 * @param Exception|null $previous
-	 */
+    /**
+     * ApiError constructor.
+     *
+     * @param string $serverError
+     * @param int $code
+     * @param Exception $details
+     * @param $userMessage
+     * @param $supportId
+     * @param Exception|null $previous
+     */
     public function __construct(
         $serverError,
         $code,

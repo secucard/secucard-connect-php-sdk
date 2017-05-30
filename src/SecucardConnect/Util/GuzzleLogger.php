@@ -2,6 +2,7 @@
 /**
  * GuzzleSubscriber class
  */
+
 namespace SecucardConnect\Util;
 
 use Closure;

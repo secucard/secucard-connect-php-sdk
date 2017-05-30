@@ -10,7 +10,6 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Log\LoggerInterface;
-use SecucardConnect\Client\ClientContext;
 use SecucardConnect\Client\ClientError;
 use SecucardConnect\Client\ProductService;
 use SecucardConnect\Client\StorageInterface;
@@ -76,10 +75,11 @@ class OauthProvider extends ProductService
      * @param StorageInterface $storage
      * @param GrantTypeInterface $credentials
      */
-    public function __construct($auth_path, StorageInterface $storage,
-                                GrantTypeInterface $credentials
-    )
-    {
+    public function __construct(
+        $auth_path,
+        StorageInterface $storage,
+        GrantTypeInterface $credentials
+    ) {
         parent::__construct();
         $this->auth_path = $auth_path;
         $this->storage = $storage;
@@ -153,15 +153,17 @@ class OauthProvider extends ProductService
 
                 if ($this->credentials instanceof RefreshTokenCredentials) {
                     $this->updateToken($this->credentials);
-                } else if ($this->refreshToken) {
-                    if (!$this->credentials instanceof ClientCredentials) {
-                        throw new ClientError('Invalid credentials type supplied, must be of type ' . ClientCredentials::class);
-                    }
-                    $this->updateToken(new RefreshTokenCredentials($this->credentials->client_id,
-                        $this->credentials->client_secret, $this->refreshToken));
-
                 } else {
-                    $this->updateToken();
+                    if ($this->refreshToken) {
+                        if (!$this->credentials instanceof ClientCredentials) {
+                            throw new ClientError('Invalid credentials type supplied, must be of type ' . ClientCredentials::class);
+                        }
+                        $this->updateToken(new RefreshTokenCredentials($this->credentials->client_id,
+                            $this->credentials->client_secret, $this->refreshToken));
+
+                    } else {
+                        $this->updateToken();
+                    }
                 }
             }
         }
@@ -169,11 +171,11 @@ class OauthProvider extends ProductService
         $at = $this->accessToken['access_token'];
 
         if ($json === true) {
-            $arr = array(
+            $arr = [
                 'access_token' => $at,
                 'expires_in' => $this->accessToken['expires_in'] - time(),
                 'expireTime' => $this->accessToken['expires_in']
-            );
+            ];
             return json_encode($arr);
         } else {
             return $at;
@@ -194,7 +196,7 @@ class OauthProvider extends ProductService
         $tokenData = null;
 
         // array of url parameters that will be sent in auth request
-        $params = array();
+        $params = [];
         if ($refreshToken == null && !empty($deviceCode)) {
             $tokenData = $this->pollDeviceAccessToken($deviceCode);
             if ($tokenData === false) {
@@ -216,7 +218,7 @@ class OauthProvider extends ProductService
         }
 
         // Process the returned data, both expired_in and refresh_token are optional parameters
-        $this->accessToken = array('access_token' => $tokenData->access_token,);
+        $this->accessToken = ['access_token' => $tokenData->access_token,];
         if (isset($tokenData->expires_in)) {
             $this->accessToken['expires_in'] = time() + $tokenData->expires_in;
         }
@@ -245,7 +247,7 @@ class OauthProvider extends ProductService
             throw new ClientError('Invalid credentials set up, must be of type ' . DeviceCredentials::class);
         }
 
-        $params = array();
+        $params = [];
         $this->setParams($params, $this->credentials);
 
         // if the guzzle gets response http_status other than 200, it will throw an exception even when there is response available
@@ -274,7 +276,7 @@ class OauthProvider extends ProductService
 
         $this->credentials->deviceCode = $deviceCode;
 
-        $params = array();
+        $params = [];
         $this->setParams($params, $this->credentials);
 
         try {
@@ -312,6 +314,6 @@ class OauthProvider extends ProductService
      */
     private function post($params)
     {
-        return $this->httpClient->post($this->auth_path, array('form_params' => $params));
+        return $this->httpClient->post($this->auth_path, ['form_params' => $params]);
     }
 }

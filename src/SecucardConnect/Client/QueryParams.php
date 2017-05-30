@@ -67,8 +67,7 @@ class QueryParams
         $offset = null,
         array $fields = null,
         array $sortOrder = null,
-        array
-        $query = null
+        array $query = null
     ) {
         $this->count = $count;
         $this->offset = $offset;

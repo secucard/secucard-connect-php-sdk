@@ -2,48 +2,43 @@
 
 namespace SecucardConnect\Product\Services\Model;
 
+/**
+ * Class UserData
+ */
 class UserData
 {
     /**
-     * @var \SecucardConnect\Product\Services\Model\Value
-     *
+     * @var Value
      */
     public $dob;
 
     /**
-     * @var \SecucardConnect\Product\Services\Model\Value
-     *
+     * @var Value
      */
     public $forename;
 
     /**
-     * @var \SecucardConnect\Product\Services\Model\Value
-     *
+     * @var Value
      */
     public $surename;
 
     /**
-     * @var \SecucardConnect\Product\Services\Model\Value
-     *
+     * @var Value
      */
     public $address;
 
     /**
-     * @var \SecucardConnect\Product\Services\Model\Value
-     *
+     * @var Value
      */
     public $birthplace;
 
     /**
-     * @var \SecucardConnect\Product\Services\Model\Value
-     *
+     * @var Value
      */
     public $nationality;
 
-
     /**
-     * @var \SecucardConnect\Product\Services\Model\Value
-     *
+     * @var Value
      */
     public $gender;
 }

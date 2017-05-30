@@ -1,8 +1,8 @@
-#PHP SDK Guide
+# PHP SDK Guide
 
-##Getting Started
+## Getting Started
 
-###Initialize the client
+### Initialize the client
 ```php
 include "vendor/autoload.php";
 
@@ -26,7 +26,7 @@ $store = new DummyStorage();
 $secucard = new SecucardConnect($config, $logger, $store, $store, $credentials);
 ```
 
-###List all existing customers (without pagination)
+### List all existing customers (without pagination)
 ```php
 $service = $secucard->payment->customers;
 
@@ -38,7 +38,7 @@ if (empty($customers)) {
 print_r($customers);
 ```
 
-###List all existing customers (with pagination)
+### List all existing customers (with pagination)
 If you have many customers, you would need following code to get them all.
 ```php
 $service = $secucard->payment->customers;

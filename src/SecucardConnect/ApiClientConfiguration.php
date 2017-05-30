@@ -15,7 +15,7 @@ class ApiClientConfiguration
     const ACCEPT_LANGUAGE_DE = 'de';
 
     // The following fields are required when creating the client
-    const REQUIRED_FIELDS = [
+    protected static $REQUIRED_FIELDS = [
         'base_url',
         'auth_path',
         'api_path',
@@ -121,7 +121,7 @@ class ApiClientConfiguration
     {
         $data = $this->toArray();
 
-        $missing = array_diff(self::REQUIRED_FIELDS, array_keys($data));
+        $missing = array_diff(self::$REQUIRED_FIELDS, array_keys($data));
 
         if ($missing) {
             throw new \InvalidArgumentException('Config is missing the following keys: ' . implode(', ', $missing));

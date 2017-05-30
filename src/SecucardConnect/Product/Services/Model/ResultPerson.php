@@ -2,15 +2,18 @@
 
 namespace SecucardConnect\Product\Services\Model;
 
+/**
+ * Class ResultPerson
+ */
 class ResultPerson
 {
     /**
-     * @var \SecucardConnect\Product\Services\Model\IdentificationProcess
+     * @var IdentificationProcess
      */
     public $identificationprocess;
 
     /**
-     * @var \SecucardConnect\Product\Services\Model\IdentificationDocument
+     * @var IdentificationDocument
      */
     public $identificationdocument;
 

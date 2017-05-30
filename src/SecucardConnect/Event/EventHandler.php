@@ -1,4 +1,5 @@
 <?php
+
 namespace SecucardConnect\Event;
 
 

@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: tk
- * Date: 09.12.15
- * Time: 09:19
- */
 
 namespace SecucardConnect\Product\Payment\Model;
 
@@ -33,15 +27,15 @@ class Transaction extends BaseModel
      */
     public $contract;
 
-	/**
-	 * @var \SecucardConnect\Product\Payment\Model\Customer
-	 */
-	public $customer;
+    /**
+     * @var \SecucardConnect\Product\Payment\Model\Customer
+     */
+    public $customer;
 
-	/**
-	 * @var \SecucardConnect\Product\Payment\Model\Customer (optional)
-	 */
-	public $recipient;
+    /**
+     * @var \SecucardConnect\Product\Payment\Model\Customer (optional)
+     */
+    public $recipient;
 
     /**
      * @var int
@@ -85,53 +79,53 @@ class Transaction extends BaseModel
      */
     public $basket;
 
-	/**
-	 * @var Experience
-	 */
+    /**
+     * @var Experience
+     */
     public $experience;
 
-	/**
-	 * If TRUE the payout of the payment transaction will be blocked until the flag was removed (by calling capture).
-	 *
-	 * @var bool (optional)
-	 */
+    /**
+     * If TRUE the payout of the payment transaction will be blocked until the flag was removed (by calling capture).
+     *
+     * @var bool (optional)
+     */
     public $accrual;
 
-	/**
-	 * @var Subscription (optional)
-	 */
+    /**
+     * @var Subscription (optional)
+     */
     public $subscription;
 
-	/**
-	 * A list of redirect urls used for the payment checkout page
-	 *
-	 * @var RedirectUrl
-	 */
+    /**
+     * A list of redirect urls used for the payment checkout page
+     *
+     * @var RedirectUrl
+     */
     public $redirect_url;
 
-	/**
+    /**
      * @deprecated use $redirect_url
-	 * @var string
-	 */
+     * @var string
+     */
     public $url_success;
 
-	/**
+    /**
      * @deprecated use $redirect_url
-	 * @var string
-	 */
+     * @var string
+     */
     public $url_failure;
 
-	/**
+    /**
      * @deprecated use $redirect_url
-	 * @var string
-	 */
+     * @var string
+     */
     public $iframe_url;
 
-	/**
-	 * A list optional settings and parameters to customize the checkout process
-	 *
-	 * @var OptData
-	 */
+    /**
+     * A list optional settings and parameters to customize the checkout process
+     *
+     * @var OptData
+     */
     public $opt_data;
 
     /**

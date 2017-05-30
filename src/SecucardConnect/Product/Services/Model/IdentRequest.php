@@ -1,7 +1,4 @@
 <?php
-/**
- * Identrequests Api Model class
- */
 
 namespace SecucardConnect\Product\Services\Model;
 
@@ -51,7 +48,7 @@ class IdentRequest extends BaseModel
     public $created;
 
     /**
-     * @var \SecucardConnect\Product\Services\Model\Contract
+     * @var Contract
      */
     public $contract;
 
@@ -60,19 +57,19 @@ class IdentRequest extends BaseModel
      */
     public $person;
 
-	/**
-	 * @var string
-	 */
+    /**
+     * @var string
+     */
     public $provider;
 
-	/**
-	 * @var string
-	 */
+    /**
+     * @var string
+     */
     public $use_internal_contract;
 
-	/**
-	 * @var Merchant[]
-	 */
+    /**
+     * @var Merchant[]
+     */
     public $assignment;
 
 }

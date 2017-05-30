@@ -12,7 +12,7 @@ class BaseCollection implements \Countable
      * Array of typed result objects.
      * @var array
      */
-    public $items = array();
+    public $items = [];
 
     /**
      * An unique id identifying the (server side) result set snapshot this items belong to.

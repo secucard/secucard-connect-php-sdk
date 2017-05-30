@@ -1,9 +1,10 @@
 <?php
 
-
 namespace SecucardConnect\Product\Services\Model;
 
-
+/**
+ * Class Value
+ */
 class Value
 {
     const STATUS_NEW = "NEW";
@@ -23,5 +24,4 @@ class Value
      * @var string
      */
     public $original;
-
 }
