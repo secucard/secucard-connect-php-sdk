@@ -1,7 +1,4 @@
 <?php
-/**
- * Identresults Api Model class
- */
 
 namespace SecucardConnect\Product\Services\Model;
 
@@ -9,7 +6,6 @@ use SecucardConnect\Product\Common\Model\BaseModel;
 
 /**
  * Identresults Api Model class
- *
  */
 class IdentResult extends BaseModel
 {
@@ -19,7 +15,7 @@ class IdentResult extends BaseModel
     const STATUS_PRELIMINARY_FAILED = "failed_preliminary";
 
     /**
-     * @var \SecucardConnect\Product\Services\Model\IdentRequest
+     * @var IdentRequest
      */
     public $request;
 
@@ -34,7 +30,7 @@ class IdentResult extends BaseModel
     public $created;
 
     /**
-     * @var \SecucardConnect\Product\Payment\Model\Contract
+     * @var Contract
      */
     public $contract;
 

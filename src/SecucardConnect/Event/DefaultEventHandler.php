@@ -57,11 +57,11 @@ abstract class DefaultEventHandler implements EventHandler
         return $event->target === $this->eventTarget && $event->type === $this->eventType;
     }
 
-	/**
-	 * @param Event $event
-	 *
-	 * @return bool
-	 */
+    /**
+     * @param Event $event
+     *
+     * @return bool
+     */
     function handle(Event $event)
     {
         if ($this->accept($event)) {

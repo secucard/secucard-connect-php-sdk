@@ -61,8 +61,12 @@ class CloneParams
      */
     public $project;
 
-    public function __construct($project = null, Data $payment_data = null, $allow_transactions = null, $url_push = null)
-    {
+    public function __construct(
+        $project = null,
+        Data $payment_data = null,
+        $allow_transactions = null,
+        $url_push = null
+    ) {
         $this->allow_transactions = $allow_transactions;
         $this->url_push = $url_push;
         $this->payment_data = $payment_data;

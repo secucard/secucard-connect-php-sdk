@@ -1,11 +1,9 @@
 <?php
-/**
- * Identcontracts Api Model class
- */
 
 namespace SecucardConnect\Product\Services\Model;
 
 use SecucardConnect\Product\Common\Model\BaseModel;
+use SecucardConnect\Product\General\Model\Merchant;
 
 /**
  * Ident contracts Api Model class
@@ -32,10 +30,8 @@ class Contract extends BaseModel
      */
     public $created;
 
-
     /**
-     * @var \SecucardConnect\Product\General\Model\Merchant
+     * @var Merchant
      */
     public $merchant;
-
 }

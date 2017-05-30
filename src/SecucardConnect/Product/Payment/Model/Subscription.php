@@ -10,10 +10,10 @@ use SecucardConnect\Product\Common\Model\BaseModel;
  */
 class Subscription extends BaseModel
 {
-	/**
-	 * The name of the subscription (for the customer)
-	 *
-	 * @var string
-	 */
-	public $purpose;
+    /**
+     * The name of the subscription (for the customer)
+     *
+     * @var string
+     */
+    public $purpose;
 }

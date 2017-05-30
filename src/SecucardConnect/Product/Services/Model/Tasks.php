@@ -3,17 +3,22 @@
 namespace SecucardConnect\Product\Services\Model;
 
 /**
- * Class ContactData
+ * Tasks Api Model class
  */
-class ContactData
+class Tasks
 {
     /**
      * @var string
      */
-    public $mobile;
+    public $type;
 
     /**
      * @var string
      */
-    public $email;
+    public $desc;
+
+    /**
+     * @var Task[]
+     */
+    public $task;
 }

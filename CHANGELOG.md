@@ -18,6 +18,34 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
+
+
+## [1.4.0] - 2017-05-30
+
+### Added
+- PaymentService: refund method
+- PaymentService: capture method
+- PaymentService: updateBasket method
+- PaymentService: reverseAccrual method
+- PaymentService: initSubsequent method
+- PaymentService: setShippingInformation method
+- PaymentService: updateSubscription method
+- Product Document: UploadsService
+- Product Service: IdentCasesService
+
+### Changed
+- Updated dependency "guzzle" to ~6.2
+- Updated dependency "jsonmapper" to ~1.1
+
+### Fixed
+- PHP 5.5 incompatibility (const array)
+- Wrong parent class of class RedirectUrl
+- PSR-2 Coding Style conformance
+
+### Removed
+- Removed tests, because the need to be reworked
+- Remove development dependency "phpunit"
+
 ## [1.3.1] - 2017-04-28
 
 ### Fixed
@@ -25,7 +53,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 
-## [1.3.0] - 2017-04-26
+## [1.3.0] - 2017-04-26 [YANKED]
 
 ### Deprecated
 - Pass an array for API client configuration in the constructor of the class "SecucardConnect" is deprecated.
@@ -306,3 +334,30 @@ Commit-ID: 5b5eb23
 ## [0.0.1] - 2014-11-03
 Commit-ID: 787f4fa
 First release
+
+
+
+
+[0.0.2]:https://github.com/secucard/secucard-connect-php-sdk/compare/v0.0.1...v0.0.2
+[0.0.3]:https://github.com/secucard/secucard-connect-php-sdk/compare/v0.0.2...v0.0.3
+[0.0.4]:https://github.com/secucard/secucard-connect-php-sdk/compare/v0.0.3...v0.0.4
+[0.0.5]:https://github.com/secucard/secucard-connect-php-sdk/compare/v0.0.4...v0.0.5
+[0.1.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v0.0.5...v0.1.0
+[0.1.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/v0.1.0...v0.1.1
+[0.1.2]:https://github.com/secucard/secucard-connect-php-sdk/compare/v0.1.1...v0.1.2
+[0.1.3]:https://github.com/secucard/secucard-connect-php-sdk/compare/v0.1.2...v0.1.3
+[1.0.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v0.1.3...v1.0.0
+[1.0.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.0.0...v1.0.1
+[1.0.2]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.0.1...v1.0.2
+[1.0.3]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.0.2...v1.0.3
+[1.0.4]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.0.3...v1.0.4
+[1.0.5]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.0.4...v1.0.5
+[1.0.6]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.0.5...v1.0.6
+[1.0.7]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.0.6...v1.0.7
+[1.0.8]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.0.7...v1.0.8
+[1.0.9]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.0.8...v1.0.9
+[1.1.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.0.9...v1.1.0
+[1.1.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.1.0...v1.1.1
+[1.1.2]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.1.1...v1.1.2
+[1.3.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.1.2...v1.3.1
+[1.4.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.3.1...v1.4.0

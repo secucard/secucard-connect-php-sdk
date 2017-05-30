@@ -6,8 +6,6 @@
 namespace SecucardConnect\Product\Smart\Model;
 
 use SecucardConnect\Product\Common\Model\BaseModel;
-use SecucardConnect\Product\Loyalty\Model\Customer;
-use SecucardConnect\Product\Loyalty\Model\MerchantCard;
 
 /**
  * Idents Api Model class

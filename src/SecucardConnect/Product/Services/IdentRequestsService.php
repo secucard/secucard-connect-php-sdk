@@ -7,29 +7,12 @@ use SecucardConnect\Client\RequestOptions;
 use SecucardConnect\Product\Common\Model\BaseCollection;
 use SecucardConnect\Product\Services\Model\IdentRequest;
 
-
 /**
  * Operations for the services/identrequests resource.
  * @package SecucardConnect\Product\Services
  */
 class IdentRequestsService extends ProductService
 {
-    /**
-     * Handles proper contact picture initialization after retrieval of a ident request.
-     * @param IdentRequest $request
-     */
-    private function process(IdentRequest &$request)
-    {
-        if (isset($request->person)) {
-            foreach ($request->person as $p) {
-                $contact = $p->contact;
-                if (!empty($contact) && !empty($contact->picture)) {
-                    $contact->pictureObject = $this->initMediaResource($contact->picture);
-                }
-            }
-        }
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -50,5 +33,21 @@ class IdentRequestsService extends ProductService
                 }
             }
         ];
+    }
+
+    /**
+     * Handles proper contact picture initialization after retrieval of a ident request.
+     * @param IdentRequest $request
+     */
+    private function process(IdentRequest &$request)
+    {
+        if (isset($request->person)) {
+            foreach ($request->person as $p) {
+                $contact = $p->contact;
+                if (!empty($contact) && !empty($contact->picture)) {
+                    $contact->pictureObject = $this->initMediaResource($contact->picture);
+                }
+            }
+        }
     }
 }

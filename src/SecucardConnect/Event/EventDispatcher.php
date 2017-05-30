@@ -44,7 +44,7 @@ class EventDispatcher
         try {
             // decode as array because data proprty, which has unknown structure (only known by handler),
             // must remain array after mapping to event
-            $arr = MapperUtil::jsonDecode($eventStr, true); 
+            $arr = MapperUtil::jsonDecode($eventStr, true);
             $event = MapperUtil::map($arr, Event::class);
         } catch (Exception $e) {
             throw  new ClientError("Invalid event JSON", $e);

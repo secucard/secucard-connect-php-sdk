@@ -12,13 +12,13 @@ class FileStorage extends DummyStorage
 {
     private $dir;
 
-	/**
-	 * FileStorage constructor.
-	 *
-	 * @param $dir
-	 *
-	 * @throws ClientError
-	 */
+    /**
+     * FileStorage constructor.
+     *
+     * @param $dir
+     *
+     * @throws ClientError
+     */
     public function __construct($dir)
     {
         parent::__construct();
@@ -119,9 +119,9 @@ class FileStorage extends DummyStorage
         return true;
     }
 
-	/**
-	 * @return bool
-	 */
+    /**
+     * @return bool
+     */
     private function load()
     {
         $filename = $this->filePath();
@@ -133,20 +133,20 @@ class FileStorage extends DummyStorage
         return false;
     }
 
-	/**
-	 * @return bool
-	 */
+    /**
+     * @return bool
+     */
     private function save()
     {
         file_put_contents($this->filePath(), json_encode($this->storage));
         return true;
     }
 
-	/**
-	 * @param $key
-	 *
-	 * @return bool|int
-	 */
+    /**
+     * @param $key
+     *
+     * @return bool|int
+     */
     private function findFile($key)
     {
         $files = glob($this->filePath($key));
@@ -167,11 +167,11 @@ class FileStorage extends DummyStorage
         return false;
     }
 
-	/**
-	 * @param $key
-	 *
-	 * @return bool
-	 */
+    /**
+     * @param $key
+     *
+     * @return bool
+     */
     private function deleteFile($key)
     {
         $file = $this->findFile($key);
@@ -186,11 +186,11 @@ class FileStorage extends DummyStorage
         return unlink($file);
     }
 
-	/**
-	 * @param $key
-	 *
-	 * @return bool
-	 */
+    /**
+     * @param $key
+     *
+     * @return bool
+     */
     private function deleteStore($key)
     {
         if (isset($this->storage[$key])) {

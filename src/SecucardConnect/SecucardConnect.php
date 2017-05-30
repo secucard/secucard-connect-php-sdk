@@ -1,7 +1,5 @@
 <?php
-/**
- * Api Client class
- */
+
 namespace SecucardConnect;
 
 use GuzzleHttp\Client;
@@ -32,7 +30,7 @@ final class SecucardConnect
     /**
      * SDK version
      */
-    const VERSION = '1.3.1'; // 2017-04-28
+    const VERSION = '1.4.0'; // 2017-05-30
 
     /**
      * @var OAuthProvider
@@ -94,8 +92,7 @@ final class SecucardConnect
         StorageInterface $dataStorage = null,
         StorageInterface $tokenStorage,
         GrantTypeInterface $credentials
-    )
-    {
+    ) {
         // Merge in default settings and validate the config
         if (is_array($config)) {
             $config = ApiClientConfiguration::createFromArray($config);
