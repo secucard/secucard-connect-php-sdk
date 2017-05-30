@@ -10,11 +10,11 @@ use SecucardConnect\Product\Payment\Service\PaymentService;
  */
 class SecupayInvoicesService extends PaymentService
 {
-	/**
-	 * @deprecated v1.1.0 Use now onStatusChange($fn).
-	 */
-	public function onSecupayInvoiceChanged($fn)
-	{
-		$this->onStatusChange($fn);
-	}
+    /**
+     * @deprecated v1.1.0 Use now onStatusChange($fn).
+     */
+    public function onSecupayInvoiceChanged($fn)
+    {
+        $this->onStatusChange($fn);
+    }
 }

@@ -2,33 +2,35 @@
 
 namespace SecucardConnect\Product\Services\Model;
 
+use SecucardConnect\Product\Common\Model\BaseModel;
+
 /**
- * Class CustomData
+ * Task Api Model class
  */
-class CustomData
+class Task
 {
     /**
      * @var string
      */
-    public $custom1;
+    public $task_id;
 
     /**
      * @var string
      */
-    public $custom2;
+    public $type;
 
     /**
      * @var string
      */
-    public $custom3;
+    public $type_info;
 
     /**
      * @var string
      */
-    public $custom4;
+    public $status;
 
     /**
-     * @var string
+     * @var BaseModel[]
      */
-    public $custom5;
+    public $assign;
 }

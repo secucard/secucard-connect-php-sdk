@@ -18,6 +18,34 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
+
+
+## [1.4.0] - 2017-05-30
+
+### Added
+- PaymentService: refund method
+- PaymentService: capture method
+- PaymentService: updateBasket method
+- PaymentService: reverseAccrual method
+- PaymentService: initSubsequent method
+- PaymentService: setShippingInformation method
+- PaymentService: updateSubscription method
+- Product Document: UploadsService
+- Product Service: IdentCasesService
+
+### Changed
+- Updated dependency "guzzle" to ~6.2
+- Updated dependency "jsonmapper" to ~1.1
+
+### Fixed
+- PHP 5.5 incompatibility (const array)
+- Wrong parent class of class RedirectUrl
+- PSR-2 Coding Style conformance
+
+### Removed
+- Removed tests, because the need to be reworked
+- Remove development dependency "phpunit"
+
 ## [1.3.1] - 2017-04-28
 
 ### Fixed
@@ -25,7 +53,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 
-## [1.3.0] - 2017-04-26
+## [1.3.0] - 2017-04-26 [YANKED]
 
 ### Deprecated
 - Pass an array for API client configuration in the constructor of the class "SecucardConnect" is deprecated.
@@ -56,7 +84,6 @@ Not published
 
 
 ## [1.1.2] - 2017-01-09
-Commit-ID: 7c69043
 
 ### Changed
 - Fix push service for ident service
@@ -64,7 +91,6 @@ Commit-ID: 7c69043
 
 
 ## [1.1.1] - 2017-01-18
-Commit-ID: 5fa107d
 
 ###Added
 - Provider to Services.IdentRequest
@@ -72,7 +98,6 @@ Commit-ID: 5fa107d
 
 
 ## [1.1.0] - 2016-12-06
-Commit-ID: 7ac3ee6
 
 ###Added
 - Credit card payment
@@ -80,7 +105,6 @@ Commit-ID: 7ac3ee6
 
 
 ## [1.0.9] - 2016-11-29
-Commit-ID: 7daf776
 
 ### Changed
 - Fix fatal on cancel request
@@ -88,7 +112,6 @@ Commit-ID: 7daf776
 
 
 ## [1.0.8] - 2016-11-29
-Commit-ID: 562487e
 
 ### Changed
 - Fix fatal on delete request
@@ -99,7 +122,6 @@ Commit-ID: 562487e
 
 
 ## [1.0.7] - 2016-11-23
-Commit-ID: 4f6f80f
 
 ### Added
 - Basket
@@ -108,7 +130,6 @@ Commit-ID: 4f6f80f
 
 
 ## [1.0.6] - 2016-10-14
-Commit-ID: 9fdcc06
 
 ### Added
 - Basket
@@ -121,7 +142,6 @@ Commit-ID: 9fdcc06
 - composer.lock file
 
 ## [1.0.5] - 2016-04-29
-Commit-ID: 57989cc
 
 ### Added
 - X-Action header support.
@@ -133,7 +153,6 @@ Commit-ID: 57989cc
 
 
 ## [1.0.4] - 2016-04-28
-Commit-ID: 3d8185e
 
 ### Added
 - Add expire time to JSON token export.
@@ -144,7 +163,6 @@ Commit-ID: 3d8185e
 
 
 ## [1.0.3] - 2016-04-21
-Commit-ID: 7202f07
 
 ### Changed
 - unknown
@@ -152,7 +170,6 @@ Commit-ID: 7202f07
 
 
 ## [1.0.2] - 2016-04-20
-Commit-ID: f08127f
 
 ### Changed
 - Readme
@@ -160,7 +177,6 @@ Commit-ID: f08127f
 
 
 ## [1.0.1] - 2016-04-06
-Commit-ID: c8923d5
 
 ###Added
 - Client method for getting token JSON for JS usage.
@@ -168,7 +184,6 @@ Commit-ID: c8923d5
 
 
 ## [1.0.0] - 2016-03-12
-Commit-ID: 61d5f43
 
 ###Added
 - payment services.
@@ -218,7 +233,6 @@ Commit-ID: 61d5f43
 
 
 ## [0.1.3] - 2015-10-15
-Commit-ID: 17cc357
 
 ### Changed
 - Correctly implemented processPush method for handling pushes
@@ -226,7 +240,6 @@ Commit-ID: 17cc357
 
 
 ## [0.1.2] - 2015-09-22
-Commit-ID: d40c9d4
 
 ### Changed
 - Fix updating and deleting Models
@@ -234,7 +247,6 @@ Commit-ID: d40c9d4
 
 
 ## [0.1.1] - 2015-08-05
-Commit-ID: c241859
 
 ### Added
 - Added const to model Smart/Transactions
@@ -245,7 +257,6 @@ Commit-ID: c241859
 
 
 ## [0.1.0] - 2015-08-04
-Commit-ID: 9035f25
 
 ### Added
 - Receipts for Smart/Transactions
@@ -256,7 +267,6 @@ Commit-ID: 9035f25
 
 
 ## [0.0.5] - 2015-07-03
-Commit-ID: 9bfdc86
 
 ### Changed
 - Fix creation of Secupaydebits
@@ -264,7 +274,6 @@ Commit-ID: 9bfdc86
 
 
 ## [0.0.4] - 2015-07-03
-Commit-ID: 2bbec34
 
 ### Added
 - "Payment" product
@@ -275,7 +284,6 @@ Commit-ID: 2bbec34
 
 
 ## [0.0.3] - 2015-05-13
-Commit-ID: a2be050
 
 ### Added
 - "Smart" product
@@ -286,7 +294,6 @@ Commit-ID: a2be050
 
 
 ## [0.0.2] - 2015-02-04
-Commit-ID: 5b5eb23
 
 ### Added
 - License
@@ -304,5 +311,31 @@ Commit-ID: 5b5eb23
 
 
 ## [0.0.1] - 2014-11-03
-Commit-ID: 787f4fa
 First release
+
+
+
+
+[0.0.2]:https://github.com/secucard/secucard-connect-php-sdk/compare/v0.0.1...v0.0.2
+[0.0.3]:https://github.com/secucard/secucard-connect-php-sdk/compare/v0.0.2...v0.0.3
+[0.0.4]:https://github.com/secucard/secucard-connect-php-sdk/compare/v0.0.3...v0.0.4
+[0.0.5]:https://github.com/secucard/secucard-connect-php-sdk/compare/v0.0.4...v0.0.5
+[0.1.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v0.0.5...v0.1.0
+[0.1.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/v0.1.0...v0.1.1
+[0.1.2]:https://github.com/secucard/secucard-connect-php-sdk/compare/v0.1.1...v0.1.2
+[0.1.3]:https://github.com/secucard/secucard-connect-php-sdk/compare/v0.1.2...v0.1.3
+[1.0.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v0.1.3...v1.0.0
+[1.0.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.0.0...v1.0.1
+[1.0.2]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.0.1...v1.0.2
+[1.0.3]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.0.2...v1.0.3
+[1.0.4]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.0.3...v1.0.4
+[1.0.5]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.0.4...v1.0.5
+[1.0.6]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.0.5...v1.0.6
+[1.0.7]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.0.6...v1.0.7
+[1.0.8]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.0.7...v1.0.8
+[1.0.9]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.0.8...v1.0.9
+[1.1.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.0.9...v1.1.0
+[1.1.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.1.0...v1.1.1
+[1.1.2]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.1.1...v1.1.2
+[1.3.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.1.2...v1.3.1
+[1.4.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.3.1...v1.4.0

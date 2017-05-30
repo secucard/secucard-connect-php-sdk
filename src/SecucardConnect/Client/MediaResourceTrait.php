@@ -114,13 +114,13 @@ trait MediaResourceTrait
         return $result;
     }
 
-	/**
-	 * @param bool $cache
-	 *
-	 * @return null|\Psr\Http\Message\StreamInterface
-	 * @throws ClientError
-	 * @throws \Exception
-	 */
+    /**
+     * @param bool $cache
+     *
+     * @return null|\Psr\Http\Message\StreamInterface
+     * @throws ClientError
+     * @throws \Exception
+     */
     private function downloadMe($cache = true)
     {
         if (empty($this->httpClient)) {

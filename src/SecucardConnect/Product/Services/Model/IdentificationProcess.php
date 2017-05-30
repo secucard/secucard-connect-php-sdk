@@ -2,7 +2,9 @@
 
 namespace SecucardConnect\Product\Services\Model;
 
-
+/**
+ * Class IdentificationProcess
+ */
 class IdentificationProcess
 {
     /**

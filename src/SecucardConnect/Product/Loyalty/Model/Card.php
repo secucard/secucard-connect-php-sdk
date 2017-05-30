@@ -5,7 +5,6 @@
 
 namespace SecucardConnect\Product\Loyalty\Model;
 
-use DateTime;
 use SecucardConnect\Product\Common\Model\BaseModel;
 use SecucardConnect\Product\General\Model\Account;
 

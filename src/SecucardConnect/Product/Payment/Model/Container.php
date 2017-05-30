@@ -29,7 +29,7 @@ class Container extends BaseModel
      * @var \SecucardConnect\Product\Payment\Model\Data
      */
     public $private;
-    
+
     /**
      * @var string
      */

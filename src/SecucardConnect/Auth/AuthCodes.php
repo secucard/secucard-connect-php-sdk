@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: tk
- * Date: 03.12.15
- * Time: 23:07
- */
 
 namespace SecucardConnect\Auth;
 

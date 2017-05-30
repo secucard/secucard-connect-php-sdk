@@ -6,25 +6,28 @@ namespace SecucardConnect\Client;
  * Class DummyStorage
  * @package SecucardConnect\Client
  */
-class DummyStorage implements StorageInterface {
-    
+class DummyStorage implements StorageInterface
+{
+
     protected $storage;
 
-	/**
-	 * DummyStorage constructor.
-	 */
-    public function __construct() {
+    /**
+     * DummyStorage constructor.
+     */
+    public function __construct()
+    {
         // init dummy storage var
         $this->storage = [];
     }
-    
+
     /**
      * Retrieve an item from cache
      *
      * @param string $key The key to store it under
      * @return mixed
      */
-    public function get($key) {
+    public function get($key)
+    {
         if (isset($this->storage[$key])) {
             return $this->storage[$key];
         }
@@ -38,7 +41,8 @@ class DummyStorage implements StorageInterface {
      * @param mixed $value
      * @return void
      */
-    public function set($key, $value) {
+    public function set($key, $value)
+    {
         $this->storage[$key] = $value;
     }
 
@@ -48,7 +52,8 @@ class DummyStorage implements StorageInterface {
      * @param string $key
      * @return void
      */
-    public function delete($key) {
+    public function delete($key)
+    {
         unset($this->storage[$key]);
     }
 
@@ -57,7 +62,8 @@ class DummyStorage implements StorageInterface {
      *
      * @return void
      */
-    public function deleteAll() {
+    public function deleteAll()
+    {
         $this->storage = [];
     }
 } 

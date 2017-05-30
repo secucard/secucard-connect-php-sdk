@@ -63,13 +63,13 @@ abstract class ProductService
 
     private $actionId;
 
-	/**
-	 * @param string $product
-	 * @param string $resource
-	 * @param ClientContext $context
-	 *
-	 * @return mixed
-	 */
+    /**
+     * @param string $product
+     * @param string $resource
+     * @param ClientContext $context
+     *
+     * @return mixed
+     */
     public static function create($product, $resource, ClientContext $context)
     {
         $rm = new ResourceMetadata($product, $resource);
@@ -142,14 +142,14 @@ abstract class ProductService
         return $this->getListInternal(null, null, $id);
     }
 
-	/**
-	 * @param QueryParams|null $query
-	 * @param null $expireTime
-	 * @param null $scrollId
-	 *
-	 * @return BaseCollection
-	 * @throws ClientError
-	 */
+    /**
+     * @param QueryParams|null $query
+     * @param null $expireTime
+     * @param null $scrollId
+     *
+     * @return BaseCollection
+     * @throws ClientError
+     */
     private function getListInternal(QueryParams $query = null, $expireTime = null, $scrollId = null)
     {
         $sp = new SearchParams($query, $expireTime, $scrollId);
@@ -288,10 +288,11 @@ abstract class ProductService
         return $inst;
     }
 
-	/**
-	 * @return string
-	 */
-    public function getResourceId(){
+    /**
+     * @return string
+     */
+    public function getResourceId()
+    {
         return $this->resourceMetadata->resourceId;
     }
 
@@ -306,60 +307,61 @@ abstract class ProductService
      * The given ID is immediately cleared (null) after applied for a service call, even after a failure.
      * @param $id string Any unique id.
      */
-    public function setActionId($id){
+    public function setActionId($id)
+    {
         $this->actionId = $id;
     }
 
-	/**
-	 * @param $id
-	 * @param $action
-	 * @param null $actionArg
-	 * @param null $object
-	 * @param null $class
-	 *
-	 * @return bool|mixed|null|string
-	 */
+    /**
+     * @param $id
+     * @param $action
+     * @param null $actionArg
+     * @param null $object
+     * @param null $class
+     *
+     * @return bool|mixed|null|string
+     */
     protected function updateWithAction($id, $action, $actionArg = null, $object = null, $class = null)
     {
         return $this->requestAction(RequestOps::UPDATE, $id, $action, $actionArg, $object, $class);
     }
 
-	/**
-	 * @param $id
-	 * @param $action
-	 * @param null $actionArg
-	 * @param null $object
-	 * @param null $class
-	 *
-	 * @return bool|mixed|null|string
-	 */
+    /**
+     * @param $id
+     * @param $action
+     * @param null $actionArg
+     * @param null $object
+     * @param null $class
+     *
+     * @return bool|mixed|null|string
+     */
     protected function deleteWithAction($id, $action, $actionArg = null, $object = null, $class = null)
     {
         return $this->requestAction(RequestOps::DELETE, $id, $action, $actionArg, $object, $class);
     }
 
-	/**
-	 * @param $id
-	 * @param $action
-	 * @param null $actionArg
-	 * @param null $object
-	 * @param null $class
-	 *
-	 * @return bool|mixed|null|string
-	 */
+    /**
+     * @param $id
+     * @param $action
+     * @param null $actionArg
+     * @param null $object
+     * @param null $class
+     *
+     * @return bool|mixed|null|string
+     */
     protected function execute($id, $action, $actionArg = null, $object = null, $class = null)
     {
         return $this->requestAction(RequestOps::EXECUTE, $id, $action, $actionArg, $object, $class);
     }
 
-	/**
-	 * @param $appId
-	 * @param $action
-	 * @param null $object
-	 * @param null $class
-	 *
-	 * @return bool|mixed|null|string
-	 */
+    /**
+     * @param $appId
+     * @param $action
+     * @param null $object
+     * @param null $class
+     *
+     * @return bool|mixed|null|string
+     */
     protected function executeCustom($appId, $action, $object = null, $class = null)
     {
         return $this->requestAction(RequestOps::EXECUTE, null, $action, null, $object, $class, $appId);
@@ -376,17 +378,17 @@ abstract class ProductService
         return [];
     }
 
-	/**
-	 * @param $op
-	 * @param null $id
-	 * @param $action
-	 * @param null $actionArg
-	 * @param null $object
-	 * @param null $class
-	 * @param null $appId
-	 *
-	 * @return bool|mixed|null|string
-	 */
+    /**
+     * @param $op
+     * @param null $id
+     * @param $action
+     * @param null $actionArg
+     * @param null $object
+     * @param null $class
+     * @param null $appId
+     *
+     * @return bool|mixed|null|string
+     */
     private function requestAction(
         $op,
         $id = null,
@@ -395,8 +397,7 @@ abstract class ProductService
         $object = null,
         $class = null,
         $appId = null
-    )
-    {
+    ) {
         // todo: should property filtering for json also apply here?
         $json = $object == null ? null : MapperUtil::jsonEncode($object);
 
@@ -421,14 +422,14 @@ abstract class ProductService
         return $json;
     }
 
-	/**
-	 * @param RequestParams $params
-	 *
-	 * @return bool|mixed
-	 * @throws ApiError
-	 * @throws AuthError
-	 * @throws ClientError
-	 */
+    /**
+     * @param RequestParams $params
+     *
+     * @return bool|mixed
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
+     */
     private function request(RequestParams $params)
     {
         /*
@@ -615,12 +616,12 @@ abstract class ProductService
         return $mr;
     }
 
-	/**
-	 * @param $json
-	 * @param $class
-	 *
-	 * @return mixed|null
-	 */
+    /**
+     * @param $json
+     * @param $class
+     *
+     * @return mixed|null
+     */
     private function createResourceInst($json, $class)
     {
         if (empty($json)) {
@@ -760,8 +761,7 @@ final class RequestParams
         $actionArg = null,
         $jsonData = null,
         array $options = []
-    )
-    {
+    ) {
         $this->operation = $operation;
         $this->id = $id;
         $this->searchParams = $searchParams;

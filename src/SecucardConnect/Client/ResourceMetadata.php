@@ -66,7 +66,7 @@ class ResourceMetadata
      * check all classes in this product model dir against the given resource name to find the right resource class
      * necessary because class name may be singular of resource name (seems safer than just stripping the "s")
      */
-    private function  findModelClass($dir, $resource, $classPrefix)
+    private function findModelClass($dir, $resource, $classPrefix)
     {
         $lcres = strtolower($resource);
         $files = glob($dir . DIRECTORY_SEPARATOR . '*.php');
@@ -94,13 +94,13 @@ class ResourceMetadata
         return null;
     }
 
-	/**
-	 * @param $dir
-	 * @param $resource
-	 * @param $classPrefix
-	 *
-	 * @return null|string
-	 */
+    /**
+     * @param $dir
+     * @param $resource
+     * @param $classPrefix
+     *
+     * @return null|string
+     */
     private function findServiceClass($dir, $resource, $classPrefix)
     {
         $lcres = strtolower($resource);
@@ -108,21 +108,21 @@ class ResourceMetadata
         foreach ($files as $file) {
             $name = basename($file, '.php');
             if (strpos(strtolower($name), $lcres) !== false) {
-	            $parentClassName = $className = $classPrefix . $name;
+                $parentClassName = $className = $classPrefix . $name;
 
                 do {
-	                $rc = new \ReflectionClass($parentClassName);
-	                $parent = $rc->getParentClass();
+                    $rc = new \ReflectionClass($parentClassName);
+                    $parent = $rc->getParentClass();
 
-	                if (!$parent) {
-	                	break;
-	                }
+                    if (!$parent) {
+                        break;
+                    }
 
-	                $parentClassName = $parent->getName();
+                    $parentClassName = $parent->getName();
 
-	                if (ProductService::class === $parentClassName) {
-		                return $className;
-	                }
+                    if (ProductService::class === $parentClassName) {
+                        return $className;
+                    }
 
                 } while (true);
             }

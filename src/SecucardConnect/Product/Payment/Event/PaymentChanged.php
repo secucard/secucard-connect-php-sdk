@@ -11,17 +11,17 @@ use SecucardConnect\Event\DefaultEventHandler;
  */
 class PaymentChanged extends DefaultEventHandler
 {
-	/**
-	 * @param $event
-	 *
-	 * @throws ClientError If the payment transaction id is missing in the event data
-	 */
-	function onEvent($event)
-	{
-		if (!isset($event->data[0]['id'])) {
-			throw new ClientError('Invalid event data, payment id not found.');
-		}
+    /**
+     * @param $event
+     *
+     * @throws ClientError If the payment transaction id is missing in the event data
+     */
+    function onEvent($event)
+    {
+        if (!isset($event->data[0]['id'])) {
+            throw new ClientError('Invalid event data, payment id not found.');
+        }
 
-		call_user_func($this->callback, $this->service->get($event->data[0]['id']));
-	}
+        call_user_func($this->callback, $this->service->get($event->data[0]['id']));
+    }
 }

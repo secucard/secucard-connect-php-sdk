@@ -10,17 +10,17 @@ use SecucardConnect\Product\Common\Model\BaseModel;
  */
 class Experience extends BaseModel
 {
-	/**
-	 * The number of positive customer experiences
-	 *
-	 * @var int
-	 */
-	public $positiv;
+    /**
+     * The number of positive customer experiences
+     *
+     * @var int
+     */
+    public $positiv;
 
-	/**
-	 * The number of negative customer experiences (open orders
-	 *
-	 * @var int
-	 */
-	public $negativ;
+    /**
+     * The number of negative customer experiences (open orders
+     *
+     * @var int
+     */
+    public $negativ;
 }

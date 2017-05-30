@@ -38,7 +38,7 @@ class PaymentInstrument
     public function createBankAccount($owner, $iban, $bic = null, $bankname = null)
     {
         $iban = str_replace(' ', '', $iban);
-        $iban = substr_replace($iban, str_repeat("X", strlen($iban)-8), 4, -4);
+        $iban = substr_replace($iban, str_repeat("X", strlen($iban) - 8), 4, -4);
 
         $this->type = self::PAYMENT_INSTRUMENT_TYPE_BANK_ACCOUNT;
         $this->data = [
@@ -61,7 +61,7 @@ class PaymentInstrument
      *
      * @return self
      */
-    public function createCreditCard($owner, $pan, $expiration_date, $issuer = null )
+    public function createCreditCard($owner, $pan, $expiration_date, $issuer = null)
     {
         $pan = str_replace(' ', '', $pan);
         $pan = substr_replace($pan, str_repeat("X", 8), 4, 8);

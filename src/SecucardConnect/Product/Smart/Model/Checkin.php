@@ -5,11 +5,7 @@
 
 namespace SecucardConnect\Product\Smart\Model;
 
-use DateTime;
 use SecucardConnect\Product\Common\Model\BaseModel;
-use SecucardConnect\Product\General\Model\Account;
-use SecucardConnect\Product\Loyalty\Model\Customer;
-use SecucardConnect\Product\Loyalty\Model\MerchantCard;
 
 /**
  * Checkin Api Model class

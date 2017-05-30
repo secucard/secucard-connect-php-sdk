@@ -11,7 +11,6 @@ use SecucardConnect\Product\Common\Model\BaseCollection;
 use SecucardConnect\Product\General\Model\Event;
 use SecucardConnect\Product\Services\Model\IdentResult;
 
-
 /**
  * Operations for the services/identresults resource.
  * @package SecucardConnect\Product\Services
@@ -19,21 +18,31 @@ use SecucardConnect\Product\Services\Model\IdentResult;
 class IdentResultsService extends ProductService
 {
     /**
-     * Handles proper attachments initialization after retrieval of a ident result.
-     * @param IdentResult $result
+     * Returns an array of IdentResult instances for a given array of IdentRequest ids.
+     * @param array $ids The request ids.
+     * @return BaseCollection The obtained results.
      */
-    private function process(IdentResult &$result)
+    public function getListByRequestIds($ids)
     {
-        if (isset($result->person)) {
-            foreach ($result->person as $p) {
-                $attachments = $p->attachments;
-                if (!empty($attachments)) {
-                    foreach ($attachments as $attachment) {
-                        $this->initMediaResource($attachment);
-                    }
-                }
-            }
+        $parts = [];
+        foreach ($ids as $id) {
+            $parts[] = 'request.id:' . $id;
         }
+        $qp = new QueryParams();
+        $qp->query = join(' OR ', $parts);
+        return $this->getList($qp);
+    }
+
+    /**
+     * Set a callback to be notified when ident-request has changed and a ident result is available.
+     * Pass null to remove a previous setting.
+     * @param $fn callable|null Any function which accepts a BaseCollection class argument.
+     * The collection contains the IdentResult instances.
+     *
+     */
+    public function onIdentRequestsChanged($fn)
+    {
+        $this->registerEventHandler('idreschanged', $fn === null ? null : new IdentResChanged($fn, $this));
     }
 
     /**
@@ -59,31 +68,21 @@ class IdentResultsService extends ProductService
     }
 
     /**
-     * Returns an array of IdentResult instances for a given array of IdentRequest ids.
-     * @param array $ids The request ids.
-     * @return BaseCollection The obtained results.
+     * Handles proper attachments initialization after retrieval of a ident result.
+     * @param IdentResult $result
      */
-    public function getListByRequestIds($ids)
+    private function process(IdentResult &$result)
     {
-        $parts = array();
-        foreach ($ids as $id) {
-            $parts[] = 'request.id:' . $id;
+        if (isset($result->person)) {
+            foreach ($result->person as $p) {
+                $attachments = $p->attachments;
+                if (!empty($attachments)) {
+                    foreach ($attachments as $attachment) {
+                        $this->initMediaResource($attachment);
+                    }
+                }
+            }
         }
-        $qp = new QueryParams();
-        $qp->query = join(' OR ', $parts);
-        return $this->getList($qp);
-    }
-
-    /**
-     * Set a callback to be notified when ident-request has changed and a ident result is available.
-     * Pass null to remove a previous setting.
-     * @param $fn callable|null Any function which accepts a BaseCollection class argument.
-     * The collection contains the IdentResult instances.
-     *
-     */
-    public function onIdentRequestsChanged($fn)
-    {
-        $this->registerEventHandler('idreschanged', $fn === null ? null : new IdentResChanged($fn, $this));
     }
 }
 
@@ -93,14 +92,6 @@ class IdentResultsService extends ProductService
  */
 class IdentResChanged extends DefaultEventHandler
 {
-    /**
-     * Overwrite the accept function, so the event with identrequest can be handled by identresults service
-     */
-    protected function accept(Event $event)
-    {
-        return $event->target === 'services.identrequests' && $event->type === $this->eventType;
-    }
-
     /**
      * @param Event $event
      * @throws ClientError
@@ -112,11 +103,22 @@ class IdentResChanged extends DefaultEventHandler
             throw new ClientError('Invalid event data, no ident-request id(s) found.');
         }
 
-        $ids = array();
+        $ids = [];
         foreach ($event->data as $item) {
             $ids[] = $item['id'];
         }
 
         call_user_func($this->callback, $this->service->getListByRequestIds($ids));
+    }
+
+    /**
+     * Overwrite the accept function, so the event with identrequest can be handled by identresults service
+     *
+     * @param Event $event
+     * @return bool
+     */
+    protected function accept(Event $event)
+    {
+        return $event->target === 'services.identrequests' && $event->type === $this->eventType;
     }
 }
