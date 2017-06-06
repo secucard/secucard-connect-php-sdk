@@ -20,8 +20,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 
-## [1.4.1] - 2017-05-30
-FIX packagist config
+## [1.4.1] - 2017-06-06
+
+### Fixed
+- Wrong exception for optional parameters "JSON property must not be NULL".
 
 
 ## [1.4.0] - 2017-05-30

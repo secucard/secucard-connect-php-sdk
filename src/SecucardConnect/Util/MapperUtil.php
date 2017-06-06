@@ -28,6 +28,10 @@ final class MapperUtil
     public static function map($json, $class, LoggerInterface $logger = null)
     {
         $mapper = new JsonMapper();
+
+        // FIX optional parameters can be null (no phpdoc NULL tag needed)
+        $mapper->bStrictNullTypes = false;
+
         if (!is_object($json)) {
             // must set when json is assoc array
             $mapper->bEnforceMapType = false;
