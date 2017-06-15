@@ -75,6 +75,20 @@ class ApiClientConfiguration
     private $accept_language = self::ACCEPT_LANGUAGE_EN;
 
     /**
+     * Define the http proxy
+     *
+     * @var string
+     */
+    private $http_proxy = null;
+
+    /**
+     * Define the https proxy
+     *
+     * @var string
+     */
+    private $https_proxy = null;
+
+    /**
      * Create a new instace with the given (array) config attributes
      *
      * @deprecated Only for backward compatibility
@@ -105,6 +119,14 @@ class ApiClientConfiguration
 
         if (!empty($config['auth'])) {
             $self->setAuth($config['auth']);
+        }
+
+        if (!empty($config['http_proxy'])) {
+            $self->setHttpProxy($config['http_proxy']);
+        }
+
+        if (!empty($config['https_proxy'])) {
+            $self->setHttpsProxy($config['https_proxy']);
         }
 
         return $self;
@@ -324,6 +346,48 @@ class ApiClientConfiguration
         }
 
         $this->accept_language = $accept_language;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHttpProxy()
+    {
+        return $this->http_proxy;
+    }
+
+    /**
+     * Set the http proxy
+     *
+     * @param string $http_proxy
+     *
+     * @return string
+     */
+    public function setHttpProxy($http_proxy)
+    {
+        $this->http_proxy = $http_proxy;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHttpsProxy()
+    {
+        return $this->https_proxy;
+    }
+
+    /**
+     * Set the https proxy
+     *
+     * @param string $https_proxy
+     *
+     * @return string
+     */
+    public function setHttpsProxy($https_proxy)
+    {
+        $this->https_proxy = $https_proxy;
         return $this;
     }
 

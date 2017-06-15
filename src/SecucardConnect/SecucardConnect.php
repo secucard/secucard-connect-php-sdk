@@ -232,7 +232,15 @@ final class SecucardConnect
     private function initHttpClient()
     {
         $stack = HandlerStack::create();
-        $options = ['base_uri' => $this->config->getBaseUrl(), 'handler' => $stack, 'auth' => null];
+        $options = [
+            'base_uri' => $this->config->getBaseUrl(),
+            'handler' => $stack,
+            'auth' => null,
+            'proxy' => [
+                'http' => $this->config->getHttpProxy(),
+                'https' => $this->config->getHttpsProxy()
+            ]
+        ];
 
         if ($this->config->getDebug() === true) {
             $options['debug'] = true;
