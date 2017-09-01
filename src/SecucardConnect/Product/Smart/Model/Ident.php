@@ -13,6 +13,9 @@ use SecucardConnect\Product\Common\Model\BaseModel;
  */
 class Ident extends BaseModel
 {
+    const TYPE_CARD = "card";
+    const TYPE_CHECKIN = "checkin";
+
     /**
      * @var string
      */

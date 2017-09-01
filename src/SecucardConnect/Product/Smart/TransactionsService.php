@@ -9,6 +9,12 @@ use SecucardConnect\Product\Smart\Model\Transaction;
 class TransactionsService extends ProductService
 {
 
+    const TYPE_DEMO = "demo";
+    const TYPE_CASH = "cash";
+    const TYPE_AUTO = "auto";
+    const TYPE_ZVT = "cashless";
+    const TYPE_LOYALTY = "loyalty";
+
     /**
      * Starting/Executing a transaction.
      *
@@ -22,7 +28,7 @@ class TransactionsService extends ProductService
     }
 
     /**
-     * Cancel an existing transaction.
+     * Cancel an existing loyalty transaction.
      * @param string $transactionId The transaction id.
      * @return bool True if successful false else.
      */
@@ -30,6 +36,5 @@ class TransactionsService extends ProductService
     {
         $res = $this->execute($transactionId, 'cancel', null, 'array');
         return (bool)$res['result'];
-
     }
 }
