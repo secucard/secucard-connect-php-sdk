@@ -19,6 +19,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Removed
 
 
+## [1.5.0] - 2017-09-01
+
+### Added
+- TransactionService: type of transactions
+- IdentService: getCardInfo method
+- Product Ident: types of login
+- MerchantCardService: validateCSC
+- MerchantCardService: validatePasscode
+- CardGroupService: checkPasscodeEnabled
+- Product CardGroup: type of transactions
+- Product MerchantCard: status of passcode
+
 
 ## [1.4.1] - 2017-06-06
 
@@ -346,3 +358,4 @@ First release
 [1.3.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.1.2...v1.3.1
 [1.4.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.3.1...v1.4.0
 [1.4.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.4.0...v1.4.1
+[1.5.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.4.1...v1.5.0
