@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Product CardGroup: type of transactions
 - Product MerchantCard: status of passcode
 
+
 ## [1.4.1] - 2017-06-06
 
 ### Fixed
