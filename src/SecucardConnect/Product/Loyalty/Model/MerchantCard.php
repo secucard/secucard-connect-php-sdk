@@ -7,6 +7,10 @@ use SecucardConnect\Product\Common\Model\BaseModel;
 
 class MerchantCard extends BaseModel
 {
+    const PASSCODE_STATUS_NOT_ENABLED = 1;
+    const PASSCODE_STATUS_NOT_SET = 2;
+    const PASSCODE_STATUS_SET = 3;
+
     /**
      * @var \SecucardConnect\Product\General\Model\Merchant
      */
@@ -50,6 +54,16 @@ class MerchantCard extends BaseModel
     /**
      * @var int
      */
+    public $cash_balance;
+
+    /**
+     * @var int
+     */
+    public $bonus_balance;
+
+    /**
+     * @var int
+     */
     public $points;
 
     /**
@@ -71,4 +85,9 @@ class MerchantCard extends BaseModel
      * @var string
      */
     public $lock_status;
+
+    /**
+     * @var int
+     */
+    public $passcode;
 }
