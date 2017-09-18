@@ -253,8 +253,8 @@ class OauthProvider extends ProductService
         // if the guzzle gets response http_status other than 200, it will throw an exception even when there is response available
         try {
             $response = $this->post($params);
-            $codes = MapperUtil::mapResponse($response, new AuthCodes(), $this->logger);
-            return $codes;
+
+            return MapperUtil::mapResponse($response, new AuthCodes(), $this->logger);
         } catch (ClientException $e) {
             throw $this->mapError($e, 'Error requesting device codes.');
         }

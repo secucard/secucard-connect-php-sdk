@@ -39,8 +39,7 @@ final class MapperUtil
         if (!empty($logger)) {
             $mapper->setLogger($logger);
         }
-        $inst = $mapper->map($json, new $class());
-        return $inst;
+        return $mapper->map($json, new $class());
     }
 
     /**
