@@ -55,7 +55,6 @@ abstract class ProductService
      */
     protected $storage;
 
-
     /**
      * @var EventDispatcher
      */
@@ -195,7 +194,6 @@ abstract class ProductService
         return $list;
     }
 
-
     /**
      * Method to get object identified by id
      *
@@ -248,7 +246,6 @@ abstract class ProductService
 
         return $jsonResponse;
     }
-
 
     /**
      * Function to save object
@@ -323,7 +320,7 @@ abstract class ProductService
      */
     protected function updateWithAction($id, $action, $actionArg = null, $object = null, $class = null)
     {
-        return $this->requestAction(RequestOps::UPDATE, $id, $action, $actionArg, $object, $class);
+        return $this->requestAction(RequestOps::UPDATE, $action, $id, $actionArg, $object, $class);
     }
 
     /**
@@ -337,7 +334,7 @@ abstract class ProductService
      */
     protected function deleteWithAction($id, $action, $actionArg = null, $object = null, $class = null)
     {
-        return $this->requestAction(RequestOps::DELETE, $id, $action, $actionArg, $object, $class);
+        return $this->requestAction(RequestOps::DELETE, $action, $id, $actionArg, $object, $class);
     }
 
     /**
@@ -351,7 +348,7 @@ abstract class ProductService
      */
     protected function execute($id, $action, $actionArg = null, $object = null, $class = null)
     {
-        return $this->requestAction(RequestOps::EXECUTE, $id, $action, $actionArg, $object, $class);
+        return $this->requestAction(RequestOps::EXECUTE, $action, $id, $actionArg, $object, $class);
     }
 
     /**
@@ -364,7 +361,7 @@ abstract class ProductService
      */
     protected function executeCustom($appId, $action, $object = null, $class = null)
     {
-        return $this->requestAction(RequestOps::EXECUTE, null, $action, null, $object, $class, $appId);
+        return $this->requestAction(RequestOps::EXECUTE, $action, null, null, $object, $class, $appId);
     }
 
     /**
@@ -391,8 +388,8 @@ abstract class ProductService
      */
     private function requestAction(
         $op,
-        $id = null,
         $action,
+        $id = null,
         $actionArg = null,
         $object = null,
         $class = null,
@@ -490,7 +487,7 @@ abstract class ProductService
                     $p['sort[' . $key . ']'] = $value;
                 }
             }
-        };
+        }
 
         if (!empty($params->searchParams->scrollId)) {
             $p['scroll_id'] = $params->searchParams->scrollId;
@@ -511,7 +508,7 @@ abstract class ProductService
         if (!empty($params->jsonData)) {
             $options[\GuzzleHttp\RequestOptions::BODY] = $params->jsonData;
             $options[\GuzzleHttp\RequestOptions::HEADERS]['Content-Type'] = 'application/json';
-        };
+        }
 
         /*
          * Idempotence (avoid double execution of the same request)

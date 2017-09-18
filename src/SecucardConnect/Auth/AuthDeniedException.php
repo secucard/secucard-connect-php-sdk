@@ -14,15 +14,6 @@ use SecucardConnect\Product\Common\Model\Error;
  */
 class AuthDeniedException extends AuthError
 {
-    /**
-     * AuthDeniedException constructor.
-     * @param Error $error
-     * @param null $message
-     */
-    public function __construct(Error $error = null, $message = null)
-    {
-        parent::__construct($error, $message);
-    }
 }
 
 ?>
