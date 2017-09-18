@@ -563,20 +563,22 @@ abstract class ProductService
 
                 switch ($e->getCode()) {
                     case 400:
+                        // Handle special auth errors
+                        $error = new Error(
+                            isset($json->error) ? (string)$json->error : '',
+                            isset($json->error_description) ? (string)$json->error_description : ''
+                        );
+
+                        return new BadAuthException($error, $msg, 400, $e);
+
                     case 401:
                         // Handle special auth errors
                         $error = new Error(
-                            isset($json->error) ? $json->error : null,
-                            isset($json->error_description) ? $json->error_description : null
+                            isset($json->error) ? (string)$json->error : '',
+                            isset($json->error_description) ? (string)$json->error_description : ''
                         );
 
-                        if ($e->getCode() == 401) {
-                            return new AuthDeniedException($error, $msg);
-                        } else {
-                            return new BadAuthException($error, $msg, 400, $e);
-                        }
-
-                        break;
+                        return new AuthDeniedException($error, $msg);
 
                     case 403:
                     case 404:
