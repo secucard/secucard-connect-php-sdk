@@ -546,7 +546,7 @@ abstract class ProductService
                 // HTTP 4xx
 
                 /*
-                 * Example of $json:
+                 * Examples of $json:
                  * --------------------------------------------------------------------------------
                  * status = "error"
                  * error = "ProductNotAllowedException"
@@ -554,6 +554,10 @@ abstract class ProductService
                  * error_user = "Es ist ein unbekannter Fehler aufgetreten (Code 1003)"
                  * code = 1003
                  * supportId = "f40fa3901afcfa54cd91cb2bd37477ae"
+                 * --------------------------------------------------------------------------------
+                 * error = "invalid_client",
+                 * error_description = "Client credentials were not found in the headers or body"
+                 * --------------------------------------------------------------------------------
                  */
                 $json = MapperUtil::mapResponse($e->getResponse());
 
