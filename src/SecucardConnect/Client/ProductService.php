@@ -541,54 +541,77 @@ abstract class ProductService
      */
     protected function mapError(Exception $e, $msg)
     {
-        if ($e instanceof ClientException) {
-            // http 4xx
-            $error = null;
-            $json = MapperUtil::mapResponse($e->getResponse());
+        try {
+            if ($e instanceof ClientException) {
+                // HTTP 4xx
 
-            if ($e->getCode() == 401 || $e->getCode() == 400) {
-                try {
-                    $error = new Error($json->error, $json->error_description);
-                } catch (Exception $e) {
-                    Logger::logWarn($this->logger, 'Failed to get error details from response.', $e);
+                /*
+                 * Example of $json:
+                 * --------------------------------------------------------------------------------
+                 * status = "error"
+                 * error = "ProductNotAllowedException"
+                 * error_details = "The current status of the payment does not allow to capture it"
+                 * error_user = "Es ist ein unbekannter Fehler aufgetreten (Code 1003)"
+                 * code = 1003
+                 * supportId = "f40fa3901afcfa54cd91cb2bd37477ae"
+                 */
+                $json = MapperUtil::mapResponse($e->getResponse());
+
+                switch ($e->getCode()) {
+                    case 400:
+                    case 401:
+                        // Handle special auth errors
+                        $error = new Error(
+                            isset($json->error) ? $json->error : null,
+                            isset($json->error_description) ? $json->error_description : null
+                        );
+
+                        if ($e->getCode() == 401) {
+                            return new AuthDeniedException($error, $msg);
+                        } else {
+                            return new BadAuthException($error, $msg, 400, $e);
+                        }
+
+                        break;
+
+                    case 403:
+                    case 404:
+                    default:
+                        // Handle other errors with
+                        if (isset($json->status) && $json->status == 'error') {
+                            // Generic API error
+                            return new ApiError(
+                                (string)$json->error,
+                                (int)$json->code,
+                                (string)$json->error_details,
+                                (string)$json->error_user,
+                                (string)$json->supportId
+                            );
+                        }
+                        break;
                 }
-            }
-
-            if ($e->getCode() == 401) {
-                return new AuthDeniedException($error, $msg);
-            }
-
-            if ($e->getCode() == 400) {
-                return new BadAuthException($error, $msg, 400, $e);
-            }
-
-            if ($e->getCode() == 404) {
-                try {
-                    return new ApiError($json->error, $json->code, $json->error_details, $json->error_user,
-                        $json->supportId);
-                } catch (Exception $e) {
-                    Logger::logWarn($this->logger, 'Failed to get error details from response.', $e);
-                }
-            }
-        }
-
-        if ($e instanceof ServerException) {
-            // http 5xx
-            try {
-                // try to map to known server error response
-                $body = MapperUtil::mapResponse($e->getResponse());
-                if (isset($body->status) && $body->status === 'error') {
-                    if (strtolower($body->error) === 'productinternalexception') {
-                        // better map this to an internal error because it's caused by wrong api usage.
-                        $err = new ClientError($body->error_details, $e);
-                    } else {
-                        $err = new ApiError($body->error, $body->code, $body->error_details,
-                            $body->error_user, $body->supportId);
+            } elseif ($e instanceof ServerException) {
+                // HTTP 5xx
+                $json = MapperUtil::mapResponse($e->getResponse());
+                if (isset($json->status) && $json->status == 'error') {
+                    // Try to map to known server error response
+                    if (strtolower($json->error) === 'productinternalexception') {
+                        // Better map this to an internal error, because it's caused by wrong api usage.
+                        return new ClientError((string)$json->error_details, $e);
                     }
-                    return $err;
+
+                    // Generic API error
+                    return new ApiError(
+                        (string)$json->error,
+                        (int)$json->code,
+                        (string)$json->error_details,
+                        (string)$json->error_user,
+                        (string)$json->supportId
+                    );
                 }
-            } catch (Exception $e) {
             }
+        } catch (Exception $e) {
+            // Ignore parsing errors
         }
 
         return $e;
@@ -650,157 +673,5 @@ abstract class ProductService
     protected function registerEventHandler($id, $handler)
     {
         $this->eventDispatcher->registerEventHandler($id, $handler);
-    }
-}
-
-/**
- * Defines all supported request operations.
- * @package SecucardConnect\Client
- */
-final class RequestOps
-{
-    const CREATE = 'POST';
-    const UPDATE = 'PUT';
-    const DELETE = 'DELETE';
-    const GET = 'GET';
-    const EXECUTE = 'POST';
-    const CUSTOM = 'POST';
-}
-
-/**
- * Defines all supported  options for API requests.
- * @package SecucardConnect\Client
- */
-final class RequestOptions
-{
-    /**
-     * Allows request result post processing by calling a callback with results of a request.
-     * The results should be passed by reference.
-     */
-    const RESULT_PROCESSING = 'resultprocessing';
-}
-
-/**
- * Class RequestParams
- * @package SecucardConnect\Client
- */
-final class RequestParams
-{
-    /**
-     * The operation to perform. See {@link RequestOps} for valid values.
-     * @var int
-     */
-    public $operation;
-
-    /**
-     * @var ResourceMetadata
-     */
-    public $resourceMetadata;
-
-    /**
-     * @var string
-     */
-    public $id;
-
-    /**
-     * App identifier for custom actions.
-     * @var string
-     */
-    public $appId;
-
-    /**
-     * @var SearchParams
-     */
-    public $searchParams;
-
-    /**
-     * @var string
-     */
-    public $action;
-
-    /**
-     * @var string
-     */
-    public $actionArg;
-
-    /**
-     * @var string
-     */
-    public $actionId;
-
-    /**
-     * @var string
-     */
-    public $jsonData;
-
-    /**
-     * @var array
-     */
-    public $options;
-
-    /**
-     * RequestParams constructor.
-     * @param string $operation
-     * @param ResourceMetadata $resourceMetadata
-     * @param string $id
-     * @param SearchParams $searchParams
-     * @param null $action
-     * @param null $actionArg
-     * @param null $jsonData
-     * @param array $options
-     */
-    public function __construct(
-        $operation,
-        ResourceMetadata $resourceMetadata,
-        $id = null,
-        SearchParams $searchParams = null,
-        $action = null,
-        $actionArg = null,
-        $jsonData = null,
-        array $options = []
-    ) {
-        $this->operation = $operation;
-        $this->id = $id;
-        $this->searchParams = $searchParams;
-        $this->options = $options;
-        $this->resourceMetadata = $resourceMetadata;
-        $this->action = $action;
-        $this->actionArg = $actionArg;
-        $this->jsonData = $jsonData;
-    }
-}
-
-/**
- * Class SearchParams
- * @package SecucardConnect\Client
- */
-final class SearchParams
-{
-    /**
-     * @var QueryParams
-     */
-    public $query;
-
-    /**
-     * @var string
-     */
-    public $scrollExpire;
-
-    /**
-     * @var string
-     */
-    public $scrollId;
-
-    /**
-     * SearchParams constructor.
-     * @param QueryParams $query
-     * @param string $scrollExpire
-     * @param string $scrollId
-     */
-    public function __construct(QueryParams $query = null, $scrollExpire = null, $scrollId = null)
-    {
-        $this->query = $query;
-        $this->scrollExpire = $scrollExpire;
-        $this->scrollId = $scrollId;
     }
 }
