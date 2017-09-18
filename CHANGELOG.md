@@ -18,6 +18,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
+## [1.5.1] - 2017-09-18
+
+### Changed
+- Improved code style
+- ApiError: parameter description
+- ProductService: improved HTTP exception handling
+- ProductService: moved RequestOps, RequestOptions, RequestParams and SearchParams to a separate file
 
 ## [1.5.0] - 2017-09-01
 
@@ -64,11 +71,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Removed tests, because the need to be reworked
 - Remove development dependency "phpunit"
 
+
 ## [1.3.1] - 2017-04-28
 
 ### Fixed
 - Get default User-Agent
-
 
 
 ## [1.3.0] - 2017-04-26 [YANKED]
@@ -95,10 +102,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - The API Client Configuration can now be filled by an object instead of an array. Setting the config as array is deprecated.
 
 
-
 ## [1.2.0] - 2017-03-01 [YANKED]
 Not published
-
 
 
 ## [1.1.2] - 2017-01-09
@@ -107,12 +112,10 @@ Not published
 - Fix push service for ident service
 
 
-
 ## [1.1.1] - 2017-01-18
 
 ###Added
 - Provider to Services.IdentRequest
-
 
 
 ## [1.1.0] - 2016-12-06
@@ -121,12 +124,10 @@ Not published
 - Credit card payment
 
 
-
 ## [1.0.9] - 2016-11-29
 
 ### Changed
 - Fix fatal on cancel request
-
 
 
 ## [1.0.8] - 2016-11-29
@@ -138,13 +139,11 @@ Not published
 
 
 
-
 ## [1.0.7] - 2016-11-23
 
 ### Added
 - Basket
 - Invoice payment
-
 
 
 ## [1.0.6] - 2016-10-14
@@ -159,6 +158,7 @@ Not published
 ### Removed
 - composer.lock file
 
+
 ## [1.0.5] - 2016-04-29
 
 ### Added
@@ -167,7 +167,6 @@ Not published
 ### Changed
 - Add payment transaction constants.
 - Removed unused model fields for payment.
-
 
 
 ## [1.0.4] - 2016-04-28
@@ -179,12 +178,10 @@ Not published
 - Remove deprecated fields "payment_requested", "payment_executed"
 
 
-
 ## [1.0.3] - 2016-04-21
 
 ### Changed
 - unknown
-
 
 
 ## [1.0.2] - 2016-04-20
@@ -193,12 +190,10 @@ Not published
 - Readme
 
 
-
 ## [1.0.1] - 2016-04-06
 
 ###Added
 - Client method for getting token JSON for JS usage.
-
 
 
 ## [1.0.0] - 2016-03-12
@@ -222,15 +217,9 @@ Not published
 - Breaking: Smart/General/Common refactored, Auth corrections, Test corrections
 -  	Update: Correct getting right resource meta data.
   	Update: Correct getting right resource meta data, ignoring case
--  	Breaking: Introduce separate args for vendor and ids in device creden…
-      
-      …tials.
--  	Breaking: Upgrade libraries (Guzzle etc.), implement list scrolling, …
-  
-  …some refactoring.
-- Add new basic service methods für actions, refactor JSON de/e…
-    
-    …ncoding.
+-  	Breaking: Introduce separate args for vendor and ids in device credentials.
+-  	Breaking: Upgrade libraries (Guzzle etc.), implement list scrolling, some refactoring.
+- Add new basic service methods für actions, refactor JSON de/encoding.
 - Naming corrections.
 - Enable stream caching with file storage.
 - Add test for storage.
@@ -239,14 +228,10 @@ Not published
 - Fix exception
 - Enhance class finding method for services and resources.
 - Make some classes final, improve client context.
-- Some corrections and enabling response post processing by use…
-  
-  …r callback.
+- Some corrections and enabling response post processing by user callback.
 - Improve services product, support downloadable attachments.
 - Fix resource meta data sampling.
-- Fix POST requests and add model property filtering for JSON. …
-  
-  …Extend transaction model.
+- Fix POST requests and add model property filtering for JSON. Extend transaction model.
 - Better API error message.
 
 
@@ -256,12 +241,10 @@ Not published
 - Correctly implemented processPush method for handling pushes
 
 
-
 ## [0.1.2] - 2015-09-22
 
 ### Changed
 - Fix updating and deleting Models
-
 
 
 ## [0.1.1] - 2015-08-05
@@ -273,7 +256,6 @@ Not published
 - Rename packagist to secucard/secucard-connect
 
 
-
 ## [0.1.0] - 2015-08-04
 
 ### Added
@@ -283,12 +265,10 @@ Not published
 - Updated event.pushes object structure
 
 
-
 ## [0.0.5] - 2015-07-03
 
 ### Changed
 - Fix creation of Secupaydebits
-
 
 
 ## [0.0.4] - 2015-07-03
@@ -300,7 +280,6 @@ Not published
 - Removed invalid ids from tests
 
 
-
 ## [0.0.3] - 2015-05-13
 
 ### Added
@@ -308,7 +287,6 @@ Not published
 
 ### changed
 - Updated Services/Ident* model
-
 
 
 ## [0.0.2] - 2015-02-04
@@ -325,7 +303,6 @@ Not published
 - Fix comments for Client.php
 - Fix phpunit tests for models
 - Fix comments and debug output
-
 
 
 ## [0.0.1] - 2014-11-03
@@ -359,3 +336,4 @@ First release
 [1.4.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.3.1...v1.4.0
 [1.4.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.4.0...v1.4.1
 [1.5.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.4.1...v1.5.0
+[1.5.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.5.0...v1.5.1

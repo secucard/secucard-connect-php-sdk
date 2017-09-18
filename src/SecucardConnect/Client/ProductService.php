@@ -377,8 +377,8 @@ abstract class ProductService
 
     /**
      * @param $op
-     * @param null $id
      * @param $action
+     * @param null $id
      * @param null $actionArg
      * @param null $object
      * @param null $class
