@@ -68,9 +68,9 @@ class ApiError extends AbstractError
      *
      * @param string $serverError
      * @param int $code
-     * @param Exception $details
-     * @param $userMessage
-     * @param $supportId
+     * @param string $details
+     * @param string $userMessage
+     * @param string $supportId
      * @param Exception|null $previous
      */
     public function __construct(
