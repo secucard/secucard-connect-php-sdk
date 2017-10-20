@@ -2,13 +2,12 @@
 
 namespace SecucardConnect\Product\Smart;
 
-
 use SecucardConnect\Client\ProductService;
 use SecucardConnect\Product\Smart\Model\Transaction;
+use SecucardConnect\Product\Loyalty\Model\LoyaltyBonus;
 
 class TransactionsService extends ProductService
 {
-
     const TYPE_DEMO = "demo";
     const TYPE_CASH = "cash";
     const TYPE_AUTO = "auto";
@@ -36,5 +35,15 @@ class TransactionsService extends ProductService
     {
         $res = $this->execute($transactionId, 'cancel', null, 'array');
         return (bool)$res['result'];
+    }
+
+    /**
+     * Request loyalty bonus products and add them to the basket
+     * @param string $transactionId Id of the smart transaction
+     * @return LoyaltyBonus
+     */
+    public function appendLoyaltyBonusProducts($transactionId)
+    {
+        return $this->execute($transactionId, "preTransaction", null,null, LoyaltyBonus::class);
     }
 }

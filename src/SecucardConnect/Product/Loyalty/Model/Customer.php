@@ -108,7 +108,7 @@ class Customer extends BaseModel
     public $customer_number;
 
     /**
-     * @var \DateTime
+     * @var string (YYYY-MM-DD)
      */
     public $dob;
 
