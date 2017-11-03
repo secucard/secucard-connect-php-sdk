@@ -18,6 +18,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
+## [1.6.0] - 2017-11-03
+
+### Added
+- SEPA mandate into response of payment container creation
+
+### Changed
+- Moved CloneParams into seperate file
+- Moved TransferAccount into seperate file
+
 ## [1.5.1] - 2017-09-18
 
 ### Changed

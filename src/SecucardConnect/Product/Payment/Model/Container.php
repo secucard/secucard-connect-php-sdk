@@ -49,4 +49,9 @@ class Container extends BaseModel
      * @var \SecucardConnect\Product\Payment\Model\Contract
      */
     public $contract;
+
+    /**
+     * @var \SecucardConnect\Product\Payment\Model\Mandate
+     */
+    public $mandate;
 }
