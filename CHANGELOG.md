@@ -18,6 +18,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
+## [1.6.1] - 2017-11-17
+
+### Added
+- Added missing param "url_push" to the payment model for "redirect_url"
+
 ## [1.6.0] - 2017-11-03
 
 ### Added
@@ -346,3 +351,5 @@ First release
 [1.4.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.4.0...v1.4.1
 [1.5.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.4.1...v1.5.0
 [1.5.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.5.0...v1.5.1
+[1.6.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.5.1...v1.6.0
+[1.6.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.6.0...v1.6.1
