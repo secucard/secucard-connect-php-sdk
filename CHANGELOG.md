@@ -18,6 +18,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
+## [1.6.1] - 2017-11-17
+
+### Added
+- Added missing param "url_push" to the payment model for "redirect_url"
+
 ## [1.6.0] - 2017-11-03
 
 ### Added
