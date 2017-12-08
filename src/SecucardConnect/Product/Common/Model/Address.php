@@ -35,4 +35,9 @@ class Address extends BaseModel
      * @var string
      */
     public $country;
+
+    /**
+     * @var string
+     */
+    public $additional_address_data;
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Payment Contracts Api Model class
+ * Payment Checkins Api Model class
  */
 
 namespace SecucardConnect\Product\Payment\Model;
@@ -11,7 +11,7 @@ use SecucardConnect\Product\Common\Model\BaseModel;
  * Payment Checkins Api Model class
  *
  */
-class Contract extends BaseModel
+class Checkin extends BaseModel
 {
     /**
      * @var string
