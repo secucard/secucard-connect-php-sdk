@@ -62,6 +62,8 @@ abstract class ProductService
 
     private $actionId;
 
+    private $api_key;
+
     /**
      * @param string $product
      * @param string $resource
@@ -310,6 +312,18 @@ abstract class ProductService
     }
 
     /**
+     * Set an api_key that requests to secuconnect backend are possible without user session.
+     * If provided the server will check, whether the connected contract id is set to handle with calls without user session.
+     *
+     * The given ID is immediately cleared (null) after applied for a service call, even after a failure.
+     * @param $api_key string Any unique key.
+     */
+    public function setApiKey($api_key)
+    {
+        $this->api_key = $api_key;
+    }
+
+    /**
      * @param $id
      * @param $action
      * @param null $actionArg
@@ -516,6 +530,14 @@ abstract class ProductService
         if ($this->actionId !== null) {
             $options[\GuzzleHttp\RequestOptions::HEADERS]['X-Action'] = $this->actionId;
             $this->setActionId(null);
+        }
+
+        /*
+         * Add api_key to header
+         */
+        if ($this->api_key !== null) {
+            $options[\GuzzleHttp\RequestOptions::HEADERS]['X-Apikey'] = $this->api_key;
+            $this->setApiKey(null);
         }
 
         /*
