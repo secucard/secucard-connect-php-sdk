@@ -11,7 +11,7 @@ $secucard = new SecucardConnect($config, $logger, $store, $store, $cred);
 /**
  * @var \SecucardConnect\Product\Payment\SecupayPayoutsService $service
  */
-$service = $secucard->payment->payouts;
+$service = $secucard->payment->secupaypayouts;
 $payout = new \SecucardConnect\Product\Payment\Model\SecupayPayout();
 $payout->currency = 'EUR';
 $payout->amount = 100;
