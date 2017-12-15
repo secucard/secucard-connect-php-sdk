@@ -2,11 +2,13 @@
 
 namespace SecucardConnect\Product\Payment\Model;
 
+use SecucardConnect\Product\Common\Model\BaseModel;
+
 /**
- * Payment SecupayPayouts Api Model class
+ * Payment SecupayPayout Api Model class
  *
  */
-class SecupayPayout extends Transaction
+class SecupayPayout extends BaseModel
 {
     /**
      * @var int

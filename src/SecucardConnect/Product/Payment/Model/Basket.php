@@ -2,18 +2,17 @@
 
 namespace SecucardConnect\Product\Payment\Model;
 
-use SecucardConnect\Product\Common\Model\BaseModel;
-
 /**
  * Basket Data Model class
  *
  */
-class Basket extends BaseModel
+class Basket
 {
     const ITEM_TYPE_ARTICLE = 'article';
     const ITEM_TYPE_SHIPPING = 'shipping';
     const ITEM_TYPE_DONATION = 'donation';
     const ITEM_TYPE_STAKEHOLDER_PAYMENT = 'stakeholder_payment';
+    const ITEM_TYPE_SUB_TRANSACTION = 'sub_transaction';
 
     /**
      * @var int
