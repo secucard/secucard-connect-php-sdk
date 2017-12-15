@@ -8,7 +8,7 @@ use SecucardConnect\Client\ProductService;
  * Operations for the payment.secupaypayout resource.
  * @package SecucardConnect\Product\Payment
  */
-class SecupayPayoutsService extends ProductService
+class SecupayPayoutService extends ProductService
 {
 
 }
