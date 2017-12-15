@@ -49,6 +49,13 @@ class SecupayPayout extends BaseModel
     public $transaction_list;
 
     /**
+     * A list of redirect urls used for the payment checkout page
+     *
+     * @var RedirectUrl
+     */
+    public $redirect_url;
+
+    /**
      * The reference to be used for the transfer
      *
      * @var string
