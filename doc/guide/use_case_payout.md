@@ -9,9 +9,9 @@ With this payment method, unlike Refund, the original transactions are not affec
 $secucard = new SecucardConnect($config, $logger, $store, $store, $cred);
 
 /**
- * @var \SecucardConnect\Product\Payment\SecupayPayoutsService $service
+ * @var \SecucardConnect\Product\Payment\SecupayPayoutService $service
  */
-$service = $secucard->payment->secupaypayouts;
+$service = $secucard->payment->secupaypayout;
 $payout = new \SecucardConnect\Product\Payment\Model\SecupayPayout();
 $payout->currency = 'EUR';
 $payout->amount = 100;
