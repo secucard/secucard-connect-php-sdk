@@ -69,4 +69,11 @@ class Basket
      * @var string
      */
     public $apikey;
+
+    /**
+     * The basket of the sub-transaction
+     *
+     * @var Basket
+     */
+    public $sub_basket;
 }
