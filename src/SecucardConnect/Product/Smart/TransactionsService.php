@@ -14,6 +14,7 @@ class TransactionsService extends ProductService
     const TYPE_AUTO = "auto";
     const TYPE_ZVT = "cashless";
     const TYPE_LOYALTY = "loyalty";
+    const TYPE_DIRECT_DEBIT = "direct_debit";
 
     /**
      * Starting/Executing a transaction.
@@ -22,9 +23,9 @@ class TransactionsService extends ProductService
      * @param string $type The transaction type like "auto" or "cash".
      * @return Transaction The started transaction.
      */
-    public function start($transactionId, $type)
+    public function start($transactionId, $type, $object = null)
     {
-        return $this->execute($transactionId, 'start', $type, null, Transaction::class);
+        return $this->execute($transactionId, 'start', $type, $object, Transaction::class);
     }
 
     /**
