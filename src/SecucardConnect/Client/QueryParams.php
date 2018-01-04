@@ -50,7 +50,7 @@ class QueryParams
      * Single expressions may combined by "AND", "OR", "NOT" operators and parenthesis "(", ")" for grouping.<br/>
      * Property names can be nested like "prop1.prop2".<br/>
      * Example: "(NOT customer.name:meier*) AND (customer.age:[30 TO 40] OR customer.age:[50 TO 60])"
-     * @var string[]
+     * @var string
      */
     public $query;
 
@@ -60,14 +60,14 @@ class QueryParams
      * @param $offset
      * @param \string[] $fields
      * @param array $sortOrder
-     * @param array $query
+     * @param string $query
      */
     public function __construct(
         $count = null,
         $offset = null,
         array $fields = null,
         array $sortOrder = null,
-        array $query = null
+        $query = null
     ) {
         $this->count = $count;
         $this->offset = $offset;
