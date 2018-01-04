@@ -50,7 +50,7 @@ class QueryParams
      * Single expressions may combined by "AND", "OR", "NOT" operators and parenthesis "(", ")" for grouping.<br/>
      * Property names can be nested like "prop1.prop2".<br/>
      * Example: "(NOT customer.name:meier*) AND (customer.age:[30 TO 40] OR customer.age:[50 TO 60])"
-     * @var string
+     * @var string[]
      */
     public $query;
 
