@@ -31,7 +31,7 @@ class PayoutTransaction
      *
      * @var string
      */
-    public $item_type = 'transaction_payout';
+    public $item_type = self::ITEM_TYPE_TRANSACTION_PAYOUT;
 
     /**
      * The payment id of the origin transaction
