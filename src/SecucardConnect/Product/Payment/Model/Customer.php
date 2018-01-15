@@ -39,9 +39,9 @@ class Customer extends BaseModel
     public $merchant;
 
     /**
-     * @var string
+     * @var \SecucardConnect\Product\Payment\Model\Checkin
      */
-    public $checkin_id;
+    public $checkin;
 
     /**
      * Your ID of the customer
