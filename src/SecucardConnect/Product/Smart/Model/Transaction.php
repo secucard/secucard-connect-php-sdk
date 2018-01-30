@@ -88,6 +88,11 @@ class Transaction extends BaseModel
     public $target_device;
 
     /**
+     * @var \SecucardConnect\Product\General\Model\Contract
+     */
+    public $contract;
+
+    /**
      * @var string
      */
     public $payment_method;
