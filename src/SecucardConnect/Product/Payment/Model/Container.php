@@ -54,4 +54,9 @@ class Container extends BaseModel
      * @var \SecucardConnect\Product\Payment\Model\Mandate
      */
     public $mandate;
+
+    /**
+     * @var \SecucardConnect\Product\Payment\Model\Checkin
+     */
+    public $checkin;
 }
