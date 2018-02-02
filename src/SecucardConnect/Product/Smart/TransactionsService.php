@@ -14,7 +14,7 @@ class TransactionsService extends ProductService
     const TYPE_AUTO = "auto";
     const TYPE_ZVT = "cashless";
     const TYPE_LOYALTY = "loyalty";
-    const TYPE_DIRECT_DEBIT = "direct_debit";
+    const TYPE_DIRECT_DEBIT = "debit";
 
     /**
      * Starting/Executing a transaction.
