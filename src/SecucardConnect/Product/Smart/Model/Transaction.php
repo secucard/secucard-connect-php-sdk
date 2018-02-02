@@ -16,7 +16,7 @@ class Transaction extends BaseModel
     const STATUS_CREATED = 'created';
     const STATUS_PROCESSING = 'processing';
     const STATUS_WAITING_FOR_COLLECTION = 'collection';
-    const STATUS_WAITING_FOR_SHIPPING = 'shipping';
+    const STATUS_WAITING_FOR_SHIPPING = 'received';
     const STATUS_FINISHED = 'finished';
     const STATUS_ABORTED = 'aborted';
     const STATUS_FAILED = 'failed';
