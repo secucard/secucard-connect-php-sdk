@@ -100,6 +100,11 @@ class Transaction extends BaseModel
     /**
      * @var string
      */
+    public $order_option;
+
+    /**
+     * @var string
+     */
     public $error;
 
 
