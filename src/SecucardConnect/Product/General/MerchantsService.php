@@ -20,7 +20,7 @@ class MerchantsService extends ProductService
      */
     public function getPublicData($contractId)
     {
-        return $this->execute(null, 'getpublicdata', $contractId, null, Merchant::class);
+        return $this->execute('me', 'getpublicdata', $contractId, null, Merchant::class);
     }
 
 }
