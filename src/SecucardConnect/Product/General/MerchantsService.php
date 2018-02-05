@@ -15,12 +15,12 @@ class MerchantsService extends ProductService
     /**
      * Getting public data of a merchant.
      *
-     * @param string $merchantId The merchant id.
+     * @param string $contractId The merchant general contract id.
      * @return Merchant only public data.
      */
-    public function getPublicData($merchantId)
+    public function getPublicData($contractId)
     {
-        return $this->execute($merchantId, 'getpublicdata', null, null, Merchant::class);
+        return $this->execute(null, 'getpublicdata', $contractId, null, Merchant::class);
     }
 
 }
