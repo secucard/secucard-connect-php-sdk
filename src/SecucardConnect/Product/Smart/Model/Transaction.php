@@ -26,6 +26,11 @@ class Transaction extends BaseModel
     const ORDER_OPTION_COLLECTION = 'collection';
     const ORDER_OPTION_SHIPPING = 'shipping';
 
+    const CHECKOUT_LAST_VISITED_PAGE_CHECKIN = 'checkin_page';
+    const CHECKOUT_LAST_VISITED_PAGE_ADDRESS = 'address_page';
+    const CHECKOUT_LAST_VISITED_PAGE_PAYMENT_SELECTION = 'payment_selection_page';
+    const CHECKOUT_LAST_VISITED_PAGE_PAYMENT_INPUT = 'payment_input_page';
+
     /**
      * @var \SecucardConnect\Product\Smart\Model\Device
      */
@@ -105,6 +110,11 @@ class Transaction extends BaseModel
      * @var string
      */
     public $order_option;
+
+    /**
+     * @var string
+     */
+    public $last_visited_page;
 
     /**
      * @var string
