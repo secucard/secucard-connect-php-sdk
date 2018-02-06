@@ -6,7 +6,6 @@
 namespace SecucardConnect\Product\General\Model;
 
 use SecucardConnect\Product\Common\Model\BaseModel;
-use SecucardConnect\Product\Services\Model\Company;
 use SecucardConnect\Product\General\Model\LegalDetails;
 
 /**
@@ -16,7 +15,7 @@ use SecucardConnect\Product\General\Model\LegalDetails;
 class Merchant extends BaseModel
 {
     /**
-     * @var Company
+     * @var \SecucardConnect\Product\Services\Model\Company
      */
     public $company;
 
