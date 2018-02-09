@@ -12,20 +12,15 @@ use SecucardConnect\Product\General\Model\LegalDetails;
  * Merchants Api Model class
  *
  */
-class Merchant extends BaseModel
+class OrderOption extends BaseModel
 {
     /**
-     * @var \SecucardConnect\Product\Services\Model\Company
+     * @var string
      */
-    public $company;
+    public $type;
 
     /**
-     * @var LegalDetails[]
+     * @var bool
      */
-    public $legal_details;
-
-    /**
-     * @var CheckoutOptions
-     */
-    public $checkout_options;
+    public $enabled;
 }
