@@ -9,6 +9,14 @@ use SecucardConnect\Product\Common\Model\BaseModel;
  */
 class OptData extends BaseModel
 {
+    const LANGUAGE_DE_DE = 'de_DE';
+    const LANGUAGE_EN_US = 'en_US';
+    const LANGUAGE_NL_NL = 'nl_NL';
+    const LANGUAGE_FR_FR = 'fr_FR';
+    const LANGUAGE_IT_IT = 'it_IT';
+    const LANGUAGE_RU_UA = 'ru_UA';
+    const LANGUAGE_RU_RU = 'ru_RU';
+
     /**
      * @var bool
      */
@@ -32,7 +40,7 @@ class OptData extends BaseModel
      *
      * @var string
      */
-    public $language = 'de_DE';
+    public $language = self::LANGUAGE_DE_DE;
 
     /**
      * The label of the headline above the basket
