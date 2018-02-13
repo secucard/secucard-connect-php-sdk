@@ -25,7 +25,7 @@ class Merchant extends BaseModel
     public $legal_details;
 
     /**
-     * @var CheckoutOptions
+     * @var OrderOption[]
      */
-    public $checkout_options;
+    public $order_options;
 }
