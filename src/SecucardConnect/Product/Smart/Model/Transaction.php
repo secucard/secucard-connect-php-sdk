@@ -118,6 +118,11 @@ class Transaction extends BaseModel
     public $last_visited_page;
 
     /**
+     * @var PickupOptions
+     */
+    public $pickup_options;
+
+    /**
      * @var string
      */
     public $error;
