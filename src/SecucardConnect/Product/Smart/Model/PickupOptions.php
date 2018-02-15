@@ -19,7 +19,7 @@ class PickupOptions extends BaseModel
     public $code;
 
     /**
-     * @var \DateTime
+     * @var string
      */
     public $date;
 }
