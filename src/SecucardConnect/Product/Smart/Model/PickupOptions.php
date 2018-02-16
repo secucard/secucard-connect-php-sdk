@@ -14,7 +14,7 @@ use SecucardConnect\Product\Common\Model\BaseModel;
 class PickupOptions extends BaseModel
 {
     /**
-     * @var int
+     * @var string
      */
     public $code;
 
