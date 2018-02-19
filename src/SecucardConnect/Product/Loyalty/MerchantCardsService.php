@@ -13,9 +13,9 @@ class MerchantCardsService extends ProductService
 {
     /**
      * Check the given CSC
-     * @param string $cardNumber cardnumber
+     * @param string $cardNumber card number
      * @param int $csc CSC number
-     * @return bool|null|
+     * @return bool|null
      */
     public function validateCSC($cardNumber, $csc) {
         return $this->execute("me", "CheckCsc", null, ["cardnumber" => $cardNumber, "csc" => $csc]);
@@ -23,7 +23,7 @@ class MerchantCardsService extends ProductService
 
     /**
      * Check the given passcode
-     * @param string $cardNumber cardnumber
+     * @param string $cardNumber card number
      * @param int $pin PIN number
      * @return bool|null
      */
