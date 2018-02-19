@@ -44,6 +44,6 @@ class TransactionsService extends ProductService
      */
     public function appendLoyaltyBonusProducts($transactionId)
     {
-        return $this->execute($transactionId, "preTransaction", null,null, LoyaltyBonus::class);
+        return $this->execute($transactionId, "preTransaction", null, null, LoyaltyBonus::class);
     }
 }
