@@ -44,46 +44,6 @@ class IdentResultsService extends ProductService
     {
         $this->registerEventHandler('idreschanged', $fn === null ? null : new IdentResChanged($fn, $this));
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function getRequestOptions()
-    {
-        return [
-            RequestOptions::RESULT_PROCESSING => function (&$value) {
-                if ($value instanceof BaseCollection) {
-                    $results = $value->items;
-                } elseif ($value instanceof IdentResult) {
-                    $results[] = $value;
-                } else {
-                    return;
-                }
-
-                foreach ($results as $result) {
-                    $this->process($result);
-                }
-            }
-        ];
-    }
-
-    /**
-     * Handles proper attachments initialization after retrieval of a ident result.
-     * @param IdentResult $result
-     */
-    private function process(IdentResult &$result)
-    {
-        if (isset($result->person)) {
-            foreach ($result->person as $p) {
-                $attachments = $p->attachments;
-                if (!empty($attachments)) {
-                    foreach ($attachments as $attachment) {
-                        $this->initMediaResource($attachment);
-                    }
-                }
-            }
-        }
-    }
 }
 
 /**

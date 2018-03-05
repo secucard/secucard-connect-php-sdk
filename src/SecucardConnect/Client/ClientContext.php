@@ -2,9 +2,9 @@
 
 namespace SecucardConnect\Client;
 
-
-use GuzzleHttp\Client;
+use Http\Client\Common\HttpMethodsClient;
 use Psr\Log\LoggerInterface;
+use SecucardConnect\Auth\OauthProvider;
 use SecucardConnect\Event\EventDispatcher;
 
 /**
@@ -14,7 +14,7 @@ use SecucardConnect\Event\EventDispatcher;
 class ClientContext
 {
     /**
-     * @var Client
+     * @var HttpMethodsClient
      */
     public $httpClient;
 
@@ -37,4 +37,9 @@ class ClientContext
      * @var EventDispatcher
      */
     public $eventDispatcher;
+
+    /**
+     * @var OauthProvider
+     */
+    public $oauthProvider;
 }

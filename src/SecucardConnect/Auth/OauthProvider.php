@@ -1,24 +1,17 @@
 <?php
-/**
- * Class OauthProvider
- */
 
 namespace SecucardConnect\Auth;
 
 use Exception;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
-use Psr\Http\Message\RequestInterface;
+use Http\Client\HttpClient;
 use Psr\Log\LoggerInterface;
 use SecucardConnect\Client\ClientError;
 use SecucardConnect\Client\ProductService;
 use SecucardConnect\Client\StorageInterface;
-use SecucardConnect\Util\MapperUtil;
 
 /**
  * OauthProvider class that is adding Access tokens to requests
  *
- * @author Jakub Elias <j.elias@secupay.ag>
  */
 class OauthProvider extends ProductService
 {
@@ -47,15 +40,9 @@ class OauthProvider extends ProductService
     protected $refreshToken;
 
     /**
-     * Path string to send there auth_requests
-     * @var string
+     * @param HttpClient $httpClient
      */
-    protected $auth_path;
-
-    /**
-     * @param Client $httpClient
-     */
-    public function setHttpClient($httpClient)
+    public function setHttpClient(HttpClient $httpClient)
     {
         $this->httpClient = $httpClient;
     }
@@ -71,47 +58,22 @@ class OauthProvider extends ProductService
 
     /**
      * Constructor
-     * @param string $auth_path
+     * @param array $config
      * @param StorageInterface $storage
      * @param GrantTypeInterface $credentials
      */
     public function __construct(
-        $auth_path,
+        array $config,
         StorageInterface $storage,
         GrantTypeInterface $credentials
     ) {
         parent::__construct();
-        $this->auth_path = $auth_path;
+        $this->config = $config;
         $this->storage = $storage;
         $this->credentials = $credentials;
 
         $this->refreshToken = $this->storage->get('refresh_token');
         $this->accessToken = $this->storage->get('access_token');
-    }
-
-
-    /**
-     * Adds the authorization header if an access token was found
-     * @param RequestInterface $request
-     * @param array $options
-     * @return \Psr\Http\Message\MessageInterface|RequestInterface If the access token could not properly set to the request.
-     * @throws ClientError
-     */
-    public function appyAuthorization(RequestInterface $request, array $options = null)
-    {
-        // Only sign requests using "auth"="oauth"
-        // IMPORTANT: you have to create special auth client (GuzzleHttp\Client) if you want to get all the request authorized
-        if (!isset($options['auth']) || $options['auth'] != 'oauth') {
-            return $request;
-        }
-
-        // get Access token for current request
-        $accessToken = $this->getAccessToken();
-        if (is_string($accessToken)) {
-            return $request->withHeader('Authorization', 'Bearer ' . $accessToken);
-        } else {
-            throw new ClientError('Authentication error, invalid on no access token data returned.');
-        }
     }
 
     /**
@@ -125,9 +87,7 @@ class OauthProvider extends ProductService
      * {"access_token":"abc", "expires_in":500}
      * @return string
      * @throws ClientError
-     * @throws \SecucardConnect\Client\ApiError
-     * @throws \SecucardConnect\Client\ApiError|\SecucardConnect\Client\AuthError|ClientError
-     * @throws \SecucardConnect\Client\AuthError
+     * @throws \SecucardConnect\Client\AuthError|ClientError
      */
     public function getAccessToken($deviceCode = null, $json = false)
     {
@@ -204,13 +164,17 @@ class OauthProvider extends ProductService
             }
         } else {
             $this->setParams($params, $refreshToken == null ? $this->credentials : $refreshToken);
+            $url = $this->config['base_url'] . $this->config['auth_path'];
 
-            try {
-                $response = $this->post($params);
-                $tokenData = MapperUtil::mapResponse($response);
-            } catch (Exception $e) {
-                throw($this->mapError($e, 'Error obtaining access token.'));
-            }
+            $tokenData = $this->makeRealRequest(
+                $this->httpClient,
+                'POST',
+                $url,
+                ['Content-Type' => 'application/x-www-form-urlencoded'],
+                http_build_query($params),
+                null,
+                'Error obtaining access token.'
+            );
         }
 
         if (empty($tokenData)) {
@@ -238,8 +202,7 @@ class OauthProvider extends ProductService
 
     /**
      * Function to get device verification codes.
-     * @throws AuthDeniedException
-     * @throws BadAuthException
+     * @throws Exception
      */
     private function obtainDeviceVerification()
     {
@@ -249,15 +212,17 @@ class OauthProvider extends ProductService
 
         $params = [];
         $this->setParams($params, $this->credentials);
+        $url = $this->config['base_url'] . $this->config['auth_path'];
 
-        // if the guzzle gets response http_status other than 200, it will throw an exception even when there is response available
-        try {
-            $response = $this->post($params);
-
-            return MapperUtil::mapResponse($response, new AuthCodes(), $this->logger);
-        } catch (ClientException $e) {
-            throw $this->mapError($e, 'Error requesting device codes.');
-        }
+        return $this->makeRealRequest(
+            $this->httpClient,
+            'POST',
+            $url,
+            ['Content-Type' => 'application/x-www-form-urlencoded'],
+            http_build_query($params),
+            new AuthCodes(),
+            'Error requesting device codes.'
+        );
     }
 
     /**
@@ -278,19 +243,25 @@ class OauthProvider extends ProductService
 
         $params = [];
         $this->setParams($params, $this->credentials);
+        $url = $this->config['base_url'] . $this->config['auth_path'];
 
         try {
-            $response = $this->post($params);
-            return MapperUtil::mapResponse($response);
+            return $this->makeRealRequest(
+                $this->httpClient,
+                'POST',
+                $url,
+                ['Content-Type' => 'application/x-www-form-urlencoded'],
+                http_build_query($params),
+                null,
+                'Error during device authentication.'
+            );
         } catch (Exception $e) {
             // check for auth pending case
-            $err = $this->mapError($e, 'Error during device authentication.');
-            if ($err instanceof AuthDeniedException && $err->getError() != null && $err->getError()->error ===
-                'authorization_pending'
-            ) {
+            if ($e instanceof AuthDeniedException && $e->getError() != null
+                && $e->getError()->error === 'authorization_pending') {
                 return false;
             }
-            throw $err;
+            throw $e;
         } finally {
             // must reset to be ready for new auth attempt
             $this->credentials->deviceCode = null;
@@ -308,12 +279,4 @@ class OauthProvider extends ProductService
         $obj->addParameters($params);
     }
 
-    /**
-     * @param $params
-     * @return \Psr\Http\Message\ResponseInterface
-     */
-    private function post($params)
-    {
-        return $this->httpClient->post($this->auth_path, ['form_params' => $params]);
-    }
 }

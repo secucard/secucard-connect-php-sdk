@@ -2,11 +2,14 @@
 
 namespace SecucardConnect\Client;
 
-
 use Exception;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\ServerException;
+use Http\Client\Common\HttpMethodsClient;
+use Http\Client\Common\Plugin\AuthenticationPlugin;
+use Http\Client\Common\PluginClient;
+use Http\Client\HttpClient;
+use Http\Discovery\MessageFactoryDiscovery;
+use Http\Message\Authentication\Bearer;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use SecucardConnect\Auth\AuthDeniedException;
 use SecucardConnect\Auth\BadAuthException;
@@ -15,9 +18,9 @@ use SecucardConnect\Event\EventHandler;
 use SecucardConnect\Product\Common\Model\BaseCollection;
 use SecucardConnect\Product\Common\Model\BaseModel;
 use SecucardConnect\Product\Common\Model\Error;
-use SecucardConnect\Product\Common\Model\MediaResource;
-use SecucardConnect\Util\Logger;
+use SecucardConnect\SecucardConnect;
 use SecucardConnect\Util\MapperUtil;
+use SecucardConnect\Auth\OauthProvider;
 
 /**
  * Base class from which all product resource specific services must derive.<br/>
@@ -30,13 +33,17 @@ use SecucardConnect\Util\MapperUtil;
  */
 abstract class ProductService
 {
+    const BODY = 'body';
+    const HEADERS = 'headers';
+    const QUERY = 'query';
+
     /**
      * @var ResourceMetadata
      */
     protected $resourceMetadata;
 
     /**
-     * @var Client
+     * @var HttpClient
      */
     protected $httpClient;
 
@@ -59,6 +66,11 @@ abstract class ProductService
      * @var EventDispatcher
      */
     protected $eventDispatcher;
+
+    /**
+     * @var OauthProvider
+     */
+    protected $oauthProvider;
 
     private $actionId;
 
@@ -90,6 +102,7 @@ abstract class ProductService
             $this->config = $context->config;
             $this->storage = $context->storage;
             $this->eventDispatcher = $context->eventDispatcher;
+            $this->oauthProvider = $context->oauthProvider;
         }
     }
 
@@ -383,7 +396,7 @@ abstract class ProductService
      * @param null $object
      * @param null $class
      * @param null $appId
-     *
+     * @throws Exception
      * @return bool|mixed|null|string
      */
     private function requestAction(
@@ -423,9 +436,7 @@ abstract class ProductService
      * @param RequestParams $params
      *
      * @return bool|mixed
-     * @throws ApiError
-     * @throws AuthError
-     * @throws ClientError
+     * @throws AbstractError|\Exception
      */
     private function request(RequestParams $params)
     {
@@ -455,8 +466,8 @@ abstract class ProductService
 
         $options = array_merge(['auth' => 'oauth'], $params->options);
 
-        if (!array_key_exists(\GuzzleHttp\RequestOptions::HEADERS, $options)) {
-            $options[\GuzzleHttp\RequestOptions::HEADERS] = [];
+        if (!array_key_exists(self::HEADERS, $options)) {
+            $options[self::HEADERS] = [];
         }
 
         /*
@@ -498,112 +509,132 @@ abstract class ProductService
         }
 
         if (count($p) != 0) {
-            $options[\GuzzleHttp\RequestOptions::QUERY] = $p;
+            $options[self::QUERY] = $p;
         }
 
         /*
          * JSON Body
          */
-
+        $body = null;
         if (!empty($params->jsonData)) {
-            $options[\GuzzleHttp\RequestOptions::BODY] = $params->jsonData;
-            $options[\GuzzleHttp\RequestOptions::HEADERS]['Content-Type'] = 'application/json';
+            $body = $params->jsonData;
+            $options[self::HEADERS]['Content-Type'] = 'application/json';
+        }
+
+
+
+        if ($this->oauthProvider instanceof OauthProvider) {
+            $accessToken = $this->oauthProvider->getAccessToken();
+            if (!empty($accessToken)) {
+                $options[self::HEADERS]['Authorization'] = 'Bearer ' . $accessToken;
+            }
+            $authenticationPlugin = new AuthenticationPlugin(new Bearer($accessToken));
+
+            $httpClient = new PluginClient(
+                $this->httpClient,
+                [$authenticationPlugin]
+            );
+        } else {
+            $httpClient = $this->httpClient;
         }
 
         /*
          * Idempotence (avoid double execution of the same request)
          */
         if ($this->actionId !== null) {
-            $options[\GuzzleHttp\RequestOptions::HEADERS]['X-Action'] = $this->actionId;
+            $options[self::HEADERS]['X-Action'] = $this->actionId;
             $this->setActionId(null);
         }
 
+        return $this->makeRealRequest($httpClient, $params->operation, $url, $options[self::HEADERS], $body);
+    }
+
+    /**
+     * @param HttpClient $httpClient
+     * @param string $httpMethod
+     * @param string $url
+     * @param array $headers
+     * @param string|null $body
+     * @param object $mappingClass
+     * @param string $defaultErrorMsg
+     * @return mixed
+     * @throws AbstractError|Exception
+     */
+    protected function makeRealRequest(HttpClient $httpClient, $httpMethod, $url, array $headers, $body = null, $mappingClass = null, $defaultErrorMsg = 'Error sending API request.')
+    {
         /*
          * Run request
          */
         try {
-            $response = $this->httpClient->request($params->operation, $url, $options);
-        } catch (Exception $e) {
-            throw $this->mapError($e, 'Error sending API request.');
+            // convert base http client to the special HttpMethodsClient
+            $httpClient = new HttpMethodsClient(
+                $httpClient,
+                MessageFactoryDiscovery::find()
+            );
+
+            $response = $httpClient->send($httpMethod, $url, $headers, $body);
+        } catch (\Http\Client\Exception $e) {
+            throw new ClientError($e->getMessage());
         }
 
         if ($response->getStatusCode() == 200) {
-            return MapperUtil::mapResponse($response);
+            return MapperUtil::mapResponse($response, $mappingClass);
+        } else {
+            throw $this->mapError($response, $defaultErrorMsg);
         }
-
-        return false;
     }
 
     /**
-     * @param Exception $e
+     * @param ResponseInterface $response
      * @param string $msg
-     * @return ApiError|AuthError|ClientError|Exception
+     * @return ApiError|AuthError|ClientError
+     * @throws \Exception
      */
-    protected function mapError(Exception $e, $msg)
+    protected function mapError(ResponseInterface $response, $msg)
     {
-        try {
-            if ($e instanceof ClientException) {
-                // HTTP 4xx
+        // HTTP 4xx
 
-                /*
-                 * Examples of $json:
-                 * --------------------------------------------------------------------------------
-                 * status = "error"
-                 * error = "ProductNotAllowedException"
-                 * error_details = "The current status of the payment does not allow to capture it"
-                 * error_user = "Es ist ein unbekannter Fehler aufgetreten (Code 1003)"
-                 * code = 1003
-                 * supportId = "f40fa3901afcfa54cd91cb2bd37477ae"
-                 * --------------------------------------------------------------------------------
-                 * error = "invalid_client",
-                 * error_description = "Client credentials were not found in the headers or body"
-                 * --------------------------------------------------------------------------------
-                 */
-                $json = MapperUtil::mapResponse($e->getResponse());
+        /*
+         * Examples of $json:
+         * --------------------------------------------------------------------------------
+         * status = "error"
+         * error = "ProductNotAllowedException"
+         * error_details = "The current status of the payment does not allow to capture it"
+         * error_user = "Es ist ein unbekannter Fehler aufgetreten (Code 1003)"
+         * code = 1003
+         * supportId = "f40fa3901afcfa54cd91cb2bd37477ae"
+         * --------------------------------------------------------------------------------
+         * error = "invalid_client",
+         * error_description = "Client credentials were not found in the headers or body"
+         * --------------------------------------------------------------------------------
+         */
+        $json = MapperUtil::mapResponse($response);
 
-                switch ($e->getCode()) {
-                    case 400:
-                        // Handle special auth errors
-                        $error = new Error(
-                            isset($json->error) ? (string)$json->error : '',
-                            isset($json->error_description) ? (string)$json->error_description : ''
-                        );
+        switch ($response->getStatusCode()) {
+            case 400:
+                // Handle special auth errors
+                $error = new Error(
+                    isset($json->error) ? (string)$json->error : '',
+                    isset($json->error_description) ? (string)$json->error_description : ''
+                );
 
-                        return new BadAuthException($error, $msg, 400, $e);
+                return new BadAuthException($error, $msg, 400);
 
-                    case 401:
-                        // Handle special auth errors
-                        $error = new Error(
-                            isset($json->error) ? (string)$json->error : '',
-                            isset($json->error_description) ? (string)$json->error_description : ''
-                        );
+            case 401:
+                // Handle special auth errors
+                $error = new Error(
+                    isset($json->error) ? (string)$json->error : '',
+                    isset($json->error_description) ? (string)$json->error_description : ''
+                );
 
-                        return new AuthDeniedException($error, $msg);
-
-                    case 403:
-                    case 404:
-                    default:
-                        // Handle other errors with
-                        if (isset($json->status) && $json->status == 'error') {
-                            // Generic API error
-                            return new ApiError(
-                                (string)$json->error,
-                                (int)$json->code,
-                                (string)$json->error_details,
-                                (string)$json->error_user,
-                                (string)$json->supportId
-                            );
-                        }
-                        break;
-                }
-            } elseif ($e instanceof ServerException) {
-                // HTTP 5xx
-                $json = MapperUtil::mapResponse($e->getResponse());
-                if (isset($json->status) && $json->status == 'error') {
+                return new AuthDeniedException($error, $msg);
+            // HTTP 5xx
+            case 500:
+                 if (isset($json->status) && $json->status == 'error') {
                     // Try to map to known server error response
                     if (strtolower($json->error) === 'productinternalexception') {
                         // Better map this to an internal error, because it's caused by wrong api usage.
-                        return new ClientError((string)$json->error_details, $e);
+                        return new ClientError((string)$json->error_details);
                     }
 
                     // Generic API error
@@ -615,37 +646,31 @@ abstract class ProductService
                         (string)$json->supportId
                     );
                 }
-            }
-        } catch (Exception $e) {
-            // Ignore parsing errors
+                break;
+            case 403:
+            case 404:
+            default:
+                // Handle other errors with
+                if (isset($json->status) && $json->status == 'error') {
+                    // Generic API error
+                    return new ApiError(
+                        (string)$json->error,
+                        (int)$json->code,
+                        (string)$json->error_details,
+                        (string)$json->error_user,
+                        (string)$json->supportId
+                    );
+                }
+                break;
         }
 
-        return $e;
-    }
-
-    /**
-     * Create new or complete a media resource object.
-     * @param MediaResource|string $arg The media resource to initialize or a url of a resource.
-     * @return MediaResource The initialized media resource instance.
-     */
-    protected function initMediaResource(&$arg)
-    {
-        if (is_string($arg)) {
-            $mr = new MediaResource();
-            $mr->setUrl($arg);
-        } else {
-            $mr = $arg;
-        }
-
-        $mr->setHttpClient($this->httpClient);
-        $mr->setStore($this->storage);
-        return $mr;
+        return new ClientError('Unknown error');
     }
 
     /**
      * @param $json
      * @param $class
-     *
+     * @throws Exception
      * @return mixed|null
      */
     private function createResourceInst($json, $class)

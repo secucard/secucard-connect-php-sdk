@@ -2,35 +2,34 @@
 
 namespace SecucardConnect;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\HandlerStack;
-use Psr\Http\Message\RequestInterface;
+use Http\Client\Common\HttpMethodsClient;
+use Http\Client\Common\Plugin\HeaderSetPlugin;
+use Http\Client\Common\Plugin\LoggerPlugin;
+use Http\Client\Common\PluginClient;
+use Http\Client\HttpClient;
+use Http\Discovery\HttpClientDiscovery;
 use Psr\Log\LoggerInterface;
 use SecucardConnect\Auth\GrantTypeInterface;
 use SecucardConnect\Auth\OauthProvider;
 use SecucardConnect\Client\ClientContext;
-use SecucardConnect\Client\DummyStorage;
 use SecucardConnect\Client\Product;
 use SecucardConnect\Client\ResourceMetadata;
 use SecucardConnect\Client\StorageInterface;
 use SecucardConnect\Event\EventDispatcher;
-use SecucardConnect\Util\GuzzleLogger;
 use SecucardConnect\Util\Logger;
 
 /**
  * Secucard API Client
  *
- * Uses GuzzleHttp client library
+ * Uses HTTPlug client library
  *
- * @author Jakub Elias <j.elias@secupay.ag>
- * @author Rico Simlinger <r.simlinger@secupay.ag>
  */
 final class SecucardConnect
 {
     /**
      * SDK version
      */
-    const VERSION = '1.5.1';
+    const VERSION = '2.0.0';
 
     /**
      * @var OAuthProvider
@@ -44,8 +43,7 @@ final class SecucardConnect
     protected $config;
 
     /**
-     * GuzzleHttp client
-     * @var Client
+     * @var HttpMethodsClient
      */
     protected $httpClient;
 
@@ -81,17 +79,16 @@ final class SecucardConnect
      * Constructor
      * @param ApiClientConfiguration $config Options to correctly initialize the client.
      * @param LoggerInterface $logger Pass here LoggerInterface to use for logging
-     * @param StorageInterface $dataStorage Pass here StorageInterface for storing any runtime data (like images)
-     * @param StorageInterface $tokenStorage Pass here StorageInterface for storing authentication data like auth.
-     * tokens.
+     * @param StorageInterface $tokenStorage Pass here StorageInterface for storing authentication data like auth.tokens
      * @param GrantTypeInterface $credentials The credentials to use when operations need authorization
+     * @param HttpClient $httpClient
      */
     public function __construct(
         $config,
         LoggerInterface $logger = null,
-        StorageInterface $dataStorage = null,
         StorageInterface $tokenStorage,
-        GrantTypeInterface $credentials
+        GrantTypeInterface $credentials,
+        HttpClient $httpClient = null
     ) {
         // Merge in default settings and validate the config
         if (is_array($config)) {
@@ -109,18 +106,32 @@ final class SecucardConnect
         $this->logger->debug('Using config: ' . json_encode($config->toArray(), JSON_PRETTY_PRINT));
         $this->config = $config;
 
-        // Create the default common storage if necessary
-        if ($dataStorage == null) {
-            $this->storage = new DummyStorage();
+        // Init http client
+        if (empty($httpClient)) {
+            // Fallback if no http client was transmitted -> try to find one
+            $httpClient = HttpClientDiscovery::find();
         }
+
+        // Add sdk specific http plugins
+        $plugins[] = new LoggerPlugin($logger);
+
+        // Add custom user-agent for statistic reasons
+        $plugins[] = new HeaderSetPlugin(['X-API-Client' => trim(
+            $this->config->getApiClient()
+            . ' ' . 'PHP-SDK/' . SecucardConnect::VERSION
+        )]);
+        $httpClient = new PluginClient(
+            $httpClient,
+            $plugins
+        );
+
+        $this->httpClient = $httpClient;
 
         // create OAuthProvider, pass the separate token storage
         if ($credentials != null) {
-            $this->oauthProvider = new OauthProvider($this->config->getAuthPath(), $tokenStorage, $credentials);
+            $this->oauthProvider = new OauthProvider($this->config->toArray(), $tokenStorage, $credentials);
             $this->oauthProvider->setLogger($this->logger);
         }
-
-        $this->initHttpClient();
 
         if ($this->oauthProvider != null) {
             $this->oauthProvider->setHttpClient($this->httpClient);
@@ -134,6 +145,7 @@ final class SecucardConnect
         $c->config = $this->config->toArray();
         $c->logger = $this->logger;
         $c->eventDispatcher = $this->eventDispatcher;
+        $c->oauthProvider = $this->oauthProvider;
         $this->clientContext = $c;
     }
 
@@ -227,39 +239,5 @@ final class SecucardConnect
     {
         $this->logger->debug('Received Push with data: ' . $eventData);
         $this->eventDispatcher->dispatch($eventData);
-    }
-
-    private function initHttpClient()
-    {
-        $stack = HandlerStack::create();
-        $options = ['base_uri' => $this->config->getBaseUrl(), 'handler' => $stack, 'auth' => null];
-
-        if ($this->config->getDebug() === true) {
-            $options['debug'] = true;
-            // Add HTTP-Requests to log
-            $stack->push(new GuzzleLogger($this->logger));
-        }
-
-        if ($this->oauthProvider != null) {
-            // assign OAuthProvider to guzzle client  to intercept requests and adding auth tokens
-            $stack->push(function (callable $handler) {
-                return function (RequestInterface $request, array $options) use ($handler) {
-                    $request = $this->oauthProvider->appyAuthorization($request, $options);
-                    return $handler($request, $options);
-                };
-            });
-        }
-
-        // Add custom user-agent for statistic reasons
-        $options['headers']['User-Agent'] = trim(
-            $this->config->getApiClient()
-            . ' ' . 'PHP-SDK/' . self::VERSION
-            . ' ' . \GuzzleHttp\default_user_agent()
-        );
-
-        // Add language setting for the error messages
-        $options['headers']['Accept-Language'] = $this->config->getAcceptLanguage();
-
-        $this->httpClient = new Client($options);
     }
 }

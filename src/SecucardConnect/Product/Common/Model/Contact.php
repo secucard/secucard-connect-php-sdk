@@ -83,12 +83,6 @@ class Contact
     public $picture;
 
     /**
-     * The img object for the picture
-     * @var MediaResource
-     */
-    public $pictureObject;
-
-    /**
      * @var string
      */
     public $url_website;

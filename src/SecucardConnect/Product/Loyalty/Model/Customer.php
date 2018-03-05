@@ -116,7 +116,4 @@ class Customer extends BaseModel
      * @var string
      */
     public $picture;
-
-//public MediaResource pictureObject;
-
 }
