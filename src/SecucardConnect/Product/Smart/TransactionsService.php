@@ -17,22 +17,34 @@ class TransactionsService extends ProductService
     /**
      * Starting/Executing a transaction.
      *
-     * @param string $transactionId The transaction id.
-     * @param string $type The transaction type like "auto" or "cash".
+     * @param string $transactionId Id of the smart transaction
+     * @param string $type The transaction type like "cashless" or "cash".
      * @return Transaction The started transaction.
      */
     public function start($transactionId, $type)
     {
+        if (!isset($transactionId)) {
+            throw new \InvalidArgumentException("Parameter [transactionId] can not be empty!");
+        }
+
+        if (!isset($type)) {
+            throw new \InvalidArgumentException("Parameter [type] can not be empty!");
+        }
+
         return $this->execute($transactionId, 'start', $type, null, Transaction::class);
     }
 
     /**
      * Cancel an existing loyalty transaction.
-     * @param string $transactionId The transaction id.
+     * @param string $transactionId Id of the smart transaction
      * @return bool True if successful false else.
      */
     public function cancel($transactionId)
     {
+        if (!isset($transactionId)) {
+            throw new \InvalidArgumentException("Parameter [transactionId] can not be empty!");
+        }
+
         $res = $this->execute($transactionId, 'cancel', null, 'array');
         return (bool)$res['result'];
     }
@@ -44,6 +56,10 @@ class TransactionsService extends ProductService
      */
     public function appendLoyaltyBonusProducts($transactionId)
     {
+        if (!isset($transactionId)) {
+            throw new \InvalidArgumentException("Parameter [transactionId] can not be empty!");
+        }
+
         return $this->execute($transactionId, "preTransaction", null, null, LoyaltyBonus::class);
     }
 }

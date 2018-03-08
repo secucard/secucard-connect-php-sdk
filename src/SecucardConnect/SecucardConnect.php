@@ -149,7 +149,6 @@ final class SecucardConnect
         $this->clientContext = $c;
     }
 
-
     /**
      * Performs authentication using the given parameter and the credentials passed in this instance
      * constructor. The returned result depends on the credentials type and parameter content. <br/>
@@ -186,6 +185,7 @@ final class SecucardConnect
      * JS code for using the secucard connect JS SDK and providing the token for it.
      * @return null|string Null if no token is used, the token data as JSON like: {"access_token":"abc", "expires_in":500}.
      * Expire time is in s.
+     * @throws \Exception
      *
      */
     public function accessTokenForJS()
@@ -196,7 +196,6 @@ final class SecucardConnect
 
         return $this->oauthProvider->getAccessToken(null, true);
     }
-
 
     /**
      * Magic getter for getting the product object.

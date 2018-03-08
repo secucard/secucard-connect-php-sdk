@@ -521,8 +521,6 @@ abstract class ProductService
             $options[self::HEADERS]['Content-Type'] = 'application/json';
         }
 
-
-
         if ($this->oauthProvider instanceof OauthProvider) {
             $accessToken = $this->oauthProvider->getAccessToken();
             if (!empty($accessToken)) {

@@ -2,7 +2,6 @@
 
 namespace SecucardConnect\Product\Loyalty;
 
-
 use SecucardConnect\Client\ProductService;
 
 /**
@@ -17,7 +16,16 @@ class MerchantCardsService extends ProductService
      * @param int $csc CSC number
      * @return bool|null
      */
-    public function validateCSC($cardNumber, $csc) {
+    public function validateCSC($cardNumber, $csc)
+    {
+        if (empty($cardNumber)) {
+            throw new \InvalidArgumentException("Parameter [cardNumber] can not be empty!");
+        }
+
+        if (empty($csc)) {
+            throw new \InvalidArgumentException("Parameter [csc] can not be empty!");
+        }
+
         return $this->execute("me", "CheckCsc", null, ["cardnumber" => $cardNumber, "csc" => $csc]);
     }
 
@@ -27,7 +35,16 @@ class MerchantCardsService extends ProductService
      * @param int $pin PIN number
      * @return bool|null
      */
-    public function validatePasscode($cardNumber, $pin) {
+    public function validatePasscode($cardNumber, $pin)
+    {
+        if (empty($cardNumber)) {
+            throw new \InvalidArgumentException("Parameter [cardNumber] can not be empty!");
+        }
+
+        if (empty($pin)) {
+            throw new \InvalidArgumentException("Parameter [pin] can not be empty!");
+        }
+
         return $this->execute("me", "CheckPasscode", null, ["cardnumber" => $cardNumber, "pin" => $pin]);
     }
 }
