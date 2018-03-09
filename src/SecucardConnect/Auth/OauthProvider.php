@@ -86,8 +86,7 @@ class OauthProvider extends ProductService
      * @param bool $json Set to true to return the token and the expire time as JSON like
      * {"access_token":"abc", "expires_in":500}
      * @return string
-     * @throws ClientError
-     * @throws \SecucardConnect\Client\AuthError|ClientError
+     * @throws ClientError|\Exception
      */
     public function getAccessToken($deviceCode = null, $json = false)
     {
@@ -149,7 +148,7 @@ class OauthProvider extends ProductService
      * token.
      * @param null|string $deviceCode
      * @return bool False on pending auth, true else.
-     * @throws ClientError
+     * @throws ClientError|\Exception
      */
     private function updateToken(RefreshTokenCredentials $refreshToken = null, $deviceCode = null)
     {
@@ -164,17 +163,8 @@ class OauthProvider extends ProductService
             }
         } else {
             $this->setParams($params, $refreshToken == null ? $this->credentials : $refreshToken);
-            $url = $this->config['base_url'] . $this->config['auth_path'];
 
-            $tokenData = $this->makeRealRequest(
-                $this->httpClient,
-                'POST',
-                $url,
-                ['Content-Type' => 'application/x-www-form-urlencoded'],
-                http_build_query($params),
-                null,
-                'Error obtaining access token.'
-            );
+            $tokenData = $this->createRequest($params, null, 'Error obtaining access token.');
         }
 
         if (empty($tokenData)) {
@@ -202,6 +192,7 @@ class OauthProvider extends ProductService
 
     /**
      * Function to get device verification codes.
+     * @return AuthCodes
      * @throws Exception
      */
     private function obtainDeviceVerification()
@@ -212,17 +203,8 @@ class OauthProvider extends ProductService
 
         $params = [];
         $this->setParams($params, $this->credentials);
-        $url = $this->config['base_url'] . $this->config['auth_path'];
 
-        return $this->makeRealRequest(
-            $this->httpClient,
-            'POST',
-            $url,
-            ['Content-Type' => 'application/x-www-form-urlencoded'],
-            http_build_query($params),
-            new AuthCodes(),
-            'Error requesting device codes.'
-        );
+        return $this->createRequest($params, new AuthCodes(), 'Error requesting device codes.');
     }
 
     /**
@@ -243,18 +225,9 @@ class OauthProvider extends ProductService
 
         $params = [];
         $this->setParams($params, $this->credentials);
-        $url = $this->config['base_url'] . $this->config['auth_path'];
 
         try {
-            return $this->makeRealRequest(
-                $this->httpClient,
-                'POST',
-                $url,
-                ['Content-Type' => 'application/x-www-form-urlencoded'],
-                http_build_query($params),
-                null,
-                'Error during device authentication.'
-            );
+            return $this->createRequest($params, null, 'Error during device authentication.');
         } catch (Exception $e) {
             // check for auth pending case
             if ($e instanceof AuthDeniedException && $e->getError() != null
@@ -279,4 +252,25 @@ class OauthProvider extends ProductService
         $obj->addParameters($params);
     }
 
+    /**
+     * @param array $params
+     * @param $mappingClass
+     * @param string $defaultErrorMsg
+     * @return mixed
+     * @throws Exception
+     * @throws \SecucardConnect\Client\AbstractError
+     */
+    private function createRequest($params, $mappingClass = null, $defaultErrorMsg) {
+        $url = $this->config['base_url'] . $this->config['auth_path'];
+
+        return $this->makeRealRequest(
+            $this->httpClient,
+            'POST',
+            $url,
+            ['Content-Type' => 'application/x-www-form-urlencoded'],
+            http_build_query($params),
+            $mappingClass,
+            $defaultErrorMsg
+        );
+    }
 }
