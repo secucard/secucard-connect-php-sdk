@@ -2,12 +2,10 @@
 
 namespace SecucardConnect\Product\Loyalty\Model;
 
-use SecucardConnect\Product\Common\Model\BaseModel;
-
-class LoyaltyBonus extends BaseModel
+class LoyaltyBonus
 {
     /**
-     * @var number
+     * @var int
      */
     public $missing_sum;
 
