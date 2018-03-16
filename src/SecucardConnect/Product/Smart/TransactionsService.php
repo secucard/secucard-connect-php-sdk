@@ -31,6 +31,10 @@ class TransactionsService extends ProductService
             throw new \InvalidArgumentException("Parameter [type] can not be empty!");
         }
 
+        if (!in_array($type, [self::TYPE_DEMO, self::TYPE_CASH, self::TYPE_AUTO, self::TYPE_ZVT, self::TYPE_LOYALTY])) {
+            throw new \InvalidArgumentException("Wrong transaction type");
+        }
+
         return $this->execute($transactionId, 'start', $type, null, Transaction::class);
     }
 
