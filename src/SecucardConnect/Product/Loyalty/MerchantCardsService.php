@@ -3,6 +3,7 @@
 namespace SecucardConnect\Product\Loyalty;
 
 use SecucardConnect\Client\ProductService;
+use SecucardConnect\Product\Loyalty\Model\ValidateMerchantcardResponse;
 
 /**
  * Operations for the loyalty/merchantcards resource.
@@ -46,5 +47,19 @@ class MerchantCardsService extends ProductService
         }
 
         return $this->execute("me", "CheckPasscode", null, ["cardnumber" => $cardNumber, "pin" => $pin]);
+    }
+
+    /**
+     * Check if the loyalty merchantcard is assigned to the merchant, locked and has a passcode
+     * @param string $cardNumber
+     * @return ValidateMerchantcardResponse
+     */
+    public function validateMerchantcard($cardNumber)
+    {
+        if (empty($cardNumber)) {
+            throw new \InvalidArgumentException("Parameter [cardNumber] can not be empty!");
+        }
+
+        return $this->execute("me", "ValidateMerchantcard", null, ["cardnumber" => $cardNumber], ValidateMerchantcardResponse::class);
     }
 }
