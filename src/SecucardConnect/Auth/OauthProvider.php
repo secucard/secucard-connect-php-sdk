@@ -15,6 +15,10 @@ use SecucardConnect\Client\StorageInterface;
  */
 class OauthProvider extends ProductService
 {
+    const REFRESH_TOKEN = 'refresh_token';
+    const ACCESS_TOKEN = 'access_token';
+    const EXPIRES_IN = 'expires_in';
+
     /**
      * @var StorageInterface
      */
@@ -55,7 +59,6 @@ class OauthProvider extends ProductService
         $this->logger = $logger;
     }
 
-
     /**
      * Constructor
      * @param array $config
@@ -72,8 +75,8 @@ class OauthProvider extends ProductService
         $this->storage = $storage;
         $this->credentials = $credentials;
 
-        $this->refreshToken = $this->storage->get('refresh_token');
-        $this->accessToken = $this->storage->get('access_token');
+        $this->refreshToken = $this->storage->get(self::REFRESH_TOKEN);
+        $this->accessToken = $this->storage->get(self::ACCESS_TOKEN);
     }
 
     /**
@@ -107,7 +110,7 @@ class OauthProvider extends ProductService
                 $this->updateToken();
             }
         } else {
-            if (isset($this->accessToken['expires_in']) && $this->accessToken['expires_in'] < time()) {
+            if (isset($this->accessToken[self::EXPIRES_IN]) && $this->accessToken[self::EXPIRES_IN] < time()) {
                 // The access token has expired
 
                 if ($this->credentials instanceof RefreshTokenCredentials) {
@@ -129,13 +132,13 @@ class OauthProvider extends ProductService
             }
         }
 
-        $at = $this->accessToken['access_token'];
+        $at = $this->accessToken[self::ACCESS_TOKEN];
 
         if ($json === true) {
             $arr = [
-                'access_token' => $at,
-                'expires_in' => $this->accessToken['expires_in'] - time(),
-                'expireTime' => $this->accessToken['expires_in']
+                self::ACCESS_TOKEN => $at,
+                self::EXPIRES_IN => $this->accessToken[self::EXPIRES_IN] - time(),
+                'expireTime' => $this->accessToken[self::EXPIRES_IN]
             ];
             return json_encode($arr);
         } else {
@@ -174,18 +177,18 @@ class OauthProvider extends ProductService
         }
 
         // Process the returned data, both expired_in and refresh_token are optional parameters
-        $this->accessToken = ['access_token' => $tokenData->access_token,];
+        $this->accessToken = [self::ACCESS_TOKEN => $tokenData->access_token];
         if (isset($tokenData->expires_in)) {
-            $this->accessToken['expires_in'] = time() + $tokenData->expires_in;
+            $this->accessToken[self::EXPIRES_IN] = time() + $tokenData->expires_in;
         }
 
         // Save access token to storage
-        $this->storage->set('access_token', $this->accessToken);
+        $this->storage->set(self::ACCESS_TOKEN, $this->accessToken);
 
         if (isset($tokenData->refresh_token)) {
             $this->refreshToken = $tokenData->refresh_token;
             // Save refresh token to storage
-            $this->storage->set('refresh_token', $this->refreshToken);
+            $this->storage->set(self::REFRESH_TOKEN, $this->refreshToken);
         }
         // never delete existing refresh token
 
