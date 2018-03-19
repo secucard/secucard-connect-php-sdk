@@ -18,6 +18,31 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
+
+## [1.7.0] - 2018-01-10
+
+### Added
+- Product Payment: Add payout methods
+- Possibility to change the language of the payment iframe.
+- Possibility to customize some labels of the payment iframe.
+
+
+## [1.6.1] - 2017-11-17
+
+### Added
+- Added missing param "url_push" to the payment model for "redirect_url"
+
+
+## [1.6.0] - 2017-11-03
+
+### Added
+- SEPA mandate into response of payment container creation
+
+### Changed
+- Moved CloneParams into separate file
+- Moved TransferAccount into separate file
+
+
 ## [1.5.1] - 2017-09-18
 
 ### Changed
@@ -25,6 +50,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - ApiError: parameter description
 - ProductService: improved HTTP exception handling
 - ProductService: moved RequestOps, RequestOptions, RequestParams and SearchParams to a separate file
+
 
 ## [1.5.0] - 2017-09-01
 
@@ -136,7 +162,6 @@ Not published
 - Fix fatal on delete request
 - Set a default value for the optional contract id param
 - FIX fatal on cancel payment call
-
 
 
 ## [1.0.7] - 2016-11-23
@@ -311,6 +336,7 @@ First release
 
 
 
+[0.0.1]:https://github.com/secucard/secucard-connect-php-sdk/releases/tag/v0.0.1
 [0.0.2]:https://github.com/secucard/secucard-connect-php-sdk/compare/v0.0.1...v0.0.2
 [0.0.3]:https://github.com/secucard/secucard-connect-php-sdk/compare/v0.0.2...v0.0.3
 [0.0.4]:https://github.com/secucard/secucard-connect-php-sdk/compare/v0.0.3...v0.0.4
@@ -337,3 +363,6 @@ First release
 [1.4.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.4.0...v1.4.1
 [1.5.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.4.1...v1.5.0
 [1.5.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.5.0...v1.5.1
+[1.6.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.5.1...v1.6.0
+[1.6.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.6.0...v1.6.1
+[1.7.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.6.1...v1.7.0
