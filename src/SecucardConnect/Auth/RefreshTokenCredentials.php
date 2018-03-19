@@ -18,6 +18,14 @@ class RefreshTokenCredentials extends ClientCredentials
      */
     public function __construct($clientId, $clientSecret, $refresh_token)
     {
+        if (empty($clientId)) {
+            throw new \InvalidArgumentException("Parameter [clientId] can not be empty!");
+        }
+
+        if (empty($clientSecret)) {
+            throw new \InvalidArgumentException("Parameter [clientSecret] can not be empty!");
+        }
+
         parent::__construct($clientId, $clientSecret);
         $this->refresh_token = $refresh_token;
     }

@@ -23,8 +23,23 @@ class DeviceCredentials extends ClientCredentials
      */
     public $deviceCode;
 
+    /**
+     * DeviceCredentials constructor.
+     * @param string $clientId
+     * @param string $clientSecret
+     * @param string $vendor
+     * @param array $vendorIds
+     */
     public function __construct($clientId, $clientSecret, $vendor, $vendorIds)
     {
+        if (empty($clientId)) {
+            throw new \InvalidArgumentException("Parameter [clientId] can not be empty!");
+        }
+
+        if (empty($clientSecret)) {
+            throw new \InvalidArgumentException("Parameter [clientSecret] can not be empty!");
+        }
+
         parent::__construct($clientId, $clientSecret);
         $this->vendor = $vendor;
         $this->vendorIds = $vendorIds;

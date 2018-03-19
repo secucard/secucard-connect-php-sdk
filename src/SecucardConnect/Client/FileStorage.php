@@ -15,8 +15,7 @@ class FileStorage extends DummyStorage
     /**
      * FileStorage constructor.
      *
-     * @param $dir
-     *
+     * @param string $dir
      * @throws ClientError
      */
     public function __construct($dir)
