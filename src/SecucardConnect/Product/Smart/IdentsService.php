@@ -14,11 +14,11 @@ class IdentsService extends ProductService
      */
     public function getCardInfo($cardNumber, $type)
     {
-        if (!isset($cardNumber)) {
+        if (empty($cardNumber)) {
             throw new \InvalidArgumentException("Parameter [cardNumber] can not be empty!");
         }
 
-        if (!isset($type)) {
+        if (empty($type)) {
             throw new \InvalidArgumentException("Parameter [type] can not be empty!");
         }
 

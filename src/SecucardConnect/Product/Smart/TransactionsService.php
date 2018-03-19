@@ -23,11 +23,11 @@ class TransactionsService extends ProductService
      */
     public function start($transactionId, $type)
     {
-        if (!isset($transactionId)) {
+        if (empty($transactionId)) {
             throw new \InvalidArgumentException("Parameter [transactionId] can not be empty!");
         }
 
-        if (!isset($type)) {
+        if (empty($type)) {
             throw new \InvalidArgumentException("Parameter [type] can not be empty!");
         }
 
@@ -45,7 +45,7 @@ class TransactionsService extends ProductService
      */
     public function cancel($transactionId)
     {
-        if (!isset($transactionId)) {
+        if (empty($transactionId)) {
             throw new \InvalidArgumentException("Parameter [transactionId] can not be empty!");
         }
 
@@ -60,7 +60,7 @@ class TransactionsService extends ProductService
      */
     public function appendLoyaltyBonusProducts($transactionId)
     {
-        if (!isset($transactionId)) {
+        if (empty($transactionId)) {
             throw new \InvalidArgumentException("Parameter [transactionId] can not be empty!");
         }
 

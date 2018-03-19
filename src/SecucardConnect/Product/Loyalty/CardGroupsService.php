@@ -15,15 +15,15 @@ class CardGroupsService extends ProductService
      */
     public function checkPasscodeEnabled($cardGroupId, $transactionType, $cardNumber)
     {
-        if (!isset($cardGroupId)) {
+        if (empty($cardGroupId)) {
             throw new \InvalidArgumentException("Parameter [cardGroupId] can not be empty!");
         }
 
-        if (!isset($transactionType)) {
+        if (empty($transactionType)) {
             throw new \InvalidArgumentException("Parameter [transactionType] can not be empty!");
         }
 
-        if (!isset($cardNumber)) {
+        if (empty($cardNumber)) {
             throw new \InvalidArgumentException("Parameter [cardNumber] can not be empty!");
         }
 

@@ -19,11 +19,11 @@ class MerchantCardsService extends ProductService
      */
     public function validateCSC($cardNumber, $csc)
     {
-        if (!isset($cardNumber)) {
+        if (empty($cardNumber)) {
             throw new \InvalidArgumentException("Parameter [cardNumber] can not be empty!");
         }
 
-        if (!isset($csc)) {
+        if (empty($csc)) {
             throw new \InvalidArgumentException("Parameter [csc] can not be empty!");
         }
 
@@ -38,11 +38,11 @@ class MerchantCardsService extends ProductService
      */
     public function validatePasscode($cardNumber, $pin)
     {
-        if (!isset($cardNumber)) {
+        if (empty($cardNumber)) {
             throw new \InvalidArgumentException("Parameter [cardNumber] can not be empty!");
         }
 
-        if (!isset($pin)) {
+        if (empty($pin)) {
             throw new \InvalidArgumentException("Parameter [pin] can not be empty!");
         }
 
@@ -56,7 +56,7 @@ class MerchantCardsService extends ProductService
      */
     public function validateMerchantcard($cardNumber)
     {
-        if (!isset($cardNumber)) {
+        if (empty($cardNumber)) {
             throw new \InvalidArgumentException("Parameter [cardNumber] can not be empty!");
         }
 

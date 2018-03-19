@@ -32,11 +32,11 @@ class DeviceCredentials extends ClientCredentials
      */
     public function __construct($clientId, $clientSecret, $vendor, $vendorIds)
     {
-        if (!isset($clientId)) {
+        if (empty($clientId)) {
             throw new \InvalidArgumentException("Parameter [clientId] can not be empty!");
         }
 
-        if (!isset($clientSecret)) {
+        if (empty($clientSecret)) {
             throw new \InvalidArgumentException("Parameter [clientSecret] can not be empty!");
         }
 
