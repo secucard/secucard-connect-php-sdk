@@ -117,8 +117,10 @@ class OauthProvider extends ProductService
                         if (!$this->credentials instanceof ClientCredentials) {
                             throw new ClientError('Invalid credentials type supplied, must be of type ' . ClientCredentials::class);
                         }
-                        $this->updateToken(new RefreshTokenCredentials($this->credentials->client_id,
-                            $this->credentials->client_secret, $this->refreshToken));
+                        $this->updateToken(new RefreshTokenCredentials(
+                            $this->credentials->client_id,
+                            $this->credentials->client_secret,
+                            $this->refreshToken));
 
                     } else {
                         $this->updateToken();
@@ -242,7 +244,7 @@ class OauthProvider extends ProductService
     }
 
     /**
-     * @param $params
+     * @param array $params
      * @param GrantTypeInterface $obj
      * @internal param RefreshTokenCredentials $refreshToken
      */
@@ -254,11 +256,10 @@ class OauthProvider extends ProductService
 
     /**
      * @param array $params
-     * @param $mappingClass
+     * @param object|null $mappingClass
      * @param string $defaultErrorMsg
      * @return mixed
-     * @throws Exception
-     * @throws \SecucardConnect\Client\AbstractError
+     * @throws Exception|\SecucardConnect\Client\AbstractError
      */
     private function createRequest($params, $mappingClass = null, $defaultErrorMsg) {
         $url = $this->config['base_url'] . $this->config['auth_path'];
