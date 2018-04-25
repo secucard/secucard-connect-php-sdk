@@ -9,10 +9,10 @@ use SecucardConnect\Product\Common\Model\BaseModel;
 use SecucardConnect\Product\General\Model\LegalDetails;
 
 /**
- * Merchants Api Model class
+ * Contract settings and conditions Api Model class
  *
  */
-class OrderOption extends BaseModel
+class ContractSettings extends BaseModel
 {
     /**
      * @var string

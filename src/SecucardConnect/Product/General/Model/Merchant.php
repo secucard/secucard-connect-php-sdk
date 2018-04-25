@@ -25,7 +25,12 @@ class Merchant extends BaseModel
     public $legal_details;
 
     /**
-     * @var OrderOption[]
+     * @var ContractSettings[]
      */
     public $order_options;
+
+    /**
+     * @var ContractSettings[]
+     */
+    public $payment_contract_conditions;
 }
