@@ -33,4 +33,9 @@ class Merchant extends BaseModel
      * @var ContractSettings[]
      */
     public $payment_contract_conditions;
+
+    /**
+     * @var MerchantUrl[]
+     */
+    public $merchant_urls;
 }
