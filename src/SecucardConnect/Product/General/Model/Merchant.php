@@ -30,7 +30,7 @@ class Merchant extends BaseModel
     public $order_options;
 
     /**
-     * @var ContractSettings[]
+     * @var int[]
      */
     public $payment_contract_conditions;
 
