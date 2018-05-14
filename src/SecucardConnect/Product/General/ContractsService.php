@@ -5,10 +5,10 @@ namespace SecucardConnect\Product\General;
 use SecucardConnect\Client\ProductService;
 
 /**
- * Provides operations for General/Accounts product.
+ * Provides operations for General/Contracts product.
  * @package SecucardConnect\Product\General
  */
-class AccountsService extends ProductService
+class ContractsService extends ProductService
 {
     
 }
