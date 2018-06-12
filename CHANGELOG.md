@@ -19,6 +19,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Removed
 
 
+## [1.7.1] - 2018-04-20
+
+### Added
+- Product Payment: Add missing basket item type "coupon"
+
+
 ## [1.7.0] - 2018-01-10
 
 ### Added
@@ -366,3 +372,4 @@ First release
 [1.6.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.5.1...v1.6.0
 [1.6.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.6.0...v1.6.1
 [1.7.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.6.1...v1.7.0
+[1.7.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.7.0...v1.7.1
