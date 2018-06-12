@@ -17,7 +17,8 @@ class ContractsService extends ProductService
 {
 
     /**
-     *  Clones a contract with a given id according to the given parameters and returns the contract.
+     * Clones a contract with a given id according to the given parameters and returns the contract.
+     
      * @param $contractId string The id of the parent contract.
      * @param $param CloneParams The parameters for cloning.
      * @return Contract
@@ -26,9 +27,15 @@ class ContractsService extends ProductService
     {
         return $this->execute($contractId, 'clone', null, $param, Contract::class);
     }
+    
+    public function getPaymentMethods($contractId='me')
+    {
+        return $this->execute($contractId, 'GetPaymentMethods');
+    }
 
     /**
      * Clones the contract of the current user according to the given parameters and returns the contract.
+     
      * @param $param CloneParams The parameters for cloning.
      * @return Contract
      */
