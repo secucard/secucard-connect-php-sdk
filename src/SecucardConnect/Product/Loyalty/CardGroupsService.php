@@ -14,7 +14,8 @@ class CardGroupsService extends ProductService
      * @param string $cardNumber Number of the card
      * @return bool|null
      */
-    public function checkPasscodeEnabled($cardGroupId, $transactionType, $cardNumber) {
+    public function checkPasscodeEnabled($cardGroupId, $transactionType, $cardNumber)
+    {
         return $this->execute($cardGroupId, "checkPasscodeEnabled", null, ["action" => $transactionType, "cardnumber" => $cardNumber]);
     }
 }

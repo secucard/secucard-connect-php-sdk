@@ -11,7 +11,7 @@ class ClientCredentials implements GrantTypeInterface
      * @var string
      */
     public $client_id;
-    
+
     /**
      * @var string
      */

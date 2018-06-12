@@ -77,4 +77,9 @@ class Basket
      * @var Basket
      */
     public $sub_basket;
+
+    /**
+     * @var string
+     */
+    public $reference_id;
 }

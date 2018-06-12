@@ -22,24 +22,24 @@ abstract class PaymentService extends ProductService implements PaymentServiceIn
      * @param string $contractId The id of the contract that was used to create this transaction. May be null if the
      * contract is an parent contract (not cloned).
      * @param int $amount The amount that you want to refund to the payer. Use '0' for a full refund.
+     * @param bool $reduceStakeholderPayment TRUE if you want to change the amount of the stakeholder positions too (on partial refund)
      *
-     * @return bool TRUE if successful FALSE else.
+     * @return array ['result', 'demo', 'new_trans_id', 'remaining_amount', 'refund_waiting_for_payment']
      */
-    public function cancel($paymentId, $contractId = null, $amount = null)
+    public function cancel($paymentId, $contractId = null, $amount = null, $reduceStakeholderPayment = false)
     {
         $object = [
-            [
-                'contract' => $contractId,
-                'amount' => $amount,
-            ]
+            'contract' => $contractId,
+            'amount' => $amount,
+            'reduce_stakeholder_payment' => $reduceStakeholderPayment
         ];
         $res = $this->execute($paymentId, 'cancel', null, $object);
 
         if (is_object($res)) {
-            return true;
+            return $res;
         }
 
-        return (bool)$res['result'];
+        return $res;
     }
 
     /**
@@ -51,12 +51,8 @@ abstract class PaymentService extends ProductService implements PaymentServiceIn
     public function capture($paymentId)
     {
         $class = $this->resourceMetadata->resourceClass;
-        /**
-         * @var $object Transaction
-         */
-        $object = new $class();
-        $object->id = $paymentId;
-        $res = $this->execute($paymentId, 'capture', null, $object, $class);
+
+        $res = $this->execute($paymentId, 'capture', null, null, $class);
 
         if ($res) {
             return true;
@@ -146,19 +142,17 @@ abstract class PaymentService extends ProductService implements PaymentServiceIn
      * For invoice payment transactions this will also capture the transaction (set the shipping date of an invoice).
      *
      * @param string $paymentId The payment transaction id
-     * @param string $provider The shipping provider
-     * @param string $number The tracking number (comma separated if there is more than one parcel)
+     * @param string $carrier The Shipping Service Provider
+     * @param string $tracking_id The tracking number (comma separated if there is more than one parcel)
      * @param string $invoice_number The invoice number of the shipped order
      * @return bool TRUE if successful, FALSE otherwise.
      */
-    public function setShippingInformation($paymentId, $provider, $number, $invoice_number = null)
+    public function setShippingInformation($paymentId, $carrier, $tracking_id, $invoice_number = null)
     {
         $object = [
-            [
-                'provider' => $provider,
-                'number' => $number,
-                'invoice_number' => $invoice_number,
-            ]
+            'carrier' => $carrier,
+            'tracking_id' => $tracking_id,
+            'invoice_number' => $invoice_number,
         ];
 
         $res = $this->updateWithAction($paymentId, 'shippingInformation', null, $object);

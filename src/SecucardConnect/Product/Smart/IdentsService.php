@@ -13,7 +13,8 @@ class IdentsService extends ProductService
      * @param string @var \SecucardConnect\Product\Smart\Model\Ident
      * @return mixed|null|string
      */
-    public function getCardInfo($cardNumber, $type) {
+    public function getCardInfo($cardNumber, $type)
+    {
         return $this->execute("notused", "validate", null, [["value" => $cardNumber, "type" => $type]]);
     }
 }
