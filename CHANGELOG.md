@@ -19,6 +19,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Removed
 
 
+## [1.8.0] - 2018-06-12
+
+### Added
+- Product Payment: Method to get a list of activated payment methods
+
+### Changed
+- Product Payment: Return type of cancel call changed from BOOL to ARRAY!
+
+### Fixed
+- Product Payment: setShippingInformation was not working correctly
+
+
 ## [1.7.1] - 2018-04-20
 
 ### Added
@@ -373,3 +385,4 @@ First release
 [1.6.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.6.0...v1.6.1
 [1.7.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.6.1...v1.7.0
 [1.7.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.7.0...v1.7.1
+[1.8.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.7.1...v1.8.0
