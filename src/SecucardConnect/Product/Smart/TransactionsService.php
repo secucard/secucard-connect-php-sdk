@@ -29,6 +29,22 @@ class TransactionsService extends ProductService
     }
 
     /**
+     * Preparing a transaction.
+     *
+     * @param string $transactionId The transaction id.
+     * @param string $type The transaction type like "auto" or "cash".
+     * @return Transaction The prepared transaction.
+     */
+    public function prepare($transactionId, $type, $object = null)
+    {
+        if (!in_array($type, [self::TYPE_AUTO, self::TYPE_DIRECT_DEBIT])) {
+            throw new \InvalidArgumentException("Wrong transaction type");
+        }
+
+        return $this->execute($transactionId, 'prepare', $type, $object, Transaction::class);
+    }
+
+    /**
      * Cancel an existing loyalty transaction.
      * @param string $transactionId The transaction id.
      * @return bool True if successful false else.
