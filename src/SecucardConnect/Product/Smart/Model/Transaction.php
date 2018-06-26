@@ -128,6 +128,11 @@ class Transaction extends BaseModel
      */
     public $error;
 
+    /**
+     * @var boolean
+     */
+    public $is_demo;
+
 
     public function jsonFilterNullProperties()
     {
