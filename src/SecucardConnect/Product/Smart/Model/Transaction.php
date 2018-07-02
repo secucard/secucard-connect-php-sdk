@@ -133,6 +133,10 @@ class Transaction extends BaseModel
      */
     public $is_demo;
 
+    /**
+     * @var integer
+     */
+    public $trans_id;
 
     public function jsonFilterNullProperties()
     {
