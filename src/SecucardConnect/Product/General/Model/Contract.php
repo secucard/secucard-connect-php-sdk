@@ -14,7 +14,7 @@ use SecucardConnect\Product\Common\Model\BaseModel;
 class Contract extends BaseModel
 {
     /**
-     * @var \SecucardConnect\Product\Payment\Model\TransferAccount
+     * @var \SecucardConnect\Product\Payment\Model\Data
      */
     public $pay_in_advance_account;
 }
