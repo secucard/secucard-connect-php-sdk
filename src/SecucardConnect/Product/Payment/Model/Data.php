@@ -2,14 +2,8 @@
 
 namespace SecucardConnect\Product\Payment\Model;
 
-
-class Data
+class Data extends MeanOfPaymentData
 {
-    /**
-     * @var string
-     */
-    public $owner;
-
     /**
      * @var string
      */

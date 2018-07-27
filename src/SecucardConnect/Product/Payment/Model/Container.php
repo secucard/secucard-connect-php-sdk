@@ -21,12 +21,12 @@ class Container extends BaseModel
     public $customer;
 
     /**
-     * @var \SecucardConnect\Product\Payment\Model\Data
+     * @var \SecucardConnect\Product\Payment\Model\MeanOfPaymentData
      */
     public $public;
 
     /**
-     * @var \SecucardConnect\Product\Payment\Model\Data
+     * @var \SecucardConnect\Product\Payment\Model\MeanOfPaymentData
      */
     public $private;
 
