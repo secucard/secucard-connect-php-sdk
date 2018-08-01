@@ -15,6 +15,7 @@ class TransactionsService extends ProductService
     const TYPE_ZVT = "cashless";
     const TYPE_LOYALTY = "loyalty";
     const TYPE_DIRECT_DEBIT = "debit";
+    const TYPE_CREDIT_CARD = "creditcard";
 
     /**
      * Starting/Executing a transaction.
@@ -37,7 +38,7 @@ class TransactionsService extends ProductService
      */
     public function prepare($transactionId, $type, $object = null)
     {
-        if (!in_array($type, [self::TYPE_AUTO, self::TYPE_DIRECT_DEBIT])) {
+        if (!in_array($type, [self::TYPE_AUTO, self::TYPE_DIRECT_DEBIT, self::TYPE_CREDIT_CARD])) {
             throw new \InvalidArgumentException("Wrong transaction type");
         }
 

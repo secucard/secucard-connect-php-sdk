@@ -21,6 +21,7 @@ class Transaction extends BaseModel
     const STATUS_ABORTED = 'aborted';
     const STATUS_FAILED = 'failed';
     const STATUS_TIMEOUT = 'timeout';
+    const STATUS_APPROVED = 'approved';
     const STATUS_OK = 'ok';
 
     const ORDER_OPTION_COLLECTION = 'collection';
