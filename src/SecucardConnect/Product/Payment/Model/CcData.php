@@ -3,8 +3,13 @@
 namespace SecucardConnect\Product\Payment\Model;
 
 
-class CcData extends MeanOfPaymentData
+class CcData
 {
+    /**
+     * @var string
+     */
+    public $owner;
+
     /**
      * @var string
      */
