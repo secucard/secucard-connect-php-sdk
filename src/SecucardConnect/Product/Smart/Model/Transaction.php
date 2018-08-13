@@ -139,6 +139,11 @@ class Transaction extends BaseModel
      */
     public $trans_id;
 
+    /**
+     * @var string
+     */
+    public $iframe_url;
+
     public function jsonFilterNullProperties()
     {
         return [
