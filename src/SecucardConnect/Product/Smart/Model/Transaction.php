@@ -33,6 +33,7 @@ class Transaction extends BaseModel
     const CHECKOUT_LAST_VISITED_PAGE_PAYMENT_INPUT = 'payment_input_page';
     const CHECKOUT_LAST_VISITED_PAGE_CONFIRMATION = 'confirmation_page';
     const CHECKOUT_LAST_VISITED_PAGE_DELIVERY_OPTIONS = 'delivery_options_page';
+    const CHECKOUT_LAST_VISITED_PAGE_SECURITY_CHECK_PAGE = 'security_check_page';
 
     /**
      * @var \SecucardConnect\Product\Smart\Model\Device
