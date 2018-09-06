@@ -106,7 +106,7 @@ final class SecucardConnect
         $this->logger = $logger == null ? new Logger(null, false) : $logger;
 
         $config->isValid();
-        // $this->logger->debug('Using config: ' . json_encode($config->toArray(), JSON_PRETTY_PRINT));
+        $this->logger->debug('Using config: ' . json_encode($config->toArray(), JSON_PRETTY_PRINT));
         $this->config = $config;
 
         // Create the default common storage if necessary
