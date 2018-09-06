@@ -54,7 +54,7 @@ class Logger implements LoggerInterface
         }
         $message = self::replace($message, $context);
         if (is_resource($this->resource)) {
-            // fwrite($this->resource, "[{$level}] {$message}\n");
+            fwrite($this->resource, "[{$level}] " . $message. "\n");
         } elseif (is_callable($this->resource)) {
             call_user_func($this->resource, "[{$level}] {$message}\n");
         } else {
