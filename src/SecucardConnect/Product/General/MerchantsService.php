@@ -2,7 +2,10 @@
 
 namespace SecucardConnect\Product\General;
 
-
+use GuzzleHttp\Exception\GuzzleException;
+use SecucardConnect\Client\ApiError;
+use SecucardConnect\Client\AuthError;
+use SecucardConnect\Client\ClientError;
 use SecucardConnect\Client\ProductService;
 use SecucardConnect\Product\General\Model\Merchant;
 
@@ -17,10 +20,10 @@ class MerchantsService extends ProductService
      *
      * @param string $contractId The merchant general contract id.
      * @return Merchant only public data.
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \SecucardConnect\Client\ApiError
-     * @throws \SecucardConnect\Client\AuthError
-     * @throws \SecucardConnect\Client\ClientError
+     * @throws GuzzleException
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
      */
     public function getPublicData($contractId)
     {

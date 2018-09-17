@@ -6,6 +6,7 @@
 namespace SecucardConnect\Product\Smart\Model;
 
 use SecucardConnect\Product\Common\Model\BaseModel;
+use SecucardConnect\Product\General\Model\Contract;
 
 /**
  * Transactions Api Model class
@@ -36,7 +37,7 @@ class Transaction extends BaseModel
     const CHECKOUT_LAST_VISITED_PAGE_SECURITY_CHECK_PAGE = 'security_check_page';
 
     /**
-     * @var \SecucardConnect\Product\Smart\Model\Device
+     * @var Device
      */
     public $device_source;
 
@@ -71,12 +72,12 @@ class Transaction extends BaseModel
     public $basket;
 
     /**
-     * @var \SecucardConnect\Product\Smart\Model\ReceiptLine[]
+     * @var ReceiptLine[]
      */
     public $receipt;
 
     /**
-     * @var \SecucardConnect\Product\Smart\Model\ReceiptLine[]
+     * @var ReceiptLine[]
      */
     public $receipt_merchant;
 
@@ -86,22 +87,22 @@ class Transaction extends BaseModel
     public $receipt_merchant_print;
 
     /**
-     * @var \SecucardConnect\Product\Smart\Model\BasketInfo
+     * @var BasketInfo
      */
     public $basket_info;
 
     /**
-     * @var \SecucardConnect\Product\Smart\Model\Ident[]
+     * @var Ident[]
      */
     public $idents;
 
     /**
-     * @var \SecucardConnect\Product\Smart\Model\Device
+     * @var Device
      */
     public $target_device;
 
     /**
-     * @var \SecucardConnect\Product\General\Model\Contract
+     * @var Contract
      */
     public $contract;
 

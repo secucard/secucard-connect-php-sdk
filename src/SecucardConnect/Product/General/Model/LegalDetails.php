@@ -7,7 +7,6 @@ use SecucardConnect\Product\Common\Model\BaseModel;
 /**
  * LegalDetails Api Model class
  */
-
 class LegalDetails extends BaseModel
 {
     const LEGAL_DETAILS_LOGO = 'logo';

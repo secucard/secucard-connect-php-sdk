@@ -9,12 +9,12 @@ namespace SecucardConnect\Product\Payment\Model;
 class GetCreditCardDataRequest
 {
     /**
-     * @var \SecucardConnect\Product\Payment\Model\Checkin
+     * @var Checkin
      */
     public $checkin;
 
     /**
-     * @var \SecucardConnect\Product\Payment\Model\Customer
+     * @var Customer
      */
     public $customer;
 
