@@ -2,6 +2,10 @@
 
 namespace SecucardConnect\Product\Payment;
 
+use GuzzleHttp\Exception\GuzzleException;
+use SecucardConnect\Client\ApiError;
+use SecucardConnect\Client\AuthError;
+use SecucardConnect\Client\ClientError;
 use SecucardConnect\Client\ProductService;
 use SecucardConnect\Product\Payment\Model\CloneParams;
 use SecucardConnect\Product\Payment\Model\CreateSubContractRequest;
@@ -18,9 +22,13 @@ class ContractsService extends ProductService
     /**
      * Clones a contract with a given id according to the given parameters and returns the contract.
      *
-     * @param $contractId string The id of the parent contract.
-     * @param $param CloneParams The parameters for cloning.
+     * @param string $contractId The id of the parent contract.
+     * @param CloneParams $param The parameters for cloning.
      * @return Contract
+     * @throws GuzzleException
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
      */
     public function cloneContract($contractId, $param)
     {
@@ -32,6 +40,10 @@ class ContractsService extends ProductService
      *
      * @param string $contractId
      * @return array
+     * @throws GuzzleException
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
      */
     public function getPaymentMethods($contractId = 'me')
     {
@@ -41,8 +53,12 @@ class ContractsService extends ProductService
     /**
      * Clones the contract of the current user according to the given parameters and returns the contract.
      *
-     * @param $param CloneParams The parameters for cloning.
+     * @param CloneParams $param The parameters for cloning.
      * @return Contract
+     * @throws GuzzleException
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
      */
     public function cloneMyContract($param)
     {
@@ -54,6 +70,10 @@ class ContractsService extends ProductService
      *
      * @param CreateSubContractRequest $param
      * @return CreateSubContractResponse
+     * @throws GuzzleException
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
      */
     public function createSubContract(CreateSubContractRequest $param)
     {

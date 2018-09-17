@@ -30,6 +30,9 @@ class Error
         $this->description = $description;
     }
 
+    /**
+     * @return string
+     */
     function __toString()
     {
         return $this->error . ', ' . $this->description;

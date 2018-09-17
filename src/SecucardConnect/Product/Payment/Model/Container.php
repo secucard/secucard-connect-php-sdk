@@ -1,7 +1,4 @@
 <?php
-/**
- * Payment Containers Api Model class
- */
 
 namespace SecucardConnect\Product\Payment\Model;
 
@@ -9,24 +6,23 @@ use SecucardConnect\Product\Common\Model\BaseModel;
 
 /**
  * Payment Containers Api Model class
- *
  */
 class Container extends BaseModel
 {
     const TYPE_BANK_ACCOUNT = "bank_account";
 
     /**
-     * @var \SecucardConnect\Product\Payment\Model\Customer
+     * @var Customer
      */
     public $customer;
 
     /**
-     * @var \SecucardConnect\Product\Payment\Model\Data
+     * @var Data
      */
     public $public;
 
     /**
-     * @var \SecucardConnect\Product\Payment\Model\Data
+     * @var Data
      */
     public $private;
 
@@ -46,12 +42,17 @@ class Container extends BaseModel
     public $updated;
 
     /**
-     * @var \SecucardConnect\Product\Payment\Model\Contract
+     * @var Contract
      */
     public $contract;
 
     /**
-     * @var \SecucardConnect\Product\Payment\Model\Mandate
+     * @var Mandate
      */
     public $mandate;
+
+    /**
+     * @var Checkin
+     */
+    public $checkin;
 }

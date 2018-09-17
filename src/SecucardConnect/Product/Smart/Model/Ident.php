@@ -1,7 +1,4 @@
 <?php
-/**
- * Idents Api Model class
- */
 
 namespace SecucardConnect\Product\Smart\Model;
 

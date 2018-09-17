@@ -34,7 +34,7 @@ class Product
 
     /**
      * Constructor
-     * @param $name
+     * @param string $name
      * @param ClientContext $context
      */
     public function __construct($name, ClientContext $context)

@@ -1,7 +1,4 @@
 <?php
-/**
- * Routings Api Model class
- */
 
 namespace SecucardConnect\Product\Smart\Model;
 
@@ -9,7 +6,6 @@ use SecucardConnect\Product\Common\Model\BaseModel;
 
 /**
  * Routings Api Model class
- *
  */
 class Routing extends BaseModel
 {

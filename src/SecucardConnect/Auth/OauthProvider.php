@@ -9,7 +9,10 @@ use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
+use SecucardConnect\Client\ApiError;
+use SecucardConnect\Client\AuthError;
 use SecucardConnect\Client\ClientError;
 use SecucardConnect\Client\ProductService;
 use SecucardConnect\Client\StorageInterface;
@@ -94,8 +97,10 @@ class OauthProvider extends ProductService
      * Adds the authorization header if an access token was found
      * @param RequestInterface $request
      * @param array $options
-     * @return \Psr\Http\Message\MessageInterface|RequestInterface If the access token could not properly set to the request.
+     * @return RequestInterface If the access token could not properly set to the request.
      * @throws ClientError
+     * @throws ApiError
+     * @throws AuthError
      */
     public function appyAuthorization(RequestInterface $request, array $options = null)
     {
@@ -125,9 +130,8 @@ class OauthProvider extends ProductService
      * {"access_token":"abc", "expires_in":500}
      * @return string
      * @throws ClientError
-     * @throws \SecucardConnect\Client\ApiError
-     * @throws \SecucardConnect\Client\ApiError|\SecucardConnect\Client\AuthError|ClientError
-     * @throws \SecucardConnect\Client\AuthError
+     * @throws ApiError
+     * @throws AuthError
      */
     public function getAccessToken($deviceCode = null, $json = false)
     {
@@ -190,6 +194,9 @@ class OauthProvider extends ProductService
      * @param null|string $deviceCode
      * @return bool False on pending auth, true else.
      * @throws ClientError
+     * @throws ApiError
+     * @throws AuthError
+     * @throws Exception
      */
     private function updateToken(RefreshTokenCredentials $refreshToken = null, $deviceCode = null)
     {
@@ -238,8 +245,11 @@ class OauthProvider extends ProductService
 
     /**
      * Function to get device verification codes.
-     * @throws AuthDeniedException
-     * @throws BadAuthException
+     * @return mixed
+     * @throws ClientError
+     * @throws ApiError
+     * @throws AuthError
+     * @throws Exception
      */
     private function obtainDeviceVerification()
     {
@@ -298,7 +308,7 @@ class OauthProvider extends ProductService
     }
 
     /**
-     * @param $params
+     * @param array $params
      * @param GrantTypeInterface $obj
      * @internal param RefreshTokenCredentials $refreshToken
      */
@@ -309,8 +319,8 @@ class OauthProvider extends ProductService
     }
 
     /**
-     * @param $params
-     * @return \Psr\Http\Message\ResponseInterface
+     * @param array $params
+     * @return ResponseInterface
      */
     private function post($params)
     {

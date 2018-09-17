@@ -13,5 +13,28 @@ use SecucardConnect\Product\Common\Model\BaseModel;
  */
 class Merchant extends BaseModel
 {
+    /**
+     * @var \SecucardConnect\Product\Services\Model\Company
+     */
+    public $company;
 
+    /**
+     * @var LegalDetails[]
+     */
+    public $legal_details;
+
+    /**
+     * @var ContractSettings[]
+     */
+    public $order_options;
+
+    /**
+     * @var int[]
+     */
+    public $payment_contract_conditions;
+
+    /**
+     * @var MerchantUrl[]
+     */
+    public $merchant_urls;
 }

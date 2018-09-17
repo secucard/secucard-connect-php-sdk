@@ -3,6 +3,10 @@
 namespace SecucardConnect\Product\Loyalty;
 
 
+use GuzzleHttp\Exception\GuzzleException;
+use SecucardConnect\Client\ApiError;
+use SecucardConnect\Client\AuthError;
+use SecucardConnect\Client\ClientError;
 use SecucardConnect\Client\ProductService;
 
 /**
@@ -15,7 +19,11 @@ class MerchantCardsService extends ProductService
      * Check the given CSC
      * @param string $cardNumber cardnumber
      * @param int $csc CSC number
-     * @return bool|null|
+     * @return bool|null
+     * @throws GuzzleException
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
      */
     public function validateCSC($cardNumber, $csc)
     {
@@ -27,6 +35,10 @@ class MerchantCardsService extends ProductService
      * @param string $cardNumber cardnumber
      * @param int $pin PIN number
      * @return bool|null
+     * @throws GuzzleException
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
      */
     public function validatePasscode($cardNumber, $pin)
     {

@@ -2,6 +2,10 @@
 
 namespace SecucardConnect\Product\Payment\Service;
 
+use GuzzleHttp\Exception\GuzzleException;
+use SecucardConnect\Client\ApiError;
+use SecucardConnect\Client\AuthError;
+use SecucardConnect\Client\ClientError;
 use SecucardConnect\Client\ProductService;
 use SecucardConnect\Product\Payment\Event\PaymentChanged;
 use SecucardConnect\Product\Payment\Model\Basket;
@@ -25,6 +29,10 @@ abstract class PaymentService extends ProductService implements PaymentServiceIn
      * @param bool $reduceStakeholderPayment TRUE if you want to change the amount of the stakeholder positions too (on partial refund)
      *
      * @return array ['result', 'demo', 'new_trans_id', 'remaining_amount', 'refund_waiting_for_payment']
+     * @throws GuzzleException
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
      */
     public function cancel($paymentId, $contractId = null, $amount = null, $reduceStakeholderPayment = false)
     {
@@ -47,6 +55,10 @@ abstract class PaymentService extends ProductService implements PaymentServiceIn
      *
      * @param string $paymentId The payment transaction id
      * @return bool TRUE if successful, FALSE otherwise.
+     * @throws GuzzleException
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
      */
     public function capture($paymentId)
     {
@@ -67,6 +79,10 @@ abstract class PaymentService extends ProductService implements PaymentServiceIn
      * @param string $paymentId The payment transaction id
      * @param Basket[] $basket
      * @return bool TRUE if successful, FALSE otherwise.
+     * @throws GuzzleException
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
      */
     public function updateBasket($paymentId, array $basket)
     {
@@ -91,6 +107,10 @@ abstract class PaymentService extends ProductService implements PaymentServiceIn
      *
      * @param string $paymentId The payment transaction id
      * @return bool
+     * @throws GuzzleException
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
      */
     public function reverseAccrual($paymentId)
     {
@@ -117,6 +137,10 @@ abstract class PaymentService extends ProductService implements PaymentServiceIn
      * @param int $amount The new total amount (max. 120% of the old amount)
      * @param Basket[] $basket The new basket items
      * @return bool TRUE if successful, FALSE otherwise.
+     * @throws GuzzleException
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
      */
     public function initSubsequent($paymentId, $amount, array $basket)
     {
@@ -146,6 +170,10 @@ abstract class PaymentService extends ProductService implements PaymentServiceIn
      * @param string $tracking_id The tracking number (comma separated if there is more than one parcel)
      * @param string $invoice_number The invoice number of the shipped order
      * @return bool TRUE if successful, FALSE otherwise.
+     * @throws GuzzleException
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
      */
     public function setShippingInformation($paymentId, $carrier, $tracking_id, $invoice_number = null)
     {
@@ -170,6 +198,10 @@ abstract class PaymentService extends ProductService implements PaymentServiceIn
      * @param string $paymentId The payment transaction id
      * @param string $purpose The purpose of the subscription
      * @return bool TRUE if successful, FALSE otherwise.
+     * @throws GuzzleException
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
      */
     public function updateSubscription($paymentId, $purpose)
     {
@@ -193,7 +225,7 @@ abstract class PaymentService extends ProductService implements PaymentServiceIn
 
     /**
      * Set a callback to be notified when a creditcard has changed. Pass null to remove a previous setting.
-     * @param $fn callable|null Any function which accepts a "Transaction" model class argument.
+     * @param callable|null $fn Any function which accepts a "Transaction" model class argument.
      */
     public function onStatusChange($fn)
     {

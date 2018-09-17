@@ -2,7 +2,6 @@
 
 namespace SecucardConnect\Product\General;
 
-
 use SecucardConnect\Client\ProductService;
 
 /**
@@ -11,6 +10,5 @@ use SecucardConnect\Client\ProductService;
  */
 class AccountsService extends ProductService
 {
-
-
+    
 }

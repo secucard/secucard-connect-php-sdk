@@ -21,6 +21,9 @@ class PasswordCredentials implements GrantTypeInterface
         $this->password = $password;
     }
 
+    /**
+     * @return string
+     */
     public function getType()
     {
         return 'password';

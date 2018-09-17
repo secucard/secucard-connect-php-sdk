@@ -2,6 +2,10 @@
 
 namespace SecucardConnect\Product\Payment\Model;
 
+/**
+ * Class TransferAccount
+ * @package SecucardConnect\Product\Payment\Model
+ */
 class TransferAccount
 {
     /**

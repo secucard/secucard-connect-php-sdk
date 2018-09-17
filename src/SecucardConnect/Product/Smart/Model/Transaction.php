@@ -1,11 +1,9 @@
 <?php
-/**
- * Transactions Api Model class
- */
 
 namespace SecucardConnect\Product\Smart\Model;
 
 use SecucardConnect\Product\Common\Model\BaseModel;
+use SecucardConnect\Product\General\Model\Contract;
 
 /**
  * Transactions Api Model class
@@ -13,17 +11,30 @@ use SecucardConnect\Product\Common\Model\BaseModel;
  */
 class Transaction extends BaseModel
 {
-    const STATUS_CREATED = "created";
-    const STATUS_PROCESSING = "processing";
-    const STATUS_CANCELED = "canceled";
-    const STATUS_FINISHED = "finished";
-    const STATUS_ABORTED = "aborted";
-    const STATUS_FAILED = "failed";
-    const STATUS_TIMEOUT = "timeout";
-    const STATUS_OK = "ok";
+    const STATUS_CREATED = 'created';
+    const STATUS_PROCESSING = 'processing';
+    const STATUS_WAITING_FOR_COLLECTION = 'collection';
+    const STATUS_WAITING_FOR_SHIPPING = 'received';
+    const STATUS_FINISHED = 'finished';
+    const STATUS_ABORTED = 'aborted';
+    const STATUS_FAILED = 'failed';
+    const STATUS_TIMEOUT = 'timeout';
+    const STATUS_APPROVED = 'approved';
+    const STATUS_OK = 'ok';
+
+    const ORDER_OPTION_COLLECTION = 'collection';
+    const ORDER_OPTION_SHIPPING = 'shipping';
+
+    const CHECKOUT_LAST_VISITED_PAGE_CHECKIN = 'checkin_page';
+    const CHECKOUT_LAST_VISITED_PAGE_ADDRESS = 'address_page';
+    const CHECKOUT_LAST_VISITED_PAGE_PAYMENT_SELECTION = 'payment_selection_page';
+    const CHECKOUT_LAST_VISITED_PAGE_PAYMENT_INPUT = 'payment_input_page';
+    const CHECKOUT_LAST_VISITED_PAGE_CONFIRMATION = 'confirmation_page';
+    const CHECKOUT_LAST_VISITED_PAGE_DELIVERY_OPTIONS = 'delivery_options_page';
+    const CHECKOUT_LAST_VISITED_PAGE_SECURITY_CHECK_PAGE = 'security_check_page';
 
     /**
-     * @var \SecucardConnect\Product\Smart\Model\Device
+     * @var Device
      */
     public $device_source;
 
@@ -58,12 +69,12 @@ class Transaction extends BaseModel
     public $basket;
 
     /**
-     * @var \SecucardConnect\Product\Smart\Model\ReceiptLine[]
+     * @var ReceiptLine[]
      */
     public $receipt;
 
     /**
-     * @var \SecucardConnect\Product\Smart\Model\ReceiptLine[]
+     * @var ReceiptLine[]
      */
     public $receipt_merchant;
 
@@ -73,19 +84,24 @@ class Transaction extends BaseModel
     public $receipt_merchant_print;
 
     /**
-     * @var \SecucardConnect\Product\Smart\Model\BasketInfo
+     * @var BasketInfo
      */
     public $basket_info;
 
     /**
-     * @var \SecucardConnect\Product\Smart\Model\Ident[]
+     * @var Ident[]
      */
     public $idents;
 
     /**
-     * @var \SecucardConnect\Product\Smart\Model\Device
+     * @var Device
      */
     public $target_device;
+
+    /**
+     * @var Contract
+     */
+    public $contract;
 
     /**
      * @var string
@@ -95,9 +111,41 @@ class Transaction extends BaseModel
     /**
      * @var string
      */
+    public $order_option;
+
+    /**
+     * @var string
+     */
+    public $last_visited_page;
+
+    /**
+     * @var PickupOptions
+     */
+    public $pickup_options;
+
+    /**
+     * @var string
+     */
     public $error;
 
+    /**
+     * @var boolean
+     */
+    public $is_demo;
 
+    /**
+     * @var integer
+     */
+    public $trans_id;
+
+    /**
+     * @var string
+     */
+    public $iframe_url;
+
+    /**
+     * @return array
+     */
     public function jsonFilterNullProperties()
     {
         return [

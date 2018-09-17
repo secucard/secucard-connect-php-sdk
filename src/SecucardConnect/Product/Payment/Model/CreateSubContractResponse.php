@@ -2,6 +2,10 @@
 
 namespace SecucardConnect\Product\Payment\Model;
 
+/**
+ * Class CreateSubContractResponse
+ * @package SecucardConnect\Product\Payment\Model
+ */
 class CreateSubContractResponse
 {
     /**

@@ -6,6 +6,7 @@ namespace SecucardConnect\Client;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\ServerException;
 use Psr\Log\LoggerInterface;
 use SecucardConnect\Auth\AuthDeniedException;
@@ -16,7 +17,6 @@ use SecucardConnect\Product\Common\Model\BaseCollection;
 use SecucardConnect\Product\Common\Model\BaseModel;
 use SecucardConnect\Product\Common\Model\Error;
 use SecucardConnect\Product\Common\Model\MediaResource;
-use SecucardConnect\Util\Logger;
 use SecucardConnect\Util\MapperUtil;
 
 /**
@@ -60,6 +60,9 @@ abstract class ProductService
      */
     protected $eventDispatcher;
 
+    /**
+     * @var string
+     */
     private $actionId;
 
     /**
@@ -68,6 +71,7 @@ abstract class ProductService
      * @param ClientContext $context
      *
      * @return mixed
+     * @throws Exception
      */
     public static function create($product, $resource, ClientContext $context)
     {
@@ -97,7 +101,10 @@ abstract class ProductService
      * Performs the query for resources according to the given query parameters.
      * @param QueryParams $query The search parameters to apply.
      * @return BaseCollection A collection containing the found items and some meta data. Null if nothing found.
-     * @throws Exception If an error happens.
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
+     * @throws GuzzleException
      */
     public function getList(QueryParams $query = null)
     {
@@ -117,7 +124,10 @@ abstract class ProductService
      * @param string $expireTime String specifying the expire time expression of the search context on the server. Valid
      * expression are "{number}{s|m|h}" like "5m" for 5 minutes.
      * @return BaseCollection The first results.
-     * @throws Exception If an error happens.
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
+     * @throws GuzzleException
      */
     public function getScrollableList(QueryParams $params, $expireTime)
     {
@@ -135,6 +145,10 @@ abstract class ProductService
      * by the initial count parameter at the end of the result set. Has count of 0 if no data is available anymore.
      * The total count of items in result is not set here.
      * todo: what happens on expiring
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
+     * @throws GuzzleException
      */
     public function getNextBatch($id)
     {
@@ -147,7 +161,11 @@ abstract class ProductService
      * @param null $scrollId
      *
      * @return BaseCollection
+     * @throws ApiError
+     * @throws AuthError
      * @throws ClientError
+     * @throws GuzzleException
+     * @throws Exception
      */
     private function getListInternal(QueryParams $query = null, $expireTime = null, $scrollId = null)
     {
@@ -199,7 +217,11 @@ abstract class ProductService
      *
      * @param string $id
      * @return BaseModel
-     * @throws \Exception
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
+     * @throws GuzzleException
+     * @throws Exception
      */
     public function get($id)
     {
@@ -226,6 +248,10 @@ abstract class ProductService
      *
      * @param BaseModel $model
      * @return bool
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
+     * @throws GuzzleException
      * @throws Exception
      * @internal param string $id default null
      */
@@ -254,7 +280,11 @@ abstract class ProductService
      *
      * @param BaseModel $model The object to save.
      * @return BaseModel The created object, has same type as the given input.
-     * @throws Exception If an error happens.
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
+     * @throws GuzzleException
+     * @throws Exception
      */
     public function save(BaseModel $model)
     {
@@ -302,7 +332,7 @@ abstract class ProductService
      * new.
      *
      * The given ID is immediately cleared (null) after applied for a service call, even after a failure.
-     * @param $id string Any unique id.
+     * @param string $id string Any unique id.
      */
     public function setActionId($id)
     {
@@ -310,13 +340,17 @@ abstract class ProductService
     }
 
     /**
-     * @param $id
-     * @param $action
+     * @param string $id
+     * @param string $action
      * @param null $actionArg
      * @param null $object
      * @param null $class
      *
      * @return bool|mixed|null|string
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
+     * @throws GuzzleException
      */
     protected function updateWithAction($id, $action, $actionArg = null, $object = null, $class = null)
     {
@@ -324,13 +358,17 @@ abstract class ProductService
     }
 
     /**
-     * @param $id
-     * @param $action
+     * @param string $id
+     * @param string $action
      * @param null $actionArg
      * @param null $object
      * @param null $class
      *
      * @return bool|mixed|null|string
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
+     * @throws GuzzleException
      */
     protected function deleteWithAction($id, $action, $actionArg = null, $object = null, $class = null)
     {
@@ -338,13 +376,17 @@ abstract class ProductService
     }
 
     /**
-     * @param $id
-     * @param $action
+     * @param string $id
+     * @param string $action
      * @param null $actionArg
      * @param null $object
      * @param null $class
      *
      * @return bool|mixed|null|string
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
+     * @throws GuzzleException
      */
     protected function execute($id, $action, $actionArg = null, $object = null, $class = null)
     {
@@ -352,12 +394,16 @@ abstract class ProductService
     }
 
     /**
-     * @param $appId
-     * @param $action
+     * @param string $appId
+     * @param string $action
      * @param null $object
      * @param null $class
      *
      * @return bool|mixed|null|string
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
+     * @throws GuzzleException
      */
     protected function executeCustom($appId, $action, $object = null, $class = null)
     {
@@ -376,8 +422,8 @@ abstract class ProductService
     }
 
     /**
-     * @param $op
-     * @param $action
+     * @param string $op
+     * @param string $action
      * @param null $id
      * @param null $actionArg
      * @param null $object
@@ -385,6 +431,11 @@ abstract class ProductService
      * @param null $appId
      *
      * @return bool|mixed|null|string
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
+     * @throws GuzzleException
+     * @throws Exception
      */
     private function requestAction(
         $op,
@@ -426,6 +477,8 @@ abstract class ProductService
      * @throws ApiError
      * @throws AuthError
      * @throws ClientError
+     * @throws GuzzleException
+     * @throws Exception
      */
     private function request(RequestParams $params)
     {
@@ -643,10 +696,11 @@ abstract class ProductService
     }
 
     /**
-     * @param $json
-     * @param $class
+     * @param array|object $json
+     * @param string $class
      *
      * @return mixed|null
+     * @throws Exception
      */
     private function createResourceInst($json, $class)
     {
@@ -658,7 +712,7 @@ abstract class ProductService
     }
 
     /**
-     * @param $arg
+     * @param mixed $arg
      */
     private function postProcess(&$arg)
     {

@@ -12,6 +12,7 @@ class SecupayInvoicesService extends PaymentService
 {
     /**
      * @deprecated v1.1.0 Use now onStatusChange($fn).
+     * @param callable $fn
      */
     public function onSecupayInvoiceChanged($fn)
     {
