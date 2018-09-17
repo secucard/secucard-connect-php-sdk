@@ -1,15 +1,11 @@
 <?php
-/**
- * Merchants Api Model class
- */
 
 namespace SecucardConnect\Product\General\Model;
 
 use SecucardConnect\Product\Common\Model\BaseModel;
 
 /**
- * merchant urls Api Model class
- *
+ * Merchant urls Api Model class
  */
 class MerchantUrl extends BaseModel
 {

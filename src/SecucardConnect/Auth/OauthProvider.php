@@ -131,7 +131,6 @@ class OauthProvider extends ProductService
      * @return string
      * @throws ClientError
      * @throws ApiError
-     * @throws ApiError|AuthError|ClientError
      * @throws AuthError
      */
     public function getAccessToken($deviceCode = null, $json = false)
