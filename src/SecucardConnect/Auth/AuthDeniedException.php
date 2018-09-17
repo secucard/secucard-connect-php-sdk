@@ -3,7 +3,6 @@
 namespace SecucardConnect\Auth;
 
 use SecucardConnect\Client\AuthError;
-use SecucardConnect\Product\Common\Model\Error;
 
 
 /**
@@ -15,7 +14,3 @@ use SecucardConnect\Product\Common\Model\Error;
 class AuthDeniedException extends AuthError
 {
 }
-
-?>
-
-

@@ -6,7 +6,6 @@
 namespace SecucardConnect\Product\General\Model;
 
 use SecucardConnect\Product\Common\Model\BaseModel;
-use SecucardConnect\Product\General\Model\LegalDetails;
 
 /**
  * Merchants Api Model class
