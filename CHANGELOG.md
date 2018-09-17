@@ -19,6 +19,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Removed
 
 
+## [1.9.0] - 2018-09-17
+
+### Added
+- Methods and Models for our new "Smart-Checkout"
+
+### Changed
+- Update dependencies
+
+
 ## [1.8.0] - 2018-06-12
 
 ### Added
@@ -386,3 +395,4 @@ First release
 [1.7.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.6.1...v1.7.0
 [1.7.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.7.0...v1.7.1
 [1.8.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.7.1...v1.8.0
+[1.9.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.8.0...v1.9.0
