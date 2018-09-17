@@ -28,7 +28,7 @@ class RedirectUrl
      * @var string
      */
     public $iframe_url;
-    
+
     /**
      * Your endpoint to receive push notifications (when the status of the payment transaction will be changed).
      *

@@ -25,4 +25,6 @@ class Mandate
     public $status;
 
     public $sepa_mandate_id;
+
+    public $mandate_date;
 }

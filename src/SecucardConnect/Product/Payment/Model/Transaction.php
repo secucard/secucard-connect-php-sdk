@@ -75,7 +75,7 @@ class Transaction extends BaseModel
     /**
      * A list of basket items
      *
-     * @var Basket[]
+     * @var array Basket[]
      */
     public $basket;
 
@@ -143,4 +143,9 @@ class Transaction extends BaseModel
      * @var PaymentInstrument
      */
     public $used_payment_instrument;
+
+    /**
+     * @var array
+     */
+    public $sub_transactions;
 }

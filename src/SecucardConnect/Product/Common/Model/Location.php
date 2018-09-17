@@ -18,7 +18,7 @@ class Location extends BaseModel
 
 
     /**
-     * @var float;
+     * @var float
      */
     public $lon;
 

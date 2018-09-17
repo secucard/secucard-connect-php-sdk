@@ -13,6 +13,7 @@ class Basket
     const ITEM_TYPE_DONATION = 'donation';
     const ITEM_TYPE_STAKEHOLDER_PAYMENT = 'stakeholder_payment';
     const ITEM_TYPE_SUB_TRANSACTION = 'sub_transaction';
+    const ITEM_TYPE_COUPON = 'coupon';
 
     /**
      * @var int
@@ -76,4 +77,9 @@ class Basket
      * @var Basket
      */
     public $sub_basket;
+
+    /**
+     * @var string
+     */
+    public $reference_id;
 }

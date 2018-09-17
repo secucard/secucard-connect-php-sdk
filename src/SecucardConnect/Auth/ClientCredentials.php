@@ -7,7 +7,14 @@ namespace SecucardConnect\Auth;
  */
 class ClientCredentials implements GrantTypeInterface
 {
+    /**
+     * @var string
+     */
     public $client_id;
+
+    /**
+     * @var string
+     */
     public $client_secret;
 
     /**
@@ -21,6 +28,9 @@ class ClientCredentials implements GrantTypeInterface
         $this->client_secret = $clientSecret;
     }
 
+    /**
+     * @return string
+     */
     public function getType()
     {
         return 'client_credentials';
