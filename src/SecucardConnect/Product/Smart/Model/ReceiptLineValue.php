@@ -3,7 +3,7 @@
 namespace SecucardConnect\Product\Smart\Model;
 
 /**
- *
+ * Class ReceiptLineValue
  * @package SecucardConnect\Product\Smart\Model
  */
 class ReceiptLineValue
@@ -60,7 +60,4 @@ class ReceiptLineValue
     {
         return (string)print_r($this, true);
     }
-
-
 }
-
