@@ -2,8 +2,12 @@
 
 namespace SecucardConnect\Product\Payment\Event;
 
+use GuzzleHttp\Exception\GuzzleException;
+use SecucardConnect\Client\ApiError;
+use SecucardConnect\Client\AuthError;
 use SecucardConnect\Client\ClientError;
 use SecucardConnect\Event\DefaultEventHandler;
+use SecucardConnect\Product\General\Model\Event;
 
 /**
  * Internal class to handle a creditcard change event.
@@ -12,9 +16,12 @@ use SecucardConnect\Event\DefaultEventHandler;
 class PaymentChanged extends DefaultEventHandler
 {
     /**
-     * @param $event
+     * @param Event $event
      *
      * @throws ClientError If the payment transaction id is missing in the event data
+     * @throws GuzzleException
+     * @throws ApiError
+     * @throws AuthError
      */
     function onEvent($event)
     {

@@ -57,7 +57,7 @@ class GuzzleLogger
         $message = $this->formatter->format($request, $response, $reason);
         $context = compact('request', 'response', 'reason');
 
-        return $this->logger->debug($message, $context);
+        $this->logger->debug($message, $context);
     }
 
 

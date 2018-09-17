@@ -29,6 +29,13 @@ class CloneParams
      */
     public $project;
 
+    /**
+     * CloneParams constructor.
+     * @param string $project
+     * @param Data|null $payment_data
+     * @param bool $allow_transactions
+     * @param string $url_push
+     */
     public function __construct(
         $project = null,
         Data $payment_data = null,

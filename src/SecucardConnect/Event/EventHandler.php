@@ -5,6 +5,10 @@ namespace SecucardConnect\Event;
 
 use SecucardConnect\Product\General\Model\Event;
 
+/**
+ * Interface EventHandler
+ * @package SecucardConnect\Event
+ */
 interface EventHandler
 {
     /**

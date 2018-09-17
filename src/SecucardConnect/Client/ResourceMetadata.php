@@ -25,8 +25,8 @@ class ResourceMetadata
 
     /**
      * ResourceMetadata constructor.
-     * @param $product
-     * @param $resource
+     * @param string $product
+     * @param string $resource
      * @throws Exception
      */
     public function __construct($product, $resource = null)
@@ -65,6 +65,11 @@ class ResourceMetadata
     /**
      * check all classes in this product model dir against the given resource name to find the right resource class
      * necessary because class name may be singular of resource name (seems safer than just stripping the "s")
+     * @param string $dir
+     * @param string $resource
+     * @param string $classPrefix
+     * @return null|string
+     * @throws \ReflectionException
      */
     private function findModelClass($dir, $resource, $classPrefix)
     {
@@ -95,11 +100,12 @@ class ResourceMetadata
     }
 
     /**
-     * @param $dir
-     * @param $resource
-     * @param $classPrefix
+     * @param string $dir
+     * @param string $resource
+     * @param string $classPrefix
      *
      * @return null|string
+     * @throws \ReflectionException
      */
     private function findServiceClass($dir, $resource, $classPrefix)
     {

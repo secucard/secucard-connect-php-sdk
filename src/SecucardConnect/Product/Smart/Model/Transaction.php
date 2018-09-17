@@ -145,6 +145,9 @@ class Transaction extends BaseModel
      */
     public $iframe_url;
 
+    /**
+     * @return array
+     */
     public function jsonFilterNullProperties()
     {
         return [

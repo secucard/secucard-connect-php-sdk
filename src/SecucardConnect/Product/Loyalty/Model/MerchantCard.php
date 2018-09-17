@@ -5,6 +5,10 @@ namespace SecucardConnect\Product\Loyalty\Model;
 
 use SecucardConnect\Product\Common\Model\BaseModel;
 
+/**
+ * Class MerchantCard
+ * @package SecucardConnect\Product\Loyalty\Model
+ */
 class MerchantCard extends BaseModel
 {
     const PASSCODE_STATUS_NOT_ENABLED = 1;

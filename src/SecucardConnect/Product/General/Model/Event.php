@@ -5,6 +5,10 @@ namespace SecucardConnect\Product\General\Model;
 
 use SecucardConnect\Product\Common\Model\BaseModel;
 
+/**
+ * Class Event
+ * @package SecucardConnect\Product\General\Model
+ */
 class Event extends BaseModel
 {
     const TYPE_CHANGED = 'changed';

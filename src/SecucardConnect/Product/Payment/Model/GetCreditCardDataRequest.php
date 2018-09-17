@@ -2,6 +2,10 @@
 
 namespace SecucardConnect\Product\Payment\Model;
 
+/**
+ * Class GetCreditCardDataRequest
+ * @package SecucardConnect\Product\Payment\Model
+ */
 class GetCreditCardDataRequest
 {
     /**

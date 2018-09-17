@@ -17,6 +17,10 @@ class MerchantsService extends ProductService
      *
      * @param string $contractId The merchant general contract id.
      * @return Merchant only public data.
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \SecucardConnect\Client\ApiError
+     * @throws \SecucardConnect\Client\AuthError
+     * @throws \SecucardConnect\Client\ClientError
      */
     public function getPublicData($contractId)
     {

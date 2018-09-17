@@ -3,6 +3,10 @@
 namespace SecucardConnect\Product\Smart\Model;
 
 
+/**
+ * Class BasketInfo
+ * @package SecucardConnect\Product\Smart\Model
+ */
 class BasketInfo
 {
     /**

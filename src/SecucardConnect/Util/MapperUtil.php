@@ -2,11 +2,14 @@
 
 namespace SecucardConnect\Util;
 
-
 use JsonMapper;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Class MapperUtil
+ * @package SecucardConnect\Util
+ */
 final class MapperUtil
 {
     private static $jsonErrors = [

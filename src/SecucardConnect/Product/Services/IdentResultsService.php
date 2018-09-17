@@ -2,6 +2,9 @@
 
 namespace SecucardConnect\Product\Services;
 
+use GuzzleHttp\Exception\GuzzleException;
+use SecucardConnect\Client\ApiError;
+use SecucardConnect\Client\AuthError;
 use SecucardConnect\Client\ClientError;
 use SecucardConnect\Client\ProductService;
 use SecucardConnect\Client\QueryParams;
@@ -21,6 +24,10 @@ class IdentResultsService extends ProductService
      * Returns an array of IdentResult instances for a given array of IdentRequest ids.
      * @param array $ids The request ids.
      * @return BaseCollection The obtained results.
+     * @throws ClientError
+     * @throws GuzzleException
+     * @throws ApiError
+     * @throws AuthError
      */
     public function getListByRequestIds($ids)
     {
@@ -36,7 +43,7 @@ class IdentResultsService extends ProductService
     /**
      * Set a callback to be notified when ident-request has changed and a ident result is available.
      * Pass null to remove a previous setting.
-     * @param $fn callable|null Any function which accepts a BaseCollection class argument.
+     * @param callable|null $fn Any function which accepts a BaseCollection class argument.
      * The collection contains the IdentResult instances.
      *
      */

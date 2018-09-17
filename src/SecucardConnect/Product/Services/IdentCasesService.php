@@ -2,6 +2,10 @@
 
 namespace SecucardConnect\Product\Services;
 
+use GuzzleHttp\Exception\GuzzleException;
+use SecucardConnect\Client\ApiError;
+use SecucardConnect\Client\AuthError;
+use SecucardConnect\Client\ClientError;
 use SecucardConnect\Client\ProductService;
 use SecucardConnect\Product\Services\Model\IdentCase;
 
@@ -14,6 +18,10 @@ class IdentCasesService extends ProductService
     /**
      * @param string $identcaseId IdentCase ID
      * @return mixed
+     * @throws GuzzleException
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
      */
     public function startIdentCase($identcaseId)
     {
@@ -23,6 +31,10 @@ class IdentCasesService extends ProductService
     /**
      * @param string $identcaseId IdentCase ID
      * @return mixed
+     * @throws GuzzleException
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
      */
     public function closeIdentCase($identcaseId)
     {
@@ -32,6 +44,10 @@ class IdentCasesService extends ProductService
     /**
      * @param string $identcaseId IdentCase ID
      * @return mixed
+     * @throws GuzzleException
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
      */
     public function resetIdentCase($identcaseId)
     {
@@ -42,6 +58,10 @@ class IdentCasesService extends ProductService
      * @param string $identcaseId IdentCase ID
      * @param string $taskId Task ID
      * @return mixed
+     * @throws GuzzleException
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
      */
     public function taskIdentCase($identcaseId, $taskId)
     {

@@ -2,6 +2,10 @@
 
 namespace SecucardConnect\Product\Payment\Model;
 
+/**
+ * Class Data
+ * @package SecucardConnect\Product\Payment\Model
+ */
 class Data
 {
     /**
@@ -41,6 +45,16 @@ class Data
      */
     public $issuer;
 
+    /**
+     * Data constructor.
+     * @param string $iban
+     * @param string $owner
+     * @param string $bic
+     * @param string $bankname
+     * @param string $pan
+     * @param string $expiration_date
+     * @param string $issuer
+     */
     public function __construct(
         $iban = null,
         $owner = null,

@@ -35,6 +35,15 @@ class ReceiptLineValue
      */
     public $decoration;
 
+    /**
+     * ReceiptLineValue constructor.
+     *
+     * @param string|null $caption
+     * @param string|null $text
+     * @param string|null $name
+     * @param string|null $value
+     * @param array|null $decoration
+     */
     public function __construct($caption = null, $text = null, $name = null, $value = null, array $decoration = null)
     {
         $this->caption = $caption;
@@ -44,9 +53,12 @@ class ReceiptLineValue
         $this->decoration = $decoration;
     }
 
+    /**
+     * @return string
+     */
     function __toString()
     {
-        return print_r($this, true);
+        return (string)print_r($this, true);
     }
 
 

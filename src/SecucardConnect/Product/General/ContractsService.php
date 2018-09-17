@@ -17,6 +17,10 @@ class ContractsService extends ProductService
      * @param PaymentMethodsRequestParams $param
      * @param string $contract_id
      * @return string[]
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \SecucardConnect\Client\ApiError
+     * @throws \SecucardConnect\Client\AuthError
+     * @throws \SecucardConnect\Client\ClientError
      */
     public function getAvailablePaymentMethods(PaymentMethodsRequestParams $param, $contract_id)
     {

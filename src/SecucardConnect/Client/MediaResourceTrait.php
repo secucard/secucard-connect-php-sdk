@@ -3,9 +3,9 @@
 
 namespace SecucardConnect\Client;
 
+use Psr\Http\Message\StreamInterface;
 
 /**
- ***
  * Trait which adds support for all URL based media resources like images or pdf documents.
  * Supports caching of the resource denoted by the URL of this instance. That means the content is downloaded and
  * put to the cache on demand. Further access is served by the cache.<br/>
@@ -75,6 +75,7 @@ trait MediaResourceTrait
 
     /**
      * Removes this object from cache.
+     * @throws ClientError
      */
     public function clear()
     {
@@ -92,6 +93,7 @@ trait MediaResourceTrait
     /**
      * Download this resource contents and cache using the storage instance passed when creating the secucard
      * connect API client.
+     * @throws ClientError
      */
     public function download()
     {
@@ -102,7 +104,8 @@ trait MediaResourceTrait
      * Return the contents of this resource as stream.
      * @param bool $cache True if the content should be cached locally by using the storage instance passed when
      * creating the secucard connect API client.
-     * @return \Psr\Http\Message\StreamInterface
+     * @return StreamInterface
+     * @throws ClientError
      */
     public function getContents($cache = true)
     {
@@ -117,7 +120,7 @@ trait MediaResourceTrait
     /**
      * @param bool $cache
      *
-     * @return null|\Psr\Http\Message\StreamInterface
+     * @return null|StreamInterface
      * @throws ClientError
      * @throws \Exception
      */
@@ -157,7 +160,7 @@ trait MediaResourceTrait
     }
 
     /**
-     * @param $key
+     * @param string $key
      * @return mixed
      */
     private function getKey($key)
