@@ -60,14 +60,14 @@ class QueryParams
      * @param $offset
      * @param \string[] $fields
      * @param array $sortOrder
-     * @param array $query
+     * @param string $query
      */
     public function __construct(
         $count = null,
         $offset = null,
         array $fields = null,
         array $sortOrder = null,
-        array $query = null
+        $query = null
     ) {
         $this->count = $count;
         $this->offset = $offset;

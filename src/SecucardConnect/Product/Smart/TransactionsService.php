@@ -14,6 +14,8 @@ class TransactionsService extends ProductService
     const TYPE_AUTO = "auto";
     const TYPE_ZVT = "cashless";
     const TYPE_LOYALTY = "loyalty";
+    const TYPE_DIRECT_DEBIT = "debit";
+    const TYPE_CREDIT_CARD = "creditcard";
 
     /**
      * Starting/Executing a transaction.
@@ -22,9 +24,25 @@ class TransactionsService extends ProductService
      * @param string $type The transaction type like "auto" or "cash".
      * @return Transaction The started transaction.
      */
-    public function start($transactionId, $type)
+    public function start($transactionId, $type, $object = null)
     {
-        return $this->execute($transactionId, 'start', $type, null, Transaction::class);
+        return $this->execute($transactionId, 'start', $type, $object, Transaction::class);
+    }
+
+    /**
+     * Preparing a transaction.
+     *
+     * @param string $transactionId The transaction id.
+     * @param string $type The transaction type like "auto" or "cash".
+     * @return Transaction The prepared transaction.
+     */
+    public function prepare($transactionId, $type, $object = null)
+    {
+        if (!in_array($type, [self::TYPE_AUTO, self::TYPE_DIRECT_DEBIT, self::TYPE_CREDIT_CARD])) {
+            throw new \InvalidArgumentException("Wrong transaction type");
+        }
+
+        return $this->execute($transactionId, 'prepare', $type, $object, Transaction::class);
     }
 
     /**
