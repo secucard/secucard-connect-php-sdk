@@ -17,7 +17,6 @@ use SecucardConnect\Product\Common\Model\BaseCollection;
 use SecucardConnect\Product\Common\Model\BaseModel;
 use SecucardConnect\Product\Common\Model\Error;
 use SecucardConnect\Product\Common\Model\MediaResource;
-use SecucardConnect\Util\Logger;
 use SecucardConnect\Util\MapperUtil;
 
 /**

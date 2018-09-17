@@ -48,7 +48,7 @@ class ResourceMetadata
         $cls = $this->findServiceClass($this->productDir, $this->resource, $classPrefix);
         if ($cls == null) {
             throw new ClientError('Unable to find service for "' . $product . '/' . $resource
-                . '", expected to find similiar to "Product\\<Product>\\<Resource>Service"');
+                . '", expected to find similar to "Product\\<Product>\\<Resource>Service"');
         }
         $this->resourceServiceClass = $cls;
 
@@ -57,7 +57,7 @@ class ResourceMetadata
         $cls = $this->findModelClass($this->modelDir, $this->resource, $classPrefix);
         if ($cls == null) {
             throw new ClientError('Unable to find a class for resource ' . $this->resource
-                . '", expected to find similiar to "Product\\<Product>\\Model\\<Resource or singular of Resource>"');
+                . '", expected to find similar to "Product\\<Product>\\Model\\<Resource or singular of Resource>"');
         }
         $this->resourceClass = $cls;
     }

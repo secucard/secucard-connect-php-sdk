@@ -43,7 +43,6 @@ class GuzzleLogger
      * @param RequestInterface $request
      * @param ResponseInterface|null $response
      * @param mixed $reason
-     * @return null
      */
     protected function log(
         RequestInterface $request,

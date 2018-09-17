@@ -108,8 +108,8 @@ final class MapperUtil
             $last = json_last_error();
             throw new \InvalidArgumentException(
                 'Unable to parse JSON data: '
-                . (isset($jsonErrors[$last])
-                    ? $jsonErrors[$last]
+                . (isset(self::$jsonErrors[$last])
+                    ? self::$jsonErrors[$last]
                     : 'Unknown error')
             );
         }
