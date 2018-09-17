@@ -2,7 +2,6 @@
 
 namespace SecucardConnect\Product\Smart\Model;
 
-
 /**
  * Class ProductGroup
  * @package SecucardConnect\Product\Smart\Model

@@ -1,7 +1,4 @@
 <?php
-/**
- * PickupOptions Api Model class
- */
 
 namespace SecucardConnect\Product\Smart\Model;
 
