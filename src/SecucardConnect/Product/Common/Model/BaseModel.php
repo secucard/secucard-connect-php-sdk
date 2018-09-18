@@ -9,7 +9,6 @@ namespace SecucardConnect\Product\Common\Model;
  * Class that should be used as parent class of every Data model
  * Class does not implement lazy loading, so it cannot carry relations
  *
- * @author Jakub Elias <j.elias@secupay.ag>
  */
 abstract class BaseModel
 {

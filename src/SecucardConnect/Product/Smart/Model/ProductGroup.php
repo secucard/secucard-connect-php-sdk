@@ -35,6 +35,4 @@ class ProductGroup
         $this->desc = $desc;
         $this->level = $level;
     }
-
-
 }

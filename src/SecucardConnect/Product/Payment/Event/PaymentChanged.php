@@ -2,7 +2,6 @@
 
 namespace SecucardConnect\Product\Payment\Event;
 
-use GuzzleHttp\Exception\GuzzleException;
 use SecucardConnect\Client\ApiError;
 use SecucardConnect\Client\AuthError;
 use SecucardConnect\Client\ClientError;
@@ -19,7 +18,6 @@ class PaymentChanged extends DefaultEventHandler
      * @param Event $event
      *
      * @throws ClientError If the payment transaction id is missing in the event data
-     * @throws GuzzleException
      * @throws ApiError
      * @throws AuthError
      */

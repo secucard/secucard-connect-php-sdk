@@ -1,19 +1,27 @@
 {
-    "name": "secucard/secucard-connect",
-    "description": "secucard connect PHP client SDK",
-    "license": "Apache-2.0",
-    "homepage": "https://github.com/secucard/secucard-connect-php-sdk",
-    "version": "v1.9.0",
-    "require": {
-        "php": ">=5.5.0",
-        "guzzlehttp/guzzle": "~6.3",
-        "psr/log": "~1.0",
-        "netresearch/jsonmapper": "~1.4",
-        "ext-json": "*"
-    },
-    "autoload": {
-        "psr-4": {
-            "SecucardConnect\\": "src/SecucardConnect"
-        }
+  "name": "secucard/secucard-connect",
+  "description": "secucard connect PHP client SDK",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/secucard/secucard-connect-php-sdk",
+  "version": "v2.0.0",
+  "require": {
+      "php": ">=5.5.0",
+      "php-http/client-implementation": "^1.0",
+      "psr/log": "~1.0",
+      "psr/http-message": "^1.0",
+      "php-http/httplug": "^1.1",
+      "php-http/discovery": "^1.4",
+      "php-http/client-common": "^1.7",
+      "php-http/message-factory": "^1.0",
+      "php-http/logger-plugin": "^1.0",
+      "netresearch/jsonmapper": "^1.4"
+  },
+  "require-dev": {
+      "php-http/mock-client": "1.1.*"
+  },
+  "autoload": {
+    "psr-4": {
+        "SecucardConnect\\": "src/SecucardConnect"
     }
+  }
 }

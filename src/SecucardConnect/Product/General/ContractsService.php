@@ -2,7 +2,6 @@
 
 namespace SecucardConnect\Product\General;
 
-use GuzzleHttp\Exception\GuzzleException;
 use SecucardConnect\Client\ApiError;
 use SecucardConnect\Client\AuthError;
 use SecucardConnect\Client\ClientError;
@@ -21,7 +20,6 @@ class ContractsService extends ProductService
      * @param PaymentMethodsRequestParams $param
      * @param string $contract_id
      * @return string[]
-     * @throws GuzzleException
      * @throws ApiError
      * @throws AuthError
      * @throws ClientError

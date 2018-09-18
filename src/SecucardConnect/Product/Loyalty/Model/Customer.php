@@ -2,7 +2,6 @@
 
 namespace SecucardConnect\Product\Loyalty\Model;
 
-
 use SecucardConnect\Product\Common\Model\BaseModel;
 
 /**
@@ -112,7 +111,7 @@ class Customer extends BaseModel
     public $customer_number;
 
     /**
-     * @var \DateTime
+     * @var string (YYYY-MM-DD)
      */
     public $dob;
 
@@ -120,7 +119,4 @@ class Customer extends BaseModel
      * @var string
      */
     public $picture;
-
-//public MediaResource pictureObject;
-
 }

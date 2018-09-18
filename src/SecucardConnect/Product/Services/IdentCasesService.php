@@ -2,7 +2,6 @@
 
 namespace SecucardConnect\Product\Services;
 
-use GuzzleHttp\Exception\GuzzleException;
 use SecucardConnect\Client\ApiError;
 use SecucardConnect\Client\AuthError;
 use SecucardConnect\Client\ClientError;
@@ -18,7 +17,6 @@ class IdentCasesService extends ProductService
     /**
      * @param string $identcaseId IdentCase ID
      * @return mixed
-     * @throws GuzzleException
      * @throws ApiError
      * @throws AuthError
      * @throws ClientError
@@ -31,7 +29,6 @@ class IdentCasesService extends ProductService
     /**
      * @param string $identcaseId IdentCase ID
      * @return mixed
-     * @throws GuzzleException
      * @throws ApiError
      * @throws AuthError
      * @throws ClientError
@@ -44,7 +41,6 @@ class IdentCasesService extends ProductService
     /**
      * @param string $identcaseId IdentCase ID
      * @return mixed
-     * @throws GuzzleException
      * @throws ApiError
      * @throws AuthError
      * @throws ClientError
@@ -58,7 +54,6 @@ class IdentCasesService extends ProductService
      * @param string $identcaseId IdentCase ID
      * @param string $taskId Task ID
      * @return mixed
-     * @throws GuzzleException
      * @throws ApiError
      * @throws AuthError
      * @throws ClientError

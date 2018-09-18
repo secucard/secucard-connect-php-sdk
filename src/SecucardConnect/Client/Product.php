@@ -10,7 +10,6 @@ use Exception;
 /**
  * Class to allow to use secucard-client->product->service->method design pattern
  *
- * @author Jakub Elias <j.elias@secupay.ag>
  */
 class Product
 {

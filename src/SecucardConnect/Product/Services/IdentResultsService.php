@@ -2,15 +2,12 @@
 
 namespace SecucardConnect\Product\Services;
 
-use GuzzleHttp\Exception\GuzzleException;
 use SecucardConnect\Client\ApiError;
 use SecucardConnect\Client\AuthError;
 use SecucardConnect\Client\ClientError;
 use SecucardConnect\Client\ProductService;
 use SecucardConnect\Client\QueryParams;
-use SecucardConnect\Client\RequestOptions;
 use SecucardConnect\Product\Common\Model\BaseCollection;
-use SecucardConnect\Product\Services\Model\IdentResult;
 
 /**
  * Operations for the services/identresults resource.
@@ -23,7 +20,6 @@ class IdentResultsService extends ProductService
      * @param array $ids The request ids.
      * @return BaseCollection The obtained results.
      * @throws ClientError
-     * @throws GuzzleException
      * @throws ApiError
      * @throws AuthError
      */
@@ -48,45 +44,5 @@ class IdentResultsService extends ProductService
     public function onIdentRequestsChanged($fn)
     {
         $this->registerEventHandler('idreschanged', $fn === null ? null : new IdentResChanged($fn, $this));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function getRequestOptions()
-    {
-        return [
-            RequestOptions::RESULT_PROCESSING => function (&$value) {
-                if ($value instanceof BaseCollection) {
-                    $results = $value->items;
-                } elseif ($value instanceof IdentResult) {
-                    $results[] = $value;
-                } else {
-                    return;
-                }
-
-                foreach ($results as $result) {
-                    $this->process($result);
-                }
-            }
-        ];
-    }
-
-    /**
-     * Handles proper attachments initialization after retrieval of a ident result.
-     * @param IdentResult $result
-     */
-    private function process(IdentResult &$result)
-    {
-        if (isset($result->person)) {
-            foreach ($result->person as $p) {
-                $attachments = $p->attachments;
-                if (!empty($attachments)) {
-                    foreach ($attachments as $attachment) {
-                        $this->initMediaResource($attachment);
-                    }
-                }
-            }
-        }
     }
 }

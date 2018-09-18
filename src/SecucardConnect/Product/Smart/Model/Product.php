@@ -86,6 +86,4 @@ class Product
         $this->tax = $tax;
         $this->group = $group;
     }
-
-
 }

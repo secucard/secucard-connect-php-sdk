@@ -5,7 +5,6 @@ namespace SecucardConnect;
 /**
  * Secucard API Client Configuration
  *
- * @author Rico Simlinger <r.simlinger@secupay.ag>
  */
 class ApiClientConfiguration
 {
@@ -137,7 +136,7 @@ class ApiClientConfiguration
     {
         return [
             'base_url' => $this->base_url,
-            'auth_path' => $this->api_path,
+            'auth_path' => $this->auth_path,
             'api_path' => $this->api_path,
             'debug' => $this->debug,
             'auth' => $this->auth,
