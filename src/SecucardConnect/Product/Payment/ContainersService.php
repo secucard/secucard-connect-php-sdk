@@ -2,7 +2,6 @@
 
 namespace SecucardConnect\Product\Payment;
 
-use GuzzleHttp\Exception\GuzzleException;
 use SecucardConnect\Client\ApiError;
 use SecucardConnect\Client\AuthError;
 use SecucardConnect\Client\ClientError;
@@ -22,7 +21,6 @@ class ContainersService extends ProductService
      *
      * @param GetCreditCardDataRequest $param
      * @return BaseCollection
-     * @throws GuzzleException
      * @throws ApiError
      * @throws AuthError
      * @throws ClientError

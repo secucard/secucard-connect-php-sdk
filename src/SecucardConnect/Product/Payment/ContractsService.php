@@ -2,7 +2,6 @@
 
 namespace SecucardConnect\Product\Payment;
 
-use GuzzleHttp\Exception\GuzzleException;
 use SecucardConnect\Client\ApiError;
 use SecucardConnect\Client\AuthError;
 use SecucardConnect\Client\ClientError;
@@ -25,7 +24,6 @@ class ContractsService extends ProductService
      * @param string $contractId The id of the parent contract.
      * @param CloneParams $param The parameters for cloning.
      * @return Contract
-     * @throws GuzzleException
      * @throws ApiError
      * @throws AuthError
      * @throws ClientError
@@ -40,7 +38,6 @@ class ContractsService extends ProductService
      *
      * @param string $contractId
      * @return array
-     * @throws GuzzleException
      * @throws ApiError
      * @throws AuthError
      * @throws ClientError
@@ -55,7 +52,6 @@ class ContractsService extends ProductService
      *
      * @param CloneParams $param The parameters for cloning.
      * @return Contract
-     * @throws GuzzleException
      * @throws ApiError
      * @throws AuthError
      * @throws ClientError
@@ -70,7 +66,6 @@ class ContractsService extends ProductService
      *
      * @param CreateSubContractRequest $param
      * @return CreateSubContractResponse
-     * @throws GuzzleException
      * @throws ApiError
      * @throws AuthError
      * @throws ClientError

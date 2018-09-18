@@ -2,15 +2,12 @@
 
 namespace SecucardConnect\Product\Services;
 
-use GuzzleHttp\Exception\GuzzleException;
 use SecucardConnect\Client\ApiError;
 use SecucardConnect\Client\AuthError;
 use SecucardConnect\Client\ClientError;
 use SecucardConnect\Client\ProductService;
 use SecucardConnect\Client\QueryParams;
-use SecucardConnect\Client\RequestOptions;
 use SecucardConnect\Product\Common\Model\BaseCollection;
-use SecucardConnect\Product\Services\Model\IdentResult;
 
 /**
  * Operations for the services/identresults resource.
@@ -23,7 +20,6 @@ class IdentResultsService extends ProductService
      * @param array $ids The request ids.
      * @return BaseCollection The obtained results.
      * @throws ClientError
-     * @throws GuzzleException
      * @throws ApiError
      * @throws AuthError
      */
