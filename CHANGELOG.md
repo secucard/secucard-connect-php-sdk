@@ -21,18 +21,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [2.0.0] - 2018-09-18
 
-### Security
-
-### Deprecated
-
 ### Added
 - Added preTransaction method for smart transactions
 - Prevent errors already on the client side by checking the input parameter
 
 ### Changed
 - Switch from guzzle to httplug
-
-### Fixed
 
 ### Removed
 - Removed MediaResource
