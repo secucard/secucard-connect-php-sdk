@@ -21,8 +21,8 @@ class EventDispatcher
 
     /**
      * Register/Unregister an event handler for a id.
-     * @param $id string An unique id for the handler.
-     * @param $handler EventHandler The handler. Pass null to remove from register.
+     * @param string $id An unique id for the handler.
+     * @param EventHandler $handler The handler. Pass null to remove from register.
      */
     public function registerEventHandler($id, $handler)
     {
@@ -35,7 +35,7 @@ class EventDispatcher
 
     /**
      * Dispatch the event string to a responsible handler if any.
-     * @param $eventStr string The event JSON.
+     * @param string $eventStr The event JSON.
      * @return void
      * @throws AbstractError
      */

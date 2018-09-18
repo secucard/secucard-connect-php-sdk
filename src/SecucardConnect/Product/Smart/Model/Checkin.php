@@ -1,7 +1,4 @@
 <?php
-/**
- * Checkin Api Model class
- */
 
 namespace SecucardConnect\Product\Smart\Model;
 

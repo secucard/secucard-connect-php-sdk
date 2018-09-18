@@ -2,7 +2,10 @@
 
 namespace SecucardConnect\Product\Smart\Model;
 
-
+/**
+ * Class ProductGroup
+ * @package SecucardConnect\Product\Smart\Model
+ */
 class ProductGroup
 {
     /**
@@ -32,6 +35,4 @@ class ProductGroup
         $this->desc = $desc;
         $this->level = $level;
     }
-
-
 }

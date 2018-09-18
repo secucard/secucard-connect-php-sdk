@@ -57,7 +57,7 @@ class QueryParams
     /**
      * QueryParams constructor.
      * @param int $count
-     * @param $offset
+     * @param int $offset
      * @param \string[] $fields
      * @param array $sortOrder
      * @param string $query

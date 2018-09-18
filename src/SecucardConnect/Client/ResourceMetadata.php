@@ -25,8 +25,8 @@ class ResourceMetadata
 
     /**
      * ResourceMetadata constructor.
-     * @param $product
-     * @param $resource
+     * @param string $product
+     * @param string $resource
      * @throws Exception
      */
     public function __construct($product, $resource = null)
@@ -48,7 +48,7 @@ class ResourceMetadata
         $cls = $this->findServiceClass($this->productDir, $this->resource, $classPrefix);
         if ($cls == null) {
             throw new ClientError('Unable to find service for "' . $product . '/' . $resource
-                . '", expected to find similiar to "Product\\<Product>\\<Resource>Service"');
+                . '", expected to find similar to "Product\\<Product>\\<Resource>Service"');
         }
         $this->resourceServiceClass = $cls;
 
@@ -57,7 +57,7 @@ class ResourceMetadata
         $cls = $this->findModelClass($this->modelDir, $this->resource, $classPrefix);
         if ($cls == null) {
             throw new ClientError('Unable to find a class for resource ' . $this->resource
-                . '", expected to find similiar to "Product\\<Product>\\Model\\<Resource or singular of Resource>"');
+                . '", expected to find similar to "Product\\<Product>\\Model\\<Resource or singular of Resource>"');
         }
         $this->resourceClass = $cls;
     }
@@ -65,6 +65,11 @@ class ResourceMetadata
     /**
      * check all classes in this product model dir against the given resource name to find the right resource class
      * necessary because class name may be singular of resource name (seems safer than just stripping the "s")
+     * @param string $dir
+     * @param string $resource
+     * @param string $classPrefix
+     * @return null|string
+     * @throws \ReflectionException
      */
     private function findModelClass($dir, $resource, $classPrefix)
     {
@@ -95,11 +100,12 @@ class ResourceMetadata
     }
 
     /**
-     * @param $dir
-     * @param $resource
-     * @param $classPrefix
+     * @param string $dir
+     * @param string $resource
+     * @param string $classPrefix
      *
      * @return null|string
+     * @throws \ReflectionException
      */
     private function findServiceClass($dir, $resource, $classPrefix)
     {

@@ -17,6 +17,9 @@ use SecucardConnect\Client\ResourceMetadata;
 use SecucardConnect\Client\StorageInterface;
 use SecucardConnect\Event\EventDispatcher;
 use SecucardConnect\Util\Logger;
+use SecucardConnect\Client\ApiError;
+use SecucardConnect\Client\ClientError;
+use SecucardConnect\Client\AuthError;
 
 /**
  * Secucard API Client
@@ -185,8 +188,9 @@ final class SecucardConnect
      * JS code for using the secucard connect JS SDK and providing the token for it.
      * @return null|string Null if no token is used, the token data as JSON like: {"access_token":"abc", "expires_in":500}.
      * Expire time is in s.
-     * @throws \Exception
-     *
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
      */
     public function accessTokenForJS()
     {
@@ -230,7 +234,7 @@ final class SecucardConnect
 
     /**
      *
-     * @param $eventData string A string containing the event JSON.
+     * @param string $eventData A string containing the event JSON.
      * @return void
      * @throws \Exception If an error happens during processing.
      */

@@ -71,30 +71,50 @@ class Logger implements LoggerInterface
         $this->enabled = $value;
     }
 
+    /**
+     * @param LoggerInterface $logger
+     * @param string $message
+     * @param Exception|null $exception
+     */
     public static function logWarn(LoggerInterface $logger, $message, \Exception $exception = null)
     {
         self::doLog(LogLevel::WARNING, $logger, $message, $exception);
     }
 
+    /**
+     * @param LoggerInterface $logger
+     * @param string $message
+     * @param Exception|null $exception
+     */
     public static function logError(LoggerInterface $logger, $message, \Exception $exception = null)
     {
         self::doLog(LogLevel::ERROR, $logger, $message, $exception);
     }
 
+    /**
+     * @param LoggerInterface $logger
+     * @param string $message
+     * @param Exception|null $exception
+     */
     public static function logInfo(LoggerInterface $logger, $message, \Exception $exception = null)
     {
         self::doLog(LogLevel::INFO, $logger, $message, $exception);
     }
 
+    /**
+     * @param LoggerInterface $logger
+     * @param string $message
+     * @param Exception|null $exception
+     */
     public static function logDebug(LoggerInterface $logger, $message, \Exception $exception = null)
     {
         self::doLog(LogLevel::DEBUG, $logger, $message, $exception);
     }
 
     /**
-     * @param $level
+     * @param string $level
      * @param LoggerInterface $logger
-     * @param $message
+     * @param string $message
      * @param \Exception $exception
      */
     private static function doLog($level, LoggerInterface $logger, $message, \Exception $exception = null)
@@ -108,6 +128,11 @@ class Logger implements LoggerInterface
         }
     }
 
+    /**
+     * @param string $message
+     * @param array $context
+     * @return mixed|string
+     */
     private static function replace($message, $context)
     {
         foreach ($context as $key => $val) {

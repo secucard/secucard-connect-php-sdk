@@ -2,10 +2,17 @@
 
 namespace SecucardConnect\Product\Smart;
 
+use SecucardConnect\Client\ApiError;
+use SecucardConnect\Client\AuthError;
+use SecucardConnect\Client\ClientError;
 use SecucardConnect\Client\ProductService;
 use SecucardConnect\Product\Smart\Model\Transaction;
 use SecucardConnect\Product\Loyalty\Model\LoyaltyBonus;
 
+/**
+ * Class TransactionsService
+ * @package SecucardConnect\Product\Smart
+ */
 class TransactionsService extends ProductService
 {
     const TYPE_DEMO = "demo";
@@ -21,7 +28,11 @@ class TransactionsService extends ProductService
      *
      * @param string $transactionId Id of the smart transaction
      * @param string $type The transaction type like "cashless" or "cash".
+     * @param null $object
      * @return Transaction The started transaction.
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
      */
     public function start($transactionId, $type, $object = null)
     {
@@ -45,7 +56,11 @@ class TransactionsService extends ProductService
      *
      * @param string $transactionId The transaction id.
      * @param string $type The transaction type like "auto" or "cash".
+     * @param null $object
      * @return Transaction The prepared transaction.
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
      */
     public function prepare($transactionId, $type, $object = null)
     {
@@ -60,6 +75,9 @@ class TransactionsService extends ProductService
      * Cancel an existing loyalty transaction.
      * @param string $transactionId Id of the smart transaction
      * @return bool True if successful false else.
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
      */
     public function cancel($transactionId)
     {
@@ -75,6 +93,9 @@ class TransactionsService extends ProductService
      * Request loyalty bonus products and add them to the basket
      * @param string $transactionId Id of the smart transaction
      * @return LoyaltyBonus
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
      */
     public function appendLoyaltyBonusProducts($transactionId)
     {

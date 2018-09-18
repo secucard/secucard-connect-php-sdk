@@ -1,13 +1,9 @@
 <?php
-/**
- * Receipts model class
- */
 
 namespace SecucardConnect\Product\Smart\Model;
 
 /**
  * Class modeling a single receipt line. These lines will be returned when a transaction is completed.
- *
  */
 class ReceiptLine
 {

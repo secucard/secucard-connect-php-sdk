@@ -2,9 +2,12 @@
 
 namespace SecucardConnect\Product\Loyalty\Model;
 
-
 use SecucardConnect\Product\Common\Model\BaseModel;
 
+/**
+ * Class Customer
+ * @package SecucardConnect\Product\Loyalty\Model
+ */
 class Customer extends BaseModel
 {
     /**

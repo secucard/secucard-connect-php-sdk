@@ -2,7 +2,10 @@
 
 namespace SecucardConnect\Product\Smart\Model;
 
-
+/**
+ * Class Text
+ * @package SecucardConnect\Product\Smart\Model
+ */
 class Text
 {
     /**
@@ -14,5 +17,4 @@ class Text
      * @var string
      */
     public $desc;
-
 }

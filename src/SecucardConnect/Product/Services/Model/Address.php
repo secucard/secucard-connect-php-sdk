@@ -2,6 +2,8 @@
 
 namespace SecucardConnect\Product\Services\Model;
 
+use SecucardConnect\Product\Common\Model\Location;
+
 /**
  * Address Api Model class
  */
@@ -18,7 +20,7 @@ class Address
     public $address_formatted;
 
     /**
-     * @var \SecucardConnect\Product\Common\Model\Location
+     * @var Location
      */
     public $geometry;
 }

@@ -5,6 +5,10 @@ namespace SecucardConnect\Product\Loyalty\Model;
 
 use SecucardConnect\Product\Common\Model\BaseModel;
 
+/**
+ * Class CardGroup
+ * @package SecucardConnect\Product\Loyalty\Model
+ */
 class CardGroup extends BaseModel
 {
     const TRANSACTION_TYPE_CHARGE = 'charge';

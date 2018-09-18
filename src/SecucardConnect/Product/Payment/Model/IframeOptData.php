@@ -2,6 +2,10 @@
 
 namespace SecucardConnect\Product\Payment\Model;
 
+/**
+ * Class IframeOptData
+ * @package SecucardConnect\Product\Payment\Model
+ */
 class IframeOptData
 {
     const CESSION_FORMAL = 'formal';

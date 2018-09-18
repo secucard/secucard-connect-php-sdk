@@ -2,11 +2,14 @@
 
 namespace SecucardConnect\Util;
 
-
 use JsonMapper;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Class MapperUtil
+ * @package SecucardConnect\Util
+ */
 final class MapperUtil
 {
     private static $jsonErrors = [
@@ -105,8 +108,8 @@ final class MapperUtil
             $last = json_last_error();
             throw new \InvalidArgumentException(
                 'Unable to parse JSON data: '
-                . (isset($jsonErrors[$last])
-                    ? $jsonErrors[$last]
+                . (isset(self::$jsonErrors[$last])
+                    ? self::$jsonErrors[$last]
                     : 'Unknown error')
             );
         }

@@ -3,6 +3,10 @@
 namespace SecucardConnect\Auth;
 
 
+/**
+ * Class DeviceCredentials
+ * @package SecucardConnect\Auth
+ */
 class DeviceCredentials extends ClientCredentials
 {
     /**
@@ -45,11 +49,17 @@ class DeviceCredentials extends ClientCredentials
         $this->vendorIds = $vendorIds;
     }
 
+    /**
+     * @return string
+     */
     public function getType()
     {
         return 'device';
     }
 
+    /**
+     * @param array $params
+     */
     public function addParameters(&$params)
     {
         parent::addParameters($params);
@@ -63,6 +73,9 @@ class DeviceCredentials extends ClientCredentials
     }
 
 
+    /**
+     * @return string
+     */
     private function buildUuid()
     {
         $id = '/vendor/' . $this->vendor;

@@ -74,7 +74,7 @@ abstract class DefaultEventHandler implements EventHandler
 
     /**
      * Implement to handle the event.
-     * @param $event
+     * @param Event $event
      * @return void
      */
     abstract function onEvent($event);

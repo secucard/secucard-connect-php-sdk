@@ -3,6 +3,10 @@
 namespace SecucardConnect\Product\General\Model;
 
 
+/**
+ * Class Assignment
+ * @package SecucardConnect\Product\General\Model
+ */
 class Assignment
 {
     /**

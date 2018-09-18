@@ -142,7 +142,7 @@ class FileStorage extends DummyStorage
     }
 
     /**
-     * @param $key
+     * @param string $key
      *
      * @return bool|int
      */
@@ -167,7 +167,7 @@ class FileStorage extends DummyStorage
     }
 
     /**
-     * @param $key
+     * @param string $key
      *
      * @return bool
      */
@@ -186,7 +186,7 @@ class FileStorage extends DummyStorage
     }
 
     /**
-     * @param $key
+     * @param string $key
      *
      * @return bool
      */

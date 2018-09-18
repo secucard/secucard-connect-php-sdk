@@ -2,6 +2,9 @@
 
 namespace SecucardConnect\Product\Loyalty;
 
+use SecucardConnect\Client\ApiError;
+use SecucardConnect\Client\AuthError;
+use SecucardConnect\Client\ClientError;
 use SecucardConnect\Client\ProductService;
 use SecucardConnect\Product\Loyalty\Model\ValidateMerchantcardResponse;
 
@@ -16,6 +19,9 @@ class MerchantCardsService extends ProductService
      * @param string $cardNumber card number
      * @param int $csc CSC number
      * @return bool|null
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
      */
     public function validateCSC($cardNumber, $csc)
     {
@@ -35,6 +41,9 @@ class MerchantCardsService extends ProductService
      * @param string $cardNumber card number
      * @param int $pin PIN number
      * @return bool|null
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
      */
     public function validatePasscode($cardNumber, $pin)
     {
@@ -53,6 +62,9 @@ class MerchantCardsService extends ProductService
      * Check if the loyalty merchantcard is assigned to the merchant, locked and has a passcode
      * @param string $cardNumber
      * @return ValidateMerchantcardResponse
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
      */
     public function validateMerchantcard($cardNumber)
     {

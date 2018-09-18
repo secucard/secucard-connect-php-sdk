@@ -20,7 +20,7 @@ interface PaymentServiceInterface
 
     /**
      * Set a callback to be notified when a payment transaction has changed. Pass NULL to remove a previous setting.
-     * @param $fn callable|null Any function which accepts a "Transaction" model class argument.
+     * @param callable|null $fn Any function which accepts a "Transaction" model class argument.
      */
     public function onStatusChange($fn);
 
