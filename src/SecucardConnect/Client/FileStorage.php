@@ -27,7 +27,7 @@ class FileStorage extends DummyStorage
             throw new ClientError('Invalid storage location, file with same name already exists.');
         }
         if (!file_exists($dir)) {
-            mkdir($dir);
+            mkdir($dir, 0777, true);
         }
         $this->dir = $dir;
         $this->load();
