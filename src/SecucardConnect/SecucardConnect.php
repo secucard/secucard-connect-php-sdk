@@ -113,9 +113,10 @@ final class SecucardConnect
         $this->config = $config;
 
         // Create the default common storage if necessary
-        if ($dataStorage == null) {
-            $this->storage = new DummyStorage();
+        if (!$dataStorage instanceof StorageInterface) {
+            $dataStorage = new DummyStorage();
         }
+        $this->storage = $dataStorage;
 
         // create OAuthProvider, pass the separate token storage
         if ($credentials != null) {
