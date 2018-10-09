@@ -3,7 +3,6 @@
 namespace SecucardConnect\Product\Smart\Model;
 
 use SecucardConnect\Product\Common\Model\BaseModel;
-use SecucardConnect\Product\General\Model\Contract;
 
 /**
  * Transactions Api Model class
@@ -99,7 +98,7 @@ class Transaction extends BaseModel
     public $target_device;
 
     /**
-     * @var Contract
+     * @var SecucardConnect\Product\General\Model\Contract
      */
     public $contract;
 
