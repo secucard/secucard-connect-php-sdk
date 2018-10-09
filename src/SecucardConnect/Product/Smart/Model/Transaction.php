@@ -98,7 +98,7 @@ class Transaction extends BaseModel
     public $target_device;
 
     /**
-     * @var SecucardConnect\Product\General\Model\Contract
+     * @var \SecucardConnect\Product\General\Model\Contract
      */
     public $contract;
 
