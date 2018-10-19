@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
+## [1.9.3] - 2018-10-19
+
+###Added
+- Smart Transaction Service: new variable to allow invoice payments
 
 ## [1.9.2] - 2018-10-12
 
@@ -411,3 +415,4 @@ First release
 [1.9.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.8.0...v1.9.0
 [1.9.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.9.0...v1.9.1
 [1.9.2]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.9.1...v1.9.2
+[1.9.3]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.9.2...v1.9.3
