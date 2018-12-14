@@ -18,6 +18,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
+## [1.9.5] - 2018-12-14
+
+###Fixed
+- Address Model: fixed typehint for the $geometry field
+
 ## [1.9.4] - 2018-11-07
 
 ###Added
