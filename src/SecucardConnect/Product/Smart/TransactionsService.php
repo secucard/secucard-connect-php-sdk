@@ -17,14 +17,15 @@ use SecucardConnect\Product\Smart\Model\Transaction;
 class TransactionsService extends ProductService
 {
 
-    const TYPE_DEMO = "demo";
-    const TYPE_CASH = "cash";
-    const TYPE_AUTO = "auto";
-    const TYPE_ZVT = "cashless";
-    const TYPE_LOYALTY = "loyalty";
-    const TYPE_DIRECT_DEBIT = "debit";
-    const TYPE_CREDIT_CARD = "creditcard";
-    const TYPE_INVOICE = "invoice";
+    const TYPE_DEMO = 'demo';
+    const TYPE_CASH = 'cash';
+    const TYPE_AUTO = 'auto';
+    const TYPE_ZVT = 'cashless';
+    const TYPE_LOYALTY = 'loyalty';
+    const TYPE_DIRECT_DEBIT = 'debit';
+    const TYPE_CREDIT_CARD = 'creditcard';
+    const TYPE_INVOICE = 'invoice';
+    const TYPE_PREPAID = 'prepaid';
 
     /**
      * Starting/Executing a transaction.
@@ -58,7 +59,7 @@ class TransactionsService extends ProductService
     public function prepare($transactionId, $type, $object = null)
     {
         if (!in_array($type, [self::TYPE_AUTO, self::TYPE_DIRECT_DEBIT, self::TYPE_CREDIT_CARD, self::TYPE_INVOICE])) {
-            throw new \InvalidArgumentException("Wrong transaction type");
+            throw new \InvalidArgumentException('Wrong transaction type');
         }
 
         return $this->execute($transactionId, 'prepare', $type, $object, Transaction::class);
