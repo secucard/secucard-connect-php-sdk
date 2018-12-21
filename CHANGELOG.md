@@ -18,20 +18,30 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
+
+## [1.10.0] - 2018-12-21
+
+### Added
+- Product Payment: Sofort
+
+
 ## [1.9.5] - 2018-12-14
 
-###Fixed
+### Fixed
 - Address Model: fixed typehint for the $geometry field
+
 
 ## [1.9.4] - 2018-11-07
 
-###Added
+### Added
 - Smart Transaction Service: new variable to allow prepaid payments
+
 
 ## [1.9.3] - 2018-10-19
 
-###Added
+### Added
 - Smart Transaction Service: new variable to allow invoice payments
+
 
 ## [1.9.2] - 2018-10-12
 
@@ -427,3 +437,5 @@ First release
 [1.9.2]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.9.1...v1.9.2
 [1.9.3]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.9.2...v1.9.3
 [1.9.4]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.9.3...v1.9.4
+[1.9.5]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.9.4...v1.9.5
+[1.10.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.9.5...v1.10.0
