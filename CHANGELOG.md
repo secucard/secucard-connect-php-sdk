@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
+## [1.10.1] - 2019-01-07
+
+### Added
+- Smart Transaction Service: new variable to allow PayPal payments
 
 ## [1.10.0] - 2018-12-21
 
@@ -439,3 +443,4 @@ First release
 [1.9.4]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.9.3...v1.9.4
 [1.9.5]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.9.4...v1.9.5
 [1.10.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.9.5...v1.10.0
+[1.10.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.10.0...v1.10.1
