@@ -26,6 +26,7 @@ class TransactionsService extends ProductService
     const TYPE_CREDIT_CARD = 'creditcard';
     const TYPE_INVOICE = 'invoice';
     const TYPE_PREPAID = 'prepaid';
+    const TYPE_PAYPAL = 'paypal';
 
     /**
      * Starting/Executing a transaction.
@@ -58,7 +59,16 @@ class TransactionsService extends ProductService
      */
     public function prepare($transactionId, $type, $object = null)
     {
-        if (!in_array($type, [self::TYPE_AUTO, self::TYPE_DIRECT_DEBIT, self::TYPE_CREDIT_CARD, self::TYPE_INVOICE])) {
+        if (!in_array(
+            $type,
+            [
+                self::TYPE_AUTO,
+                self::TYPE_DIRECT_DEBIT,
+                self::TYPE_CREDIT_CARD,
+                self::TYPE_INVOICE,
+                self::TYPE_PAYPAL,
+            ]
+        )) {
             throw new \InvalidArgumentException('Wrong transaction type');
         }
 
