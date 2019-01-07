@@ -23,8 +23,7 @@ abstract class PaymentService extends ProductService implements PaymentServiceIn
      * Currently, partial refunds are are not allowed for all payment products.
      *
      * @param string $paymentId The payment transaction id.
-     * @param string $contractId The id of the contract that was used to create this transaction. May be null if the
-     * contract is an parent contract (not cloned).
+     * @param string $contractId The id of the contract that was used to create this transaction.
      * @param int $amount The amount that you want to refund to the payer. Use '0' for a full refund.
      * @param bool $reduceStakeholderPayment TRUE if you want to change the amount of the stakeholder positions too (on partial refund)
      *
@@ -54,17 +53,22 @@ abstract class PaymentService extends ProductService implements PaymentServiceIn
      * Capture a pre-authorized payment transaction.
      *
      * @param string $paymentId The payment transaction id
+     * @param string $contractId The id of the contract that was used to create this transaction.
      * @return bool TRUE if successful, FALSE otherwise.
      * @throws GuzzleException
      * @throws ApiError
      * @throws AuthError
      * @throws ClientError
      */
-    public function capture($paymentId)
+    public function capture($paymentId, $contractId = null)
     {
         $class = $this->resourceMetadata->resourceClass;
 
-        $res = $this->execute($paymentId, 'capture', null, null, $class);
+        $object = [
+            'contract' => $contractId,
+        ];
+
+        $res = $this->execute($paymentId, 'capture', null, $object, $class);
 
         if ($res) {
             return true;
@@ -78,13 +82,14 @@ abstract class PaymentService extends ProductService implements PaymentServiceIn
      *
      * @param string $paymentId The payment transaction id
      * @param Basket[] $basket
+     * @param string $contractId The id of the contract that was used to create this transaction.
      * @return bool TRUE if successful, FALSE otherwise.
      * @throws GuzzleException
      * @throws ApiError
      * @throws AuthError
      * @throws ClientError
      */
-    public function updateBasket($paymentId, array $basket)
+    public function updateBasket($paymentId, array $basket, $contractId = null)
     {
         $class = $this->resourceMetadata->resourceClass;
         /**
@@ -93,6 +98,7 @@ abstract class PaymentService extends ProductService implements PaymentServiceIn
         $object = new $class();
         $object->id = $paymentId;
         $object->basket = $basket;
+        $object->contract = $contractId;
         $res = $this->updateWithAction($paymentId, 'basket', null, $object, $class);
 
         if ($res) {
