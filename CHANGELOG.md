@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 - Smart Transaction Service: new variable to allow PayPal payments
+- Product Payment: Contract-ID parameter for the "capture" and "updateBasket" methods.
 
 ## [1.10.0] - 2018-12-21
 
