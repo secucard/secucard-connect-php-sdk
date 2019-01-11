@@ -20,4 +20,9 @@ class TransactionsService extends ProductService
         parent::__construct($resourceMetadata, $context);
         $this->resourceMetadata->resourceClass = 'SecucardConnect\\Product\\Payment\\Model\\Transactions';
     }
+
+    public function getCrowdFundingData($merchantId)
+    {
+        return $this->getWithAction("", 'crowdfundingdata', $merchantId);
+    }
 }

@@ -244,6 +244,24 @@ abstract class ProductService
     }
 
     /**
+     * @param string $id
+     * @param string $action
+     * @param null $actionArg
+     * @param null $object
+     * @param null $class
+     *
+     * @return bool|mixed|null|string
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
+     * @throws GuzzleException
+     */
+    protected function getWithAction($id, $action, $actionArg = null, $object = null, $class = null)
+    {
+        return $this->requestAction(RequestOps::GET, $action, $id, $actionArg, $object, $class);
+    }
+
+    /**
      * Function to delete the model identified by id
      *
      * @param BaseModel $model
