@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Removed
 
 
-## [1.11.0] - 2019-01-10
+## [1.11.0] - 2019-01-11
 
 ### Added
 - Product Payment: UploadidentsService
