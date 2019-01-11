@@ -3,8 +3,6 @@
 namespace SecucardConnect\Product\Payment\Model;
 
 use SecucardConnect\Product\Common\Model\BaseModel;
-use SecucardConnect\Product\Common\Model\Contact;
-use SecucardConnect\Product\General\Model\Merchant;
 
 /**
  * Class Transactions
@@ -13,7 +11,7 @@ use SecucardConnect\Product\General\Model\Merchant;
 class Transactions extends BaseModel
 {
     /**
-     * @var Merchant
+     * @var \SecucardConnect\Product\General\Model\Merchant
      */
     public $merchant;
 
@@ -93,7 +91,7 @@ class Transactions extends BaseModel
     public $details;
 
     /**
-     * @var Contact
+     * @var \SecucardConnect\Product\Common\Model\Contact
      */
     public $customer;
 
