@@ -86,7 +86,7 @@ class Transactions extends BaseModel
     public $status_text;
 
     /**
-     * @var array
+     * @var TransactionsDetails
      */
     public $details;
 
