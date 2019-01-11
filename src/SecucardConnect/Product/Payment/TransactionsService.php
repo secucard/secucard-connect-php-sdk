@@ -23,6 +23,6 @@ class TransactionsService extends ProductService
 
     public function getCrowdFundingData($merchantId)
     {
-        return $this->getWithAction("", 'crowdfundingdata', $merchantId);
+        return $this->getWithAction("not_set", 'crowdfundingdata', $merchantId, null, "SecucardConnect\\Product\\Payment\\Model\\CrowdFundingData");
     }
 }
