@@ -143,6 +143,11 @@ class Transaction extends BaseModel
     public $iframe_url;
 
     /**
+     * @var CheckoutLinks
+     */
+    public $checkout_links;
+
+    /**
      * @return array
      */
     public function jsonFilterNullProperties()
