@@ -148,6 +148,11 @@ class Transaction extends BaseModel
     public $checkout_links;
 
     /**
+     * @var \SecucardConnect\Product\Payment\Model\Customer
+     */
+    public $customer;
+
+    /**
      * @return array
      */
     public function jsonFilterNullProperties()

@@ -18,6 +18,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
+## [1.11.2] - 2019-02-18
+
+### Added
+- Smart Transaction model: new field customer
+
 ## [1.11.1] - 2019-01-28
 
 ### Added
@@ -460,3 +465,4 @@ First release
 [1.10.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.10.0...v1.10.1
 [1.11.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.10.1...v1.11.0
 [1.11.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.11.0...v1.11.1
+[1.11.2]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.11.1...v1.11.2
