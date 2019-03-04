@@ -18,15 +18,24 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
+
+## [1.12.0] - 2019-03-04
+
+### Added
+- Product Payment: TransactionsService::assignPayment($paymentId, $accountingId)
+
+
 ## [1.11.2] - 2019-02-18
 
 ### Added
 - Smart Transaction model: new field customer
 
+
 ## [1.11.1] - 2019-01-28
 
 ### Added
 - Smart Transaction model: new field checkout_links
+
 
 ## [1.11.0] - 2019-01-11
 

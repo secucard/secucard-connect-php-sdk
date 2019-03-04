@@ -1,5 +1,7 @@
 # secucard connect PHP SDK
 
+**If you start with a new project please use this SDK: [https://github.com/secuconnect/secuconnect-js-sdk](https://github.com/secuconnect/secuconnect-js-sdk)**
+
 [![Latest Stable Version](https://poser.pugx.org/secucard/secucard-connect/v/stable)](https://packagist.org/packages/secucard/secucard-connect)
 [![Total Downloads](https://poser.pugx.org/secucard/secucard-connect/downloads)](https://packagist.org/packages/secucard/secucard-connect)
 [![License](https://poser.pugx.org/secucard/secucard-connect/license)](https://packagist.org/packages/secucard/secucard-connect)
