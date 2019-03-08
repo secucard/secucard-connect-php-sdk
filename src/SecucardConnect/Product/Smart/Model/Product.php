@@ -9,6 +9,17 @@ namespace SecucardConnect\Product\Smart\Model;
 class Product
 {
     /**
+     * possible item types for mixed baskets
+     */
+    const TYPE_PAYMENT_TRANSACTION = 'payment_transaction';
+    const TYPE_SUB_TRANSACTION = 'sub_transaction';
+    const TYPE_ARTICLE = 'article';
+    const TYPE_SHIPPING = 'shipping';
+    const TYPE_DONATION = 'donation';
+    const TYPE_COUPON = 'coupon';
+    const TYPE_STAKEHOLDER_PAYMENT = 'stakeholder_payment';
+
+    /**
      * @var int
      */
     public $id;
@@ -52,6 +63,31 @@ class Product
      * @var \SecucardConnect\Product\Smart\Model\ProductGroup[]
      */
     public $group;
+
+    /**
+     * @var string
+     */
+    public $item_type;
+
+    /**
+     * @var int
+     */
+    public $sum;
+
+    /**
+     * @var string
+     */
+    public $reference_id;
+
+    /**
+     * @var string
+     */
+    public $contract_id;
+
+    /**
+     * @var \SecucardConnect\Product\Smart\Model\Product
+     */
+    public $sub_basket;
 
     /**
      * Product constructor.
