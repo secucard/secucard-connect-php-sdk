@@ -85,7 +85,7 @@ class Product
     public $contract_id;
 
     /**
-     * @var \SecucardConnect\Product\Smart\Model\Product
+     * @var \SecucardConnect\Product\Smart\Model\Product[]
      */
     public $sub_basket;
 
