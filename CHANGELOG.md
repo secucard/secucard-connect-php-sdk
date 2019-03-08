@@ -19,6 +19,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Removed
 
 
+## [1.12.1] - 2019-03-DD
+
+### Added
+- Smart Transactions: Added mixed basket
+
+
 ## [1.12.0] - 2019-03-04
 
 ### Added
