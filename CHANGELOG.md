@@ -482,3 +482,4 @@ First release
 [1.11.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.11.0...v1.11.1
 [1.11.2]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.11.1...v1.11.2
 [1.12.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.11.2...v1.12.0
+[1.12.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.12.0...v1.12.1
