@@ -19,6 +19,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Removed
 
 
+## [1.12.1] - 2019-04-25
+
+### Added
+- Transaction: new const CHECKOUT_LAST_VISITED_PAGE_PAYPAL_CHECKOUT
+
+
 ## [1.12.0] - 2019-03-04
 
 ### Added
