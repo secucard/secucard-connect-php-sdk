@@ -31,6 +31,7 @@ class Transaction extends BaseModel
     const CHECKOUT_LAST_VISITED_PAGE_CONFIRMATION = 'confirmation_page';
     const CHECKOUT_LAST_VISITED_PAGE_DELIVERY_OPTIONS = 'delivery_options_page';
     const CHECKOUT_LAST_VISITED_PAGE_SECURITY_CHECK_PAGE = 'security_check_page';
+    const CHECKOUT_LAST_VISITED_PAGE_PAYPAL_CHECKOUT = 'paypal_checkout_page';
 
     /**
      * @var Device

@@ -19,10 +19,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Removed
 
 
-## [1.12.1] - 2019-03-DD
+## [1.12.2] - 2019-05-08
 
 ### Added
 - Smart Transactions: Added mixed basket
+
+
+## [1.12.1] - 2019-04-25
+
+### Added
+- Transaction: new const CHECKOUT_LAST_VISITED_PAGE_PAYPAL_CHECKOUT
 
 
 ## [1.12.0] - 2019-03-04
@@ -468,17 +474,19 @@ First release
 [1.6.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.5.1...v1.6.0
 [1.6.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.6.0...v1.6.1
 [1.7.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.6.1...v1.7.0
-[1.7.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.7.0...v1.7.1
-[1.8.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.7.1...v1.8.0
-[1.9.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.8.0...v1.9.0
-[1.9.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.9.0...v1.9.1
-[1.9.2]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.9.1...v1.9.2
-[1.9.3]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.9.2...v1.9.3
-[1.9.4]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.9.3...v1.9.4
-[1.9.5]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.9.4...v1.9.5
-[1.10.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.9.5...v1.10.0
-[1.10.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.10.0...v1.10.1
-[1.11.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.10.1...v1.11.0
-[1.11.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.11.0...v1.11.1
-[1.11.2]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.11.1...v1.11.2
-[1.12.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.11.2...v1.12.0
+[1.7.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/v1.7.0...1.7.1
+[1.8.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.7.1...1.8.0
+[1.9.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.8.0...1.9.0
+[1.9.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.9.0...1.9.1
+[1.9.2]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.9.1...1.9.2
+[1.9.3]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.9.2...1.9.3
+[1.9.4]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.9.3...1.9.4
+[1.9.5]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.9.4...1.9.5
+[1.10.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.9.5...1.10.0
+[1.10.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.10.0...1.10.1
+[1.11.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.10.1...1.11.0
+[1.11.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.11.0...1.11.1
+[1.11.2]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.11.1...1.11.2
+[1.12.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.11.2...1.12.0
+[1.12.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.12.0...1.12.1
+[1.12.2]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.12.1...1.12.2
