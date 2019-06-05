@@ -7,7 +7,7 @@ namespace SecucardConnect\Product\General\Model;
 /**
  * CollectionDeliveryConfiguration Api Model class
  */
-class CollectionDeliveryConfiguration
+class CollectionDeliveryConfiguration extends BaseDeliveryConfiguration
 {
     /**
      * @var string
