@@ -11,4 +11,13 @@ namespace SecucardConnect\Product\Payment\Model;
  */
 class SecupayInvoice extends Transaction
 {
+    /**
+     * @var string
+     */
+    public $transfer_purpose;
+
+    /**
+     * @var TransferAccount
+     */
+    public $transfer_account;
 }
