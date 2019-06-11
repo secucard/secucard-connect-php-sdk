@@ -18,4 +18,9 @@ class CollectionDeliveryConfiguration extends BaseDeliveryConfiguration
      * @var array
      */
     public $collection_hours;
+
+    /**
+     * @var string
+     */
+    public $store_id;
 }

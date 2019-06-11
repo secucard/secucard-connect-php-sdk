@@ -13,5 +13,13 @@ use SecucardConnect\Product\Common\Model\BaseModel;
  */
 class Store extends BaseModel
 {
+    /**
+     * @var string
+     */
+    public $name;
 
+    /**
+     * @var string
+     */
+    public $address_formatted;
 }
