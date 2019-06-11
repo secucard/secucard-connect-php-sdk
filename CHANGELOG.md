@@ -19,6 +19,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Removed
 
 
+## [1.12.2] - 2019-06-11
+
+### Fixed
+- Payment Invoice: add missing transfer_account & transfer_purpose response parameter
+
+
 ## [1.12.1] - 2019-04-25
 
 ### Added
