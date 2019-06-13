@@ -154,6 +154,16 @@ class Transaction extends BaseModel
     public $customer;
 
     /**
+     * @var boolean
+     */
+    public $is_customer_mutable;
+
+    /**
+     * @var array
+     */
+    public $shipping_address;
+
+    /**
      * @return array
      */
     public function jsonFilterNullProperties()
