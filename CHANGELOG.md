@@ -19,6 +19,24 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Removed
 
 
+## [1.13.0] - 2019-06-14
+
+### Added
+- Payment Payout: new parameters in the models "SecupayPayout" and "PayoutTransaction"
+
+### Changed
+- extend the Smart-Checkout models:
+  - General/Model/BaseDeliveryConfiguration.php
+  - General/Model/CollectionDeliveryConfiguration.php 
+  - General/Model/Merchant.php
+  - General/Model/OrderOptions.php 
+  - General/Model/ShippingDeliveryConfiguration.php
+  - General/Model/Store.php
+  - Smart/Model/Basket.php 
+  - Smart/Model/PickupOptions.php
+  - Smart/Model/Product.php
+
+
 ## [1.12.2] - 2019-06-11
 
 ### Fixed
@@ -490,3 +508,4 @@ First release
 [1.12.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.11.2...1.12.0
 [1.12.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.12.0...1.12.1
 [1.12.2]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.12.1...1.12.2
+[1.13.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.12.2...1.13.0
