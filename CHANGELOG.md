@@ -19,10 +19,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Removed
 
 
-## [1.12.2] - 2019-05-08
+## [1.12.2] - 2019-06-11
 
-### Added
-- Smart Transactions: Added mixed basket
+### Fixed
+- Payment Invoice: add missing transfer_account & transfer_purpose response parameter
 
 
 ## [1.12.1] - 2019-04-25
