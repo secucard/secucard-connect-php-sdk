@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   - Smart/Model/PickupOptions.php
   - Smart/Model/Product.php
 
+
 ## [1.12.2] - 2019-06-11
 
 ### Fixed
