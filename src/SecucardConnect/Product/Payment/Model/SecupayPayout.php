@@ -11,21 +11,37 @@ use SecucardConnect\Product\Common\Model\BaseModel;
 class SecupayPayout extends BaseModel
 {
     /**
+     * Create a demo transaction
+     *
+     * @var bool
+     */
+    public $demo;
+
+    /**
+     * 	Total amount of transaction lit's items
+     *
      * @var int
      */
     public $amount;
 
     /**
+     * ISO 4217 code of currency, eg EUR for Euro.
+     *
      * @var string
      */
     public $currency;
 
     /**
+     * The purpose of the payment.
+     *
      * @var string
      */
     public $purpose;
 
     /**
+     * Transaction ID
+     * [read-only]
+     *
      * @var string
      */
     public $trans_id;
@@ -36,6 +52,30 @@ class SecupayPayout extends BaseModel
     public $status;
 
     /**
+     * Contract ID
+     *
+     * @var string
+     */
+    public $contract;
+
+    /**
+     * Payment customer ID
+     *
+     * @var string
+     */
+    public $customer;
+
+    /**
+     * Specifying an order number.
+     *
+     * @var string
+     */
+    public $order_id;
+
+    /**
+     * Transaction status ID
+     * [read-only]
+     *
      * @var string
      */
     public $transaction_status;
@@ -57,6 +97,7 @@ class SecupayPayout extends BaseModel
 
     /**
      * The reference to be used for the transfer
+     * [read-only]
      *
      * @var string
      */
@@ -64,6 +105,7 @@ class SecupayPayout extends BaseModel
 
     /**
      * Bank details to be used for the transfer
+     * [read-only]
      *
      * @var TransferAccount
      */
