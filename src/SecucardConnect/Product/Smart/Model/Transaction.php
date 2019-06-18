@@ -159,7 +159,7 @@ class Transaction extends BaseModel
     public $is_customer_mutable;
 
     /**
-     * @var array
+     * @var \SecucardConnect\Product\Payment\Model\Customer
      */
     public $shipping_address;
 
