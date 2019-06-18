@@ -34,9 +34,30 @@ class PayoutTransaction
     public $item_type = self::ITEM_TYPE_TRANSACTION_PAYOUT;
 
     /**
-     * The payment id of the origin transaction
+     * The payment ID of the origin transaction
      *
      * @var string
      */
     public $transaction_hash;
+
+    /**
+     * The payment transaction ID of the origin transaction
+     *
+     * @var string
+     */
+    public $transaction_id;
+
+    /**
+     * Payment Container ID (as alternative to the origin transaction)
+     *
+     * @var string
+     */
+    public $container_id;
+
+    /**
+     * Reference id - must be unique for the entire basket
+     *
+     * @var string
+     */
+    public $reference_id;
 }

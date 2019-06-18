@@ -5,13 +5,11 @@
  */
 namespace SecucardConnect\Product\Smart\Model;
 
-use SecucardConnect\Product\Common\Model\BaseModel;
-
 /**
  * PickupOptions Api Model class
  *
  */
-class PickupOptions extends BaseModel
+class PickupOptions
 {
     /**
      * @var string
@@ -22,4 +20,9 @@ class PickupOptions extends BaseModel
      * @var string
      */
     public $date;
+
+    /**
+     * @var \SecucardConnect\Product\General\Model\Store
+     */
+    public $store;
 }

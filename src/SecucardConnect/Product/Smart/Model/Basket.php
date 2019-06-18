@@ -17,4 +17,9 @@ class Basket
      * @var \SecucardConnect\Product\Smart\Model\Text[]
      */
     public $texts;
+
+    /**
+     * @var string
+     */
+    public $type;
 }
