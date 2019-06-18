@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [1.13.1] - 2019-06-18
 
 ### Added
-- Transaction: added new public fields
+- Smart Transaction Model: added new public fields (is_customer_mutable, shipping_address)
 
 ## [1.13.0] - 2019-06-14
 
