@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
+## [1.13.1] - 2019-06-18
+
+### Added
+- Transaction: added new public fields
 
 ## [1.13.0] - 2019-06-14
 
@@ -509,3 +513,4 @@ First release
 [1.12.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.12.0...1.12.1
 [1.12.2]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.12.1...1.12.2
 [1.13.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.12.2...1.13.0
+[1.13.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.0...1.13.1
