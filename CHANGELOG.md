@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [1.13.1] - 2019-07-11
 
 ### Added
-- Transaction: new field $container
+- Smart Transaction: new field $container
 
 
 ## [1.13.0] - 2019-06-14
