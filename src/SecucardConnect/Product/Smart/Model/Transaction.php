@@ -154,6 +154,11 @@ class Transaction extends BaseModel
     public $customer;
 
     /**
+     * @var \SecucardConnect\Product\Payment\Model\Container
+     */
+    public $container;
+
+    /**
      * @return array
      */
     public function jsonFilterNullProperties()
