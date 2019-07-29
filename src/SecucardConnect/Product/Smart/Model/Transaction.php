@@ -161,7 +161,7 @@ class Transaction extends BaseModel
     /**
      * @var boolean
      */
-    public $is_customer_mutable;
+    public $is_customer_readonly;
 
     /**
      * @var \SecucardConnect\Product\Payment\Model\Customer
