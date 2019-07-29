@@ -154,6 +154,11 @@ class Transaction extends BaseModel
     public $customer;
 
     /**
+     * @var \SecucardConnect\Product\Payment\Model\Container
+     */
+    public $container;
+
+    /**
      * @var boolean
      */
     public $is_customer_mutable;

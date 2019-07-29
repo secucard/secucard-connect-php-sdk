@@ -18,10 +18,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
-## [1.13.1] - 2019-06-18
+## [1.13.2] - 2019-07-29
 
 ### Added
 - Smart Transaction Model: added new public fields (is_customer_mutable, shipping_address)
+
+## [1.13.1] - 2019-07-11
+
+### Added
+- Smart Transaction: new field $container
+
 
 ## [1.13.0] - 2019-06-14
 
@@ -514,3 +520,4 @@ First release
 [1.12.2]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.12.1...1.12.2
 [1.13.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.12.2...1.13.0
 [1.13.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.0...1.13.1
+[1.13.2]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.1...1.13.2
