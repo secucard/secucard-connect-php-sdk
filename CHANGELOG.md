@@ -18,6 +18,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
+## [1.13.3] - 2019-07-30
+
+### Added
+- Smart Transaction Model: added new constant for cancelled status
+
+### Fixed
+- Smart Transaction Service: cancel() function now works correctly
+
 ## [1.13.2] - 2019-07-29
 
 ### Added
@@ -521,3 +529,4 @@ First release
 [1.13.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.12.2...1.13.0
 [1.13.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.0...1.13.1
 [1.13.2]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.1...1.13.2
+[1.13.3]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.2...1.13.3
