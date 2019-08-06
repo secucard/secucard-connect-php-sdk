@@ -31,11 +31,6 @@ class Customer extends BaseModel
     /**
      * @var string
      */
-    public $merchant_id;
-
-    /**
-     * @var \SecucardConnect\Product\General\Model\Merchant
-     */
     public $merchant;
 
     /**
