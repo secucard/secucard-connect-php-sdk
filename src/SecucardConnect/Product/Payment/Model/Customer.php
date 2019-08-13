@@ -29,7 +29,7 @@ class Customer extends BaseModel
     public $contact;
 
     /**
-     * @var string
+     * @var \SecucardConnect\Product\General\Model\Merchant
      */
     public $merchant;
 
