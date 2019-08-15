@@ -24,11 +24,6 @@ class Customer extends BaseModel
     public $updated;
 
     /**
-     * @var \SecucardConnect\Product\Payment\Model\Contract
-     */
-    public $contract;
-
-    /**
      * @var \SecucardConnect\Product\Common\Model\Contact
      */
     public $contact;
