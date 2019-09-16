@@ -88,5 +88,5 @@ class TransactionsService extends ProductService
     {
         $res = $this->execute($transactionId, 'cancel', null, 'array');
         return (bool)$res['result'];
-    } /* test */
+    }
 }
