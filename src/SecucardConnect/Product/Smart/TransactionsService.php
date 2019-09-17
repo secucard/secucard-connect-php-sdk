@@ -102,6 +102,6 @@ class TransactionsService extends ProductService
     public function abort($transactionId)
     {
         $res = $this->execute($transactionId, 'abort', null, 'array');
-        return (bool)$res['result'];
+        return $res['status'] !== Transaction::STATUS_ABORTED;
     }
 }
