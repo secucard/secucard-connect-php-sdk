@@ -87,7 +87,7 @@ class TransactionsService extends ProductService
     public function cancel($transactionId)
     {
         $res = $this->execute($transactionId, 'cancel', null, 'array');
-        return (bool)$res['result'];
+        return $res['status'] !== Transaction::STATUS_CANCELLED;
     }
 
     /**
