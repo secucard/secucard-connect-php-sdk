@@ -89,4 +89,19 @@ class TransactionsService extends ProductService
         $res = $this->execute($transactionId, 'cancel', null, 'array');
         return $res['status'] !== Transaction::STATUS_CANCELLED;
     }
+
+    /**
+     * Abort an existing loyalty transaction.
+     * @param string $transactionId The transaction id.
+     * @return bool True if successful false else.
+     * @throws GuzzleException
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
+     */
+    public function abort($transactionId)
+    {
+        $res = $this->execute($transactionId, 'abort', null, 'array');
+        return $res['status'] !== Transaction::STATUS_ABORTED;
+    }
 }
