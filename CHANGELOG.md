@@ -18,6 +18,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
+## [1.13.4] - 2019-09-17
+
+### Added
+- Smart Transaction Service: added abort() function
+
 ## [1.13.3] - 2019-07-30
 
 ### Added
@@ -530,3 +535,4 @@ First release
 [1.13.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.0...1.13.1
 [1.13.2]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.1...1.13.2
 [1.13.3]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.2...1.13.3
+[1.13.4]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.3...1.13.4
