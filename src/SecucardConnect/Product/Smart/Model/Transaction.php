@@ -145,6 +145,7 @@ class Transaction extends BaseModel
     public $iframe_url;
 
     /**
+     * @deprecated please use application_context
      * @var CheckoutLinks
      */
     public $checkout_links;
@@ -160,6 +161,7 @@ class Transaction extends BaseModel
     public $container;
 
     /**
+     * @deprecated please use application_context
      * @var boolean
      */
     public $is_customer_readonly;
@@ -168,6 +170,11 @@ class Transaction extends BaseModel
      * @var \SecucardConnect\Product\Payment\Model\Customer
      */
     public $shipping_address;
+
+    /**
+     * @var ApplicationContext
+     */
+    public $application_context;
 
     /**
      * @return array
