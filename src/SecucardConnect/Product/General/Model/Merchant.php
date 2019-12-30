@@ -39,7 +39,7 @@ class Merchant extends BaseModel
     public $merchant_urls;
 
     /**
-     * @var CheckoutOptions[]
+     * @var CheckoutOptions
      */
     public $checkout_options;
 }
