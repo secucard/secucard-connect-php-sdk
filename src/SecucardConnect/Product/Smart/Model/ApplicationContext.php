@@ -12,7 +12,7 @@ namespace SecucardConnect\Product\Smart\Model;
 class ApplicationContext
 {
     /**
-     * @var CheckoutLinks
+     * @var ReturnUrls
      */
     public $return_urls;
 

@@ -145,7 +145,6 @@ class Transaction extends BaseModel
     public $iframe_url;
 
     /**
-     * @deprecated please use application_context
      * @var CheckoutLinks
      */
     public $checkout_links;
@@ -161,7 +160,7 @@ class Transaction extends BaseModel
     public $container;
 
     /**
-     * @deprecated please use application_context
+     * @deprecated
      * @var boolean
      */
     public $is_customer_readonly;
