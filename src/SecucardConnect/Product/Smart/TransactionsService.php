@@ -86,8 +86,8 @@ class TransactionsService extends ProductService
      */
     public function cancel($transactionId)
     {
-        $res = $this->execute($transactionId, 'cancel', null, 'array');
-        return $res['status'] !== Transaction::STATUS_CANCELLED;
+        $res = $this->execute($transactionId, 'cancel', null, null, Transaction::class);
+        return $res->status === Transaction::STATUS_CANCELLED;
     }
 
     /**
@@ -101,7 +101,7 @@ class TransactionsService extends ProductService
      */
     public function abort($transactionId)
     {
-        $res = $this->execute($transactionId, 'abort', null, 'array');
-        return $res['status'] !== Transaction::STATUS_ABORTED;
+        $res = $this->execute($transactionId, 'abort', null, null, Transaction::class);
+        return $res->status === Transaction::STATUS_ABORTED;
     }
 }

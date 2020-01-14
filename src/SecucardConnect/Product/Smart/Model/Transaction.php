@@ -34,6 +34,15 @@ class Transaction extends BaseModel
     const CHECKOUT_LAST_VISITED_PAGE_SECURITY_CHECK_PAGE = 'security_check_page';
     const CHECKOUT_LAST_VISITED_PAGE_PAYPAL_CHECKOUT = 'paypal_checkout_page';
 
+    //  intent possible values
+    const INTENT_DEFAULT = null;
+    const INTENT_POS = 'pos';
+    const INTENT_SALE = 'sale';
+    const INTENT_AUTHORIZATION = 'authorization';
+    const INTENT_ORDER = 'order';
+    const INTENT_CASHREG = 'cashreg';
+    const INTENT_CHECKOUT = 'checkout';
+
     /**
      * @var Device
      */
@@ -174,6 +183,11 @@ class Transaction extends BaseModel
      * @var ApplicationContext
      */
     public $application_context;
+
+    /**
+     * @var string|null
+     */
+    public $intent;
 
     /**
      * @return array
