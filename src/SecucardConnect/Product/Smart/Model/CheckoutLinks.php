@@ -15,22 +15,4 @@ class CheckoutLinks
      * @var string
      */
     public $url_checkout;
-
-    /**
-     * @deprecated
-     * @var string
-     */
-    public $url_success;
-
-    /**
-     * @deprecated
-     * @var string
-     */
-    public $url_abort;
-
-    /**
-     * @deprecated
-     * @var string
-     */
-    public $url_error;
 }
