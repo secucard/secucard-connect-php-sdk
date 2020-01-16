@@ -12,12 +12,12 @@ namespace SecucardConnect\Product\Smart\Model;
 class ApplicationContext
 {
     /**
-     * @var ReturnUrls
-     */
-    public $return_urls;
-
-    /**
      * @var Locks
      */
     public $locks;
+
+    /**
+     * @var ReturnUrls
+     */
+    public $return_urls;
 }

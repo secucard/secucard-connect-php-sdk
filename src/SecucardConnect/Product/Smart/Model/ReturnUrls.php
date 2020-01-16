@@ -19,10 +19,10 @@ class ReturnUrls
     /**
      * @var string
      */
-    public $url_abort;
+    public $url_error;
 
     /**
      * @var string
      */
-    public $url_error;
+    public $url_abort;
 }
