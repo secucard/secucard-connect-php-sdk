@@ -5,14 +5,14 @@ namespace SecucardConnect\Product\Smart\Model;
 
 
 /**
- * Class CheckoutLinks
+ * Class Locks
  *
  * @author Anton Lunyov <anton.lunyov@blue-veery.com>
  */
-class CheckoutLinks
+class Locks
 {
     /**
-     * @var string
+     * @var boolean
      */
-    public $url_checkout;
+    public $customer;
 }
