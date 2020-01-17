@@ -47,7 +47,7 @@ class PaymentWizardOptions
     public $basket_headline;
 
     /**
-     * @var string
+     * @var bool
      */
     public $is_basket_shown;
 
