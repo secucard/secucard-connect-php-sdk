@@ -18,6 +18,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
+## [1.13.10] - 2020-02-13
+
+### Added
+- General Merchants Model: new field checkout_options
+- New type CheckoutOptions which contains Smart Checkout options for given merchant
+
 ## [1.13.9] - 2020-02-11
 
 ### Removed
@@ -570,3 +576,4 @@ First release
 [1.13.7]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.6...1.13.7
 [1.13.8]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.7...1.13.8
 [1.13.9]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.8...1.13.9
+[1.13.10]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.9...1.13.10

@@ -37,4 +37,9 @@ class Merchant extends BaseModel
      * @var MerchantUrl[]
      */
     public $merchant_urls;
+
+    /**
+     * @var CheckoutOptions
+     */
+    public $checkout_options;
 }
