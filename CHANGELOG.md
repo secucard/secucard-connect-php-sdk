@@ -18,6 +18,30 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
+## [1.13.9] - 2020-02-11
+
+### Removed
+- Smart Transaction Model: public field payment_links
+
+## [1.13.8] - 2020-01-29
+
+### Added
+- Smart Transaction Model: added new public field payment_links to have access to them inside Smart Checkout backend
+
+## [1.13.7] - 2020-01-16
+
+### Added
+- Smart Transaction Model: added new field application_context which contains values previously held in checkout_links and is_customer_readonly
+
+### Removed
+- Checkout Links Model: removed fields url_success, url_error and url_abort
+- Smart Transaction Model: removed is_customer_readonly field
+
+## [1.13.6] - 2020-01-09
+
+### Added
+- Smart Transaction Model: added new public field (intent) and constants for possible values
+
 ## [1.13.5] - 2019-09-18
 
 ### Fixed
@@ -542,3 +566,7 @@ First release
 [1.13.3]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.2...1.13.3
 [1.13.4]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.3...1.13.4
 [1.13.5]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.4...1.13.5
+[1.13.6]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.5...1.13.6
+[1.13.7]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.6...1.13.7
+[1.13.8]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.7...1.13.8
+[1.13.9]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.8...1.13.9
