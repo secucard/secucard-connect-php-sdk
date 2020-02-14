@@ -18,6 +18,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
+## [1.13.11] - 2020-02-14
+
+### Added
+- Smart Transaction Model: added new public field payment_links to have access to them inside Smart Checkout backend
+
 ## [1.13.10] - 2020-02-13
 
 ### Added
@@ -577,3 +582,4 @@ First release
 [1.13.8]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.7...1.13.8
 [1.13.9]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.8...1.13.9
 [1.13.10]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.9...1.13.10
+[1.13.11]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.10...1.13.11

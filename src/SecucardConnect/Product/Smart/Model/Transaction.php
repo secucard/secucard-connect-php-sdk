@@ -184,6 +184,11 @@ class Transaction extends BaseModel
     public $intent;
 
     /**
+     * @var PaymentLinks
+     */
+    public $payment_links;
+
+    /**
      * @return array
      */
     public function jsonFilterNullProperties()
