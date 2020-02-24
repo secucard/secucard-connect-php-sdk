@@ -5,36 +5,36 @@ namespace SecucardConnect\Product\Smart\Model;
 
 
 /**
- * Class PaymentWizardOptions
+ * Class PaymentWizardLocalOptions
  *
  * @author Anton Lunyov <anton.lunyov@blue-veery.com>
  */
-class PaymentWizardOptions
+class PaymentWizardLocalOptions
 {
     /**
      * @var string
+     */
+    public $payment_hint_title;
+
+    /**
+     * @var array
      */
     public $payment_hint;
 
     /**
      * @var string
      */
-    public $project_name;
+    public $project_title;
 
     /**
      * @var string
      */
-    public $project_logo;
+    public $submit_button_title;
 
     /**
      * @var string
      */
-    public $submit_button_label;
-
-    /**
-     * @var string
-     */
-    public $primary_colour;
+    public $cancel_button_title;
 
     /**
      * @var string
@@ -44,15 +44,15 @@ class PaymentWizardOptions
     /**
      * @var string
      */
-    public $basket_headline;
+    public $basket_title;
 
     /**
      * @var bool
      */
-    public $is_basket_shown;
+    public $hide_disclaimer;
 
     /**
-     * @var string
+     * @var bool
      */
-    public $language_formality;
+    public $has_accepted_disclaimer;
 }

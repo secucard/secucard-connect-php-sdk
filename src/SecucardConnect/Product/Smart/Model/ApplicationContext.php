@@ -22,7 +22,7 @@ class ApplicationContext
     public $return_urls;
 
     /**
-     * @var PaymentWizardOptions
+     * @var PaymentWizardLocalOptions
      */
     public $iframe_opts;
 }
