@@ -18,6 +18,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
+## [1.14.0] - 2020-03-04
+
+### Added
+- General Contracts service: new method getPaymentWizardOptions()
+- New type PaymentWizardContractOptions which contains Payment Wizard options configured in the contract
+- New Type PaymentWizardLocalOptions which contains Payment Wizard options configured in the Smart Transaction
+- Application Context model: new field iframe_opts
+
 ## [1.13.11] - 2020-02-14
 
 ### Added

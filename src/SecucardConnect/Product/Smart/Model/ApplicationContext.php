@@ -20,4 +20,9 @@ class ApplicationContext
      * @var ReturnUrls
      */
     public $return_urls;
+
+    /**
+     * @var PaymentWizardLocalOptions
+     */
+    public $iframe_opts;
 }
