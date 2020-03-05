@@ -34,6 +34,11 @@ class PaymentWizardContractOptions
     /**
      * @var string
      */
+    public $cancel_button_title;
+
+    /**
+     * @var string
+     */
     public $primary_colour;
 
     /**
