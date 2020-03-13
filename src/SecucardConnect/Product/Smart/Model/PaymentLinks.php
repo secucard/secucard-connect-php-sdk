@@ -30,4 +30,9 @@ class PaymentLinks
      * @var string
      */
     public $invoice;
+
+    /**
+     * @var string
+     */
+    public $general;
 }
