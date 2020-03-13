@@ -18,6 +18,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
+## [1.14.1] - 2020-03-13
+
+### Added
+- Payment Links model: added general link
+
 ## [1.14.0] - 2020-03-04
 
 ### Added
