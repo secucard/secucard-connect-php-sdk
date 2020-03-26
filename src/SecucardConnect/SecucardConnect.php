@@ -33,7 +33,7 @@ final class SecucardConnect
     /**
      * SDK version
      */
-    const VERSION = '1.14.1';
+    const VERSION = '1.14.2';
 
     /**
      * @var OAuthProvider

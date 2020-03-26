@@ -18,6 +18,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
+## [1.14.2] - 2020-03-26
+
+### Removed
+- ContainerService: removed method getCreditCardContainer
+
 ## [1.14.1] - 2020-03-13
 
 ### Added
@@ -598,3 +603,4 @@ First release
 [1.13.11]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.10...1.13.11
 [1.14.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.11...1.14.0
 [1.14.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.14.0...1.14.1
+[1.14.2]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.14.1...1.14.2
