@@ -5,16 +5,11 @@ namespace SecucardConnect\Product\General\Model;
 /**
  * CheckoutOptions Api Model class
  */
-class CheckoutOptions
+class PaymentLinkOptions
 {
     /**
      * @var array
      */
-    public $shipping;
-
-    /**
-     * @var array
-     */
-    public $collection;
+    public $background;
 }
 
