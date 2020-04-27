@@ -18,6 +18,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
+## [1.16.0] - 2020-04-27
+
+### Changed
+- Moving background image to another location
+
 ## [1.15.0] - 2020-03-26
 
 ### Removed
@@ -604,3 +609,4 @@ First release
 [1.14.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.11...1.14.0
 [1.14.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.14.0...1.14.1
 [1.15.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.14.1...1.15.0
+[1.16.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.15.0...1.16.0
