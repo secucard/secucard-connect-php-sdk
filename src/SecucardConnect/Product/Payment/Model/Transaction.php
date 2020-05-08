@@ -148,4 +148,10 @@ class Transaction extends BaseModel
      * @var array
      */
     public $sub_transactions;
+
+    /**
+     * payment transaction ID (PCI_...)
+     * @var string
+     */
+    public $payment_id;
 }

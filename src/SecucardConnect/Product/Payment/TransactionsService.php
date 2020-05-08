@@ -9,6 +9,7 @@ use SecucardConnect\Client\ClientContext;
 use SecucardConnect\Client\ClientError;
 use SecucardConnect\Client\ProductService;
 use SecucardConnect\Client\ResourceMetadata;
+use SecucardConnect\Product\Payment\Event\PaymentChanged;
 use SecucardConnect\Product\Payment\Model\AssignedPaymentTransaction;
 use SecucardConnect\Product\Payment\Model\CrowdFundingData;
 
@@ -25,6 +26,25 @@ class TransactionsService extends ProductService
     {
         parent::__construct($resourceMetadata, $context);
         $this->resourceMetadata->resourceClass = 'SecucardConnect\\Product\\Payment\\Model\\Transactions';
+    }
+
+    /**
+     * @param string $id (f.e. 'ylikceanvpdq4455715')
+     * @return \SecucardConnect\Product\Payment\Model\Transaction
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
+     * @throws GuzzleException
+     */
+    public function getOldFormat($id)
+    {
+        return $this->getWithAction(
+            $id,
+            'oldFormat',
+            null,
+            null,
+            'SecucardConnect\\Product\\Payment\\Model\\Transaction'
+        );
     }
 
     /**
@@ -66,5 +86,14 @@ class TransactionsService extends ProductService
             null,
             'SecucardConnect\\Product\\Payment\\Model\\AssignedPaymentTransaction'
         );
+    }
+
+    /**
+     * Set a callback to be notified when a creditcard has changed. Pass null to remove a previous setting.
+     * @param callable|null $fn Any function which accepts a "\SecucardConnect\Product\Payment\Model\Transaction" model class argument.
+     */
+    public function onStatusChange($fn)
+    {
+        $this->registerEventHandler(static::class, $fn === null ? null : new PaymentChanged($fn, $this));
     }
 }
