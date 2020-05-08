@@ -154,4 +154,11 @@ class Transaction extends BaseModel
      * @var string
      */
     public $payment_id;
+
+    /**
+     * list of allowed payment methods, f.e. ['TWINT']
+     * if no one was defined the custommer can select one by himself (based on your contract)
+     * @var string
+     */
+    public $payment_methods;
 }
