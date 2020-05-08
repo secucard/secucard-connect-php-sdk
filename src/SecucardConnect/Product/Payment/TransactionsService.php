@@ -2,6 +2,7 @@
 
 namespace SecucardConnect\Product\Payment;
 
+use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use SecucardConnect\Client\ApiError;
 use SecucardConnect\Client\AuthError;
@@ -9,6 +10,7 @@ use SecucardConnect\Client\ClientContext;
 use SecucardConnect\Client\ClientError;
 use SecucardConnect\Client\ProductService;
 use SecucardConnect\Client\ResourceMetadata;
+use SecucardConnect\Product\Common\Model\BaseModel;
 use SecucardConnect\Product\Payment\Event\PaymentChanged;
 use SecucardConnect\Product\Payment\Model\AssignedPaymentTransaction;
 use SecucardConnect\Product\Payment\Model\CrowdFundingData;
@@ -26,6 +28,15 @@ class TransactionsService extends ProductService
     {
         parent::__construct($resourceMetadata, $context);
         $this->resourceMetadata->resourceClass = 'SecucardConnect\\Product\\Payment\\Model\\Transactions';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function save(BaseModel $model)
+    {
+        $this->resourceMetadata->resourceClass = '\SecucardConnect\Product\Payment\Model\Transaction';
+        return parent::save($model);
     }
 
     /**
