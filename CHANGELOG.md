@@ -18,6 +18,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
+## [1.17.1] - 2020-06-02
+
+### Added
+- Smart.Transaction-Model: added new status constants
+
 ## [1.17.0] - 2020-05-08
 
 ### Added
@@ -616,3 +621,4 @@ First release
 [1.15.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.14.1...1.15.0
 [1.16.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.15.0...1.16.0
 [1.17.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.16.0...1.17.0
+[1.17.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.17.0...1.17.1
