@@ -7,11 +7,13 @@ use SecucardConnect\Client\ApiError;
 use SecucardConnect\Client\AuthError;
 use SecucardConnect\Client\ClientContext;
 use SecucardConnect\Client\ClientError;
+use SecucardConnect\Client\MissingParamsError;
 use SecucardConnect\Client\ProductService;
 use SecucardConnect\Client\ResourceMetadata;
 use SecucardConnect\Product\Common\Model\BaseModel;
 use SecucardConnect\Product\Payment\Event\PaymentChanged;
 use SecucardConnect\Product\Payment\Model\AssignedPaymentTransaction;
+use SecucardConnect\Product\Payment\Model\Basket;
 use SecucardConnect\Product\Payment\Model\CrowdFundingData;
 use SecucardConnect\Product\Payment\Model\Transaction;
 use SecucardConnect\Product\Payment\Model\Transactions;
@@ -47,9 +49,14 @@ class TransactionsService extends ProductService
     /**
      * @inheritDoc
      * @return Transaction|Transactions
+     * @throws MissingParamsError
      */
     public function get($id)
     {
+        if (empty($id)) {
+            throw new MissingParamsError('id', __METHOD__);
+        }
+
         if (substr_compare($id, "PCI_", 0, 4, true) === 0) {
             return parent::get($id);
         }
@@ -64,9 +71,14 @@ class TransactionsService extends ProductService
      * @throws AuthError
      * @throws ClientError
      * @throws GuzzleException
+     * @throws MissingParamsError
      */
     public function getOldFormat($id)
     {
+        if (empty($id)) {
+            throw new MissingParamsError('id', __METHOD__);
+        }
+
         return $this->getWithAction(
             $id,
             'oldFormat',
@@ -83,9 +95,14 @@ class TransactionsService extends ProductService
      * @throws AuthError
      * @throws ClientError
      * @throws GuzzleException
+     * @throws MissingParamsError
      */
     public function getCrowdFundingData($merchantId)
     {
+        if (empty($merchantId)) {
+            throw new MissingParamsError('merchantId', __METHOD__);
+        }
+
         return $this->getWithAction(
             'not_set',
             'crowdfundingdata',
@@ -105,9 +122,16 @@ class TransactionsService extends ProductService
      * @throws ApiError
      * @throws AuthError
      * @throws ClientError
+     * @throws MissingParamsError
      */
     public function assignPayment($paymentId, $accountingId)
     {
+        if (empty($paymentId)) {
+            throw new MissingParamsError('paymentId', __METHOD__);
+        } elseif (empty($accountingId)) {
+            throw new MissingParamsError('accountingId', __METHOD__);
+        }
+
         return $this->execute(
             $paymentId,
             'assignPayment',
@@ -115,6 +139,174 @@ class TransactionsService extends ProductService
             null,
             'SecucardConnect\\Product\\Payment\\Model\\AssignedPaymentTransaction'
         );
+    }
+    /**
+     * Cancel or Refund an existing transaction.
+     * Currently, partial refunds are are not allowed for all payment products.
+     *
+     * @param string $paymentId The payment transaction id.
+     * @param string $contractId The id of the contract that was used to create this transaction.
+     * @param int $amount The amount that you want to refund to the payer. Use '0' for a full refund.
+     * @param bool $reduceStakeholderPayment TRUE if you want to change the amount of the stakeholder positions too (on partial refund)
+     *
+     * @return array ['result', 'demo', 'new_trans_id', 'remaining_amount', 'refund_waiting_for_payment']
+     * @throws GuzzleException
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
+     * @throws MissingParamsError
+     */
+    public function cancel($paymentId, $contractId = null, $amount = null, $reduceStakeholderPayment = false)
+    {
+        if (empty($paymentId)) {
+            throw new MissingParamsError('paymentId', __METHOD__);
+        }
+
+        $object = [
+            'contract' => $contractId,
+            'amount' => $amount,
+            'reduce_stakeholder_payment' => $reduceStakeholderPayment,
+            'return_old_format' => true
+        ];
+
+        return $this->execute($paymentId, 'cancel', null, $object);
+    }
+
+    /**
+     * Capture a pre-authorized payment transaction.
+     *
+     * @param string $paymentId The payment transaction id
+     * @param string $contractId The id of the contract that was used to create this transaction.
+     * @return bool TRUE if successful, FALSE otherwise.
+     * @throws GuzzleException
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
+     * @throws MissingParamsError
+     */
+    public function capture($paymentId, $contractId = null)
+    {
+        if (empty($paymentId)) {
+            throw new MissingParamsError('paymentId', __METHOD__);
+        }
+
+        $class = $this->resourceMetadata->resourceClass;
+
+        $object = [
+            'contract' => $contractId,
+        ];
+
+        $res = $this->execute($paymentId, 'capture', null, $object, $class);
+
+        if ($res) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Add additional basket items to the payment transaction. F.e. for adding stakeholder payment items.
+     *
+     * @param string $paymentId The payment transaction id
+     * @param Basket[] $basket
+     * @param string $contractId The id of the contract that was used to create this transaction.
+     * @return bool TRUE if successful, FALSE otherwise.
+     * @throws GuzzleException
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
+     * @throws MissingParamsError
+     */
+    public function updateBasket($paymentId, $basket, $contractId = null)
+    {
+        if (empty($paymentId)) {
+            throw new MissingParamsError('paymentId', __METHOD__);
+        }
+
+        if (empty($basket) || !is_array($basket)) {
+            throw new MissingParamsError('basket', __METHOD__);
+        }
+
+        $class = $this->resourceMetadata->resourceClass;
+        /**
+         * @var $object Transaction
+         */
+        $object = new $class();
+        $object->id = $paymentId;
+        $object->basket = $basket;
+        $object->contract = $contractId;
+        $res = $this->updateWithAction($paymentId, 'basket', null, $object, $class);
+
+        if ($res) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Remove the accrual flag of an existing payment transaction.
+     *
+     * @param string $paymentId The payment transaction id
+     * @return bool
+     * @throws GuzzleException
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
+     * @throws MissingParamsError
+     */
+    public function reverseAccrual($paymentId)
+    {
+        if (empty($paymentId)) {
+            throw new MissingParamsError('paymentId', __METHOD__);
+        }
+
+        $res = $this->execute($paymentId, 'revokeAccrual');
+
+        if ($res) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Add some shipping information, like the shipping provider (carrier) or a tracking number for the parcel.
+     * For invoice payment transactions this will also capture the transaction (set the shipping date of an invoice).
+     *
+     * @param string $paymentId The payment transaction id
+     * @param string|null $carrier The Shipping Service Provider
+     * @param string|null $tracking_id The tracking number (comma separated if there is more than one parcel)
+     * @param string|null $invoice_number The invoice number of the shipped order
+     * @return bool TRUE if successful, FALSE otherwise.
+     * @throws GuzzleException
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
+     * @throws MissingParamsError
+     */
+    public function setShippingInformation($paymentId, $carrier, $tracking_id, $invoice_number = null)
+    {
+        if (empty($paymentId)) {
+            throw new MissingParamsError('paymentId', __METHOD__);
+        } elseif (empty($tracking_id) && empty($invoice_number)) {
+            throw new MissingParamsError('tracking_id OR invoice_number', __METHOD__);
+        }
+
+        $object = [
+            'carrier' => $carrier,
+            'tracking_id' => $tracking_id,
+            'invoice_number' => $invoice_number,
+        ];
+
+        $res = $this->updateWithAction($paymentId, 'shippingInformation', null, $object);
+
+        if ($res) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

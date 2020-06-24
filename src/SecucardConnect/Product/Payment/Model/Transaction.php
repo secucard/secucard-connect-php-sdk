@@ -135,7 +135,7 @@ class Transaction extends BaseModel
      *
      * @var string
      */
-    public $payment_action = self::PAYMENT_ACTION_SALE;
+    public $payment_action;
 
     /**
      * The payment data which has the payer used (like bank account, credit card, ...). This data is always masked.
