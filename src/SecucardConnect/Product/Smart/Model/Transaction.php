@@ -22,8 +22,8 @@ class Transaction extends BaseModel
     const STATUS_APPROVED = 'approved';
     const STATUS_OK = 'ok';
 
-    const ORDER_OPTION_COLLECTION = 'collection';
-    const ORDER_OPTION_SHIPPING = 'shipping';
+    const DELIVERY_OPTIONS_COLLECTION = 'collection';
+    const DELIVERY_OPTIONS_SHIPPING = 'shipping';
 
     const CHECKOUT_LAST_VISITED_PAGE_CHECKIN = 'checkin_page';
     const CHECKOUT_LAST_VISITED_PAGE_ADDRESS = 'address_page';
@@ -121,17 +121,7 @@ class Transaction extends BaseModel
     /**
      * @var string
      */
-    public $order_option;
-
-    /**
-     * @var string
-     */
     public $last_visited_page;
-
-    /**
-     * @var PickupOptions
-     */
-    public $pickup_options;
 
     /**
      * @var string
@@ -187,6 +177,11 @@ class Transaction extends BaseModel
      * @var PaymentLinks
      */
     public $payment_links;
+
+    /**
+     * @var DeliveryOptionsShipping|DeliveryOptionsCollection
+     */
+    public $delivery_options;
 
     /**
      * @return array
