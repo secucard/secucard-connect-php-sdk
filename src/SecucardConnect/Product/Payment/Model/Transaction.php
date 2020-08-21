@@ -135,7 +135,7 @@ class Transaction extends BaseModel
      *
      * @var string
      */
-    public $payment_action = self::PAYMENT_ACTION_SALE;
+    public $payment_action;
 
     /**
      * The payment data which has the payer used (like bank account, credit card, ...). This data is always masked.
@@ -148,4 +148,17 @@ class Transaction extends BaseModel
      * @var array
      */
     public $sub_transactions;
+
+    /**
+     * payment transaction ID (PCI_...)
+     * @var string
+     */
+    public $payment_id;
+
+    /**
+     * list of allowed payment methods, f.e. ['TWINT']
+     * if no one was defined the custommer can select one by himself (based on your contract)
+     * @var string
+     */
+    public $payment_methods;
 }

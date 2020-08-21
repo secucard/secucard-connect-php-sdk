@@ -8,7 +8,7 @@ use SecucardConnect\Product\Common\Model\BaseModel;
  * Class Transactions
  * @package SecucardConnect\Product\Payment\Model
  */
-class Transactions extends BaseModel
+class Transactions extends Transaction
 {
     /**
      * @var \SecucardConnect\Product\General\Model\Merchant
