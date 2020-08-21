@@ -16,6 +16,8 @@ class Transaction extends BaseModel
     const STATUS_WAITING_FOR_SHIPPING = 'received';
     const STATUS_FINISHED = 'finished';
     const STATUS_ABORTED = 'aborted';
+    const STATUS_PENDING = 'pending';
+    const STATUS_DELETED = 'deleted';
     const STATUS_CANCELLED = 'cancelled';
     const STATUS_FAILED = 'failed';
     const STATUS_TIMEOUT = 'timeout';

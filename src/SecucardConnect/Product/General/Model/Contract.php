@@ -13,4 +13,9 @@ class Contract extends BaseModel
      * @var \SecucardConnect\Product\Payment\Model\Data
      */
     public $pay_in_advance_account;
+
+    /**
+     * @var PaymentLinkOptions
+     */
+    public $payment_link_options;
 }

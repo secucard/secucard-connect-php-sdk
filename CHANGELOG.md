@@ -18,6 +18,44 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
+## [1.18.0] - 2020-06-24
+
+### Added
+- Added `MissingParamsError` exception, which extends the `ApiError`
+- Payment.TransactionsService: added `cancel` method
+- Payment.TransactionsService: added `assignPayment` method
+- Payment.TransactionsService: added `capture` method
+- Payment.TransactionsService: added `updateBasket` method
+- Payment.TransactionsService: added `reverseAccrual` method
+- Payment.TransactionsService: added `setShippingInformation` method
+
+### Changed
+- Added small input validation to `Payment.TransactionsService` and `Payment.PaymentService` to avoid API errors.
+
+### Removed
+- Removed unused method `Payment.PaymentService.initSubsequent`
+- Removed unused method `Payment.PaymentService.updateSubscription`
+
+## [1.17.1] - 2020-06-02
+
+### Added
+- Smart.Transaction-Model: added new status constants
+
+## [1.17.0] - 2020-05-08
+
+### Added
+- Twint integration
+
+## [1.16.0] - 2020-04-27
+
+### Changed
+- Moving background image to another location
+
+## [1.15.0] - 2020-03-26
+
+### Removed
+- ContainerService: removed method getCreditCardContainer
+
 ## [1.14.1] - 2020-03-13
 
 ### Added
@@ -598,3 +636,8 @@ First release
 [1.13.11]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.10...1.13.11
 [1.14.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.11...1.14.0
 [1.14.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.14.0...1.14.1
+[1.15.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.14.1...1.15.0
+[1.16.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.15.0...1.16.0
+[1.17.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.16.0...1.17.0
+[1.17.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.17.0...1.17.1
+[1.18.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.17.1...1.18.0
