@@ -18,11 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
-## [1.18.0] - 2020-08-21
-
-### Security
-
-### Deprecated
+## [1.19.0] - 2020-08-21
 
 ### Added
 - added `src/SecucardConnect/Product/Smart/Model/BaseDeliveryOptions.php ` class
@@ -35,8 +31,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - changed `src/SecucardConnect/Product/Smart/Model/DeliveryOptionsTimeSlot.php` const `ORDER_OPTION_COLLECTION` into `DELIVERY_OPTIONS_COLLECTION`
 - changed `src/SecucardConnect/Product/Smart/Model/DeliveryOptionsTimeSlot.php` const `ORDER_OPTION_SHIPPING` into `DELIVERY_OPTIONS_SHIPPING`
-
-### Fixed
 
 ### Removed
 - removed `src/SecucardConnect/Product/General/Model/BaseDeliveryConfiguration.php` class
