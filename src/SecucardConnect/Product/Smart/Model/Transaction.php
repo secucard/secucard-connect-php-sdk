@@ -179,7 +179,7 @@ class Transaction extends BaseModel
     public $payment_links;
 
     /**
-     * @var DeliveryOptionsShipping|DeliveryOptionsCollection
+     * @var BaseDeliveryOptions
      */
     public $delivery_options;
 
@@ -197,5 +197,27 @@ class Transaction extends BaseModel
             'receipt_merchant_print',
             'error'
         ];
+    }
+
+    /**
+     * @param array $payload
+     * @return $this
+     */
+    public function setDeliveryOptions(array $payload)
+    {
+        if (!isset($payload['type'])) {
+            return $this;
+        }
+
+        switch ($payload['type']) {
+            case self::DELIVERY_OPTIONS_SHIPPING:
+                $this->delivery_options = new DeliveryOptionsShipping();
+                break;
+            case self::DELIVERY_OPTIONS_COLLECTION:
+                $this->delivery_options = new DeliveryOptionsCollection();
+                break;
+        }
+
+        return $this;
     }
 }

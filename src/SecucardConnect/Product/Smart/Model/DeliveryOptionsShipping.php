@@ -5,7 +5,7 @@ namespace SecucardConnect\Product\Smart\Model;
 /**
  * DeliveryOptionsShipping Api Model class
  */
-class DeliveryOptionsShipping
+class DeliveryOptionsShipping extends BaseDeliveryOptions
 {
     /**
      * @var string
