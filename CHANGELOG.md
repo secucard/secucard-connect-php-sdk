@@ -18,6 +18,36 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
+## [1.18.0] - 2020-08-21
+
+### Security
+
+### Deprecated
+
+### Added
+- added `src/SecucardConnect/Product/Smart/Model/BaseDeliveryOptions.php ` class
+- added `src/SecucardConnect/Product/Smart/Model/DeliveryOptionsCollection.php` class
+- added `src/SecucardConnect/Product/Smart/Model/DeliveryOptionsShipping.php` class
+- added `src/SecucardConnect/Product/Smart/Model/DeliveryOptionsTimeSlot.php` class
+- `src/SecucardConnect/Product/Smart/Model/Transaction.php` added `delivery_options` property
+- `src/SecucardConnect/Product/Smart/Model/Transaction.php` added `setDeliveryOptions` method
+
+### Changed
+- changed `src/SecucardConnect/Product/Smart/Model/DeliveryOptionsTimeSlot.php` const `ORDER_OPTION_COLLECTION` into `DELIVERY_OPTIONS_COLLECTION`
+- changed `src/SecucardConnect/Product/Smart/Model/DeliveryOptionsTimeSlot.php` const `ORDER_OPTION_SHIPPING` into `DELIVERY_OPTIONS_SHIPPING`
+
+### Fixed
+
+### Removed
+- removed `src/SecucardConnect/Product/General/Model/BaseDeliveryConfiguration.php` class
+- removed `src/SecucardConnect/Product/General/Model/CheckoutOptions.php` class
+- removed `src/SecucardConnect/Product/General/Model/CollectionDeliveryConfiguration.php` class
+- removed `src/SecucardConnect/Product/General/Model/ShippingDeliveryConfiguration.php` class
+- removed `src/SecucardConnect/Product/General/Model/OrderOptions.php` class
+- removed `src/SecucardConnect/Product/Smart/Model/PickupOptions.php` class
+- `src/SecucardConnect/Product/General/Model/Merchant.php` removed `order_options` and `checkout_options` properties
+- `src/SecucardConnect/Product/Smart/Model/Transaction.php` removed `order_option` and `pickup_options` properties
+
 ## [1.18.0] - 2020-06-24
 
 ### Added
