@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
-## [1.19.0] - 2020-08-21
+## [1.19.0] - 2020-09-08
 
 ### Added
 - added `src/SecucardConnect/Product/Smart/Model/BaseDeliveryOptions.php ` class
@@ -665,3 +665,4 @@ First release
 [1.17.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.16.0...1.17.0
 [1.17.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.17.0...1.17.1
 [1.18.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.17.1...1.18.0
+[1.19.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.18.0...1.19.0
