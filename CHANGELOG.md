@@ -18,6 +18,30 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
+## [1.19.0] - 2020-09-08
+
+### Added
+- added `src/SecucardConnect/Product/Smart/Model/BaseDeliveryOptions.php ` class
+- added `src/SecucardConnect/Product/Smart/Model/DeliveryOptionsCollection.php` class
+- added `src/SecucardConnect/Product/Smart/Model/DeliveryOptionsShipping.php` class
+- added `src/SecucardConnect/Product/Smart/Model/DeliveryOptionsTimeSlot.php` class
+- `src/SecucardConnect/Product/Smart/Model/Transaction.php` added `delivery_options` property
+- `src/SecucardConnect/Product/Smart/Model/Transaction.php` added `setDeliveryOptions` method
+
+### Changed
+- changed `src/SecucardConnect/Product/Smart/Model/DeliveryOptionsTimeSlot.php` const `ORDER_OPTION_COLLECTION` into `DELIVERY_OPTIONS_COLLECTION`
+- changed `src/SecucardConnect/Product/Smart/Model/DeliveryOptionsTimeSlot.php` const `ORDER_OPTION_SHIPPING` into `DELIVERY_OPTIONS_SHIPPING`
+
+### Removed
+- removed `src/SecucardConnect/Product/General/Model/BaseDeliveryConfiguration.php` class
+- removed `src/SecucardConnect/Product/General/Model/CheckoutOptions.php` class
+- removed `src/SecucardConnect/Product/General/Model/CollectionDeliveryConfiguration.php` class
+- removed `src/SecucardConnect/Product/General/Model/ShippingDeliveryConfiguration.php` class
+- removed `src/SecucardConnect/Product/General/Model/OrderOptions.php` class
+- removed `src/SecucardConnect/Product/Smart/Model/PickupOptions.php` class
+- `src/SecucardConnect/Product/General/Model/Merchant.php` removed `order_options` and `checkout_options` properties
+- `src/SecucardConnect/Product/Smart/Model/Transaction.php` removed `order_option` and `pickup_options` properties
+
 ## [1.18.0] - 2020-06-24
 
 ### Added
@@ -641,3 +665,4 @@ First release
 [1.17.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.16.0...1.17.0
 [1.17.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.17.0...1.17.1
 [1.18.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.17.1...1.18.0
+[1.19.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.18.0...1.19.0

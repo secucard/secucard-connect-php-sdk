@@ -24,11 +24,6 @@ class Merchant extends BaseModel
     public $legal_details;
 
     /**
-     * @var OrderOptions
-     */
-    public $order_options;
-
-    /**
      * @var int[]
      */
     public $payment_contract_conditions;
@@ -37,9 +32,4 @@ class Merchant extends BaseModel
      * @var MerchantUrl[]
      */
     public $merchant_urls;
-
-    /**
-     * @var CheckoutOptions
-     */
-    public $checkout_options;
 }
