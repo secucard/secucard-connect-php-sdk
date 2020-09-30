@@ -18,6 +18,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
+## [1.20.0] - 2020-09-30
+
+### Security
+- Dependency updates
+
+
 ## [1.19.0] - 2020-09-08
 
 ### Added
@@ -666,3 +672,4 @@ First release
 [1.17.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.17.0...1.17.1
 [1.18.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.17.1...1.18.0
 [1.19.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.18.0...1.19.0
+[1.20.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.19.0...1.20.0
