@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Removed
 
 
-## [1.21.0] - 2020-03-10
+## [1.21.0] - 2021-03-10
 
 ### Added
 - Payment.Model.Transaction: added `demo` parameter
@@ -40,7 +40,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [1.20.0] - 2020-09-30
 
 ### Security
-- Dependency updates
+- Dependency updates (for PHP 7 environments)
 
 
 ## [1.19.0] - 2020-09-08
