@@ -17,7 +17,7 @@ class AssignedPaymentTransaction extends Transaction
     public $remaining_payment_amount;
 
     /**
-     * The remaining( open) amount of the payment transaction
+     * The remaining (open) amount of the payment transaction
      * (read only)
      *
      * @var int

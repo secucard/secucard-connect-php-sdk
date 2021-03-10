@@ -47,7 +47,7 @@ class ContractsService extends ProductService
      */
     public function getPaymentMethods($contractId = 'me')
     {
-        return $this->execute($contractId, 'GetPaymentMethods');
+        return $this->getWithAction($contractId, 'paymentMethods');
     }
 
     /**
@@ -69,14 +69,19 @@ class ContractsService extends ProductService
      * Clones the contract of the current user according to the given parameters and returns the contract.
      *
      * @param CreateSubContractRequest $param
+     * @param string $contract_id
      * @return CreateSubContractResponse
-     * @throws GuzzleException
      * @throws ApiError
      * @throws AuthError
      * @throws ClientError
+     * @throws GuzzleException
      */
-    public function createSubContract(CreateSubContractRequest $param)
+    public function createSubContract(CreateSubContractRequest $param, $contract_id = null)
     {
-        return $this->execute('me', 'requestId', null, $param, CreateSubContractResponse::class);
+        if (empty($contract_id)) {
+            $contract_id = 'me';
+        }
+
+        return $this->execute($contract_id, 'requestId', null, $param, CreateSubContractResponse::class);
     }
 }

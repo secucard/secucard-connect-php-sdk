@@ -23,6 +23,13 @@ class Transaction extends BaseModel
     const PAYMENT_ACTION_SALE = "sale"; // Direct payment (immediate debit of the funds from the buyer's funding source)
 
     /**
+     * Create a demo transaction
+     *
+     * @var bool
+     */
+    public $demo;
+
+    /**
      * @var \SecucardConnect\Product\Payment\Model\Contract
      */
     public $contract;

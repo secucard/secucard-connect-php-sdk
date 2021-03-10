@@ -18,6 +18,25 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
+
+## [1.21.0] - 2020-03-10
+
+### Added
+- Payment.Model.Transaction: added `demo` parameter
+- Payment.Model.CrowdFundingDataProject: added `sofort` parameter
+- Payment.Model.CreateSubContractRequest: added `payout_purpose` parameter
+- Payment.ContractsService.createSubContract: added `contract_id` parameter (optional)
+
+### Changed
+- Smart.TransactionsService.prepare: removed transaction type validation (to support new payment methods)
+
+### Fixed
+- Payment.ContractsService.getPaymentMethods was not working
+
+### Removed
+- removed unused `GetCreditCardDataRequest` class
+
+
 ## [1.20.0] - 2020-09-30
 
 ### Security
@@ -673,3 +692,4 @@ First release
 [1.18.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.17.1...1.18.0
 [1.19.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.18.0...1.19.0
 [1.20.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.19.0...1.20.0
+[1.21.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.20.0...1.21.0
