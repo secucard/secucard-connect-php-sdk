@@ -19,6 +19,11 @@ class CreateSubContractRequest
     public $project;
 
     /**
+     * @var string
+     */
+    public $payout_purpose;
+
+    /**
      * @var \SecucardConnect\Product\Payment\Model\Data
      */
     public $payout_account;
