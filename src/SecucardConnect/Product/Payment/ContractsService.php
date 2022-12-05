@@ -1,4 +1,5 @@
 <?php
+/** @noinspection PhpUnused */
 
 namespace SecucardConnect\Product\Payment;
 
@@ -11,7 +12,6 @@ use SecucardConnect\Client\ProductService;
 use SecucardConnect\Product\Payment\Model\CloneParams;
 use SecucardConnect\Product\Payment\Model\CreateSubContractRequest;
 use SecucardConnect\Product\Payment\Model\CreateSubContractResponse;
-use SecucardConnect\Product\Payment\Model\Transaction;
 use SecucardConnect\Product\Services\Model\Contract;
 
 
@@ -26,7 +26,7 @@ class ContractsService extends ProductService
      *
      * @param string $contractId The id of the parent contract.
      * @param CloneParams $param The parameters for cloning.
-     * @return Contract
+     * @return \SecucardConnect\Product\Payment\Model\Contract
      * @throws GuzzleException
      * @throws ApiError
      * @throws AuthError
@@ -56,7 +56,7 @@ class ContractsService extends ProductService
      * Clones the contract of the current user according to the given parameters and returns the contract.
      *
      * @param CloneParams $param The parameters for cloning.
-     * @return Contract
+     * @return \SecucardConnect\Product\Payment\Model\Contract
      * @throws GuzzleException
      * @throws ApiError
      * @throws AuthError

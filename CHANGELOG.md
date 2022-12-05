@@ -18,6 +18,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
+
+## [1.23.0] - 2022-12-05
+
+### Added
+Function to check the live transaction status:
+- \SecucardConnect\Product\Payment\TransactionsService::checkStatus()
+
+### Changed
+- New structure of Payment.Model.CrowdFundingData
+
+
 ## [1.22.0] - 2021-06-11
 
 ### Added
@@ -703,3 +714,4 @@ First release
 [1.20.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.19.0...1.20.0
 [1.21.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.20.0...1.21.0
 [1.22.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.21.0...1.22.0
+[1.23.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.22.0...1.23.0

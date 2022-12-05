@@ -1,8 +1,8 @@
 <?php
+/** @noinspection PhpFullyQualifiedNameUsageInspection */
+/** @noinspection PhpUnused */
 
 namespace SecucardConnect\Product\Services\Model;
-
-use SecucardConnect\Product\Common\Model\BaseModel;
 
 /**
  * Task Api Model class
@@ -30,7 +30,7 @@ class Task
     public $status;
 
     /**
-     * @var BaseModel[]
+     * @var \SecucardConnect\Product\Common\Model\BaseModel[]
      */
     public $assign;
 }
