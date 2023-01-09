@@ -16,13 +16,16 @@ class Transaction extends BaseModel
     const STATUS_WAITING_FOR_SHIPPING = 'received';
     const STATUS_FINISHED = 'finished';
     const STATUS_ABORTED = 'aborted';
+    const STATUS_PENDING = 'pending';
+    const STATUS_DELETED = 'deleted';
+    const STATUS_CANCELLED = 'cancelled';
     const STATUS_FAILED = 'failed';
     const STATUS_TIMEOUT = 'timeout';
     const STATUS_APPROVED = 'approved';
     const STATUS_OK = 'ok';
 
-    const ORDER_OPTION_COLLECTION = 'collection';
-    const ORDER_OPTION_SHIPPING = 'shipping';
+    const DELIVERY_OPTIONS_COLLECTION = 'collection';
+    const DELIVERY_OPTIONS_SHIPPING = 'shipping';
 
     const CHECKOUT_LAST_VISITED_PAGE_CHECKIN = 'checkin_page';
     const CHECKOUT_LAST_VISITED_PAGE_ADDRESS = 'address_page';
@@ -32,6 +35,15 @@ class Transaction extends BaseModel
     const CHECKOUT_LAST_VISITED_PAGE_DELIVERY_OPTIONS = 'delivery_options_page';
     const CHECKOUT_LAST_VISITED_PAGE_SECURITY_CHECK_PAGE = 'security_check_page';
     const CHECKOUT_LAST_VISITED_PAGE_PAYPAL_CHECKOUT = 'paypal_checkout_page';
+
+    //  intent possible values
+    const INTENT_DEFAULT = null;
+    const INTENT_POS = 'pos';
+    const INTENT_SALE = 'sale';
+    const INTENT_AUTHORIZATION = 'authorization';
+    const INTENT_ORDER = 'order';
+    const INTENT_CASHREG = 'cashreg';
+    const INTENT_CHECKOUT = 'checkout';
 
     /**
      * @var Device
@@ -111,17 +123,7 @@ class Transaction extends BaseModel
     /**
      * @var string
      */
-    public $order_option;
-
-    /**
-     * @var string
-     */
     public $last_visited_page;
-
-    /**
-     * @var PickupOptions
-     */
-    public $pickup_options;
 
     /**
      * @var string
@@ -159,14 +161,29 @@ class Transaction extends BaseModel
     public $container;
 
     /**
-     * @var boolean
-     */
-    public $is_customer_readonly;
-
-    /**
      * @var \SecucardConnect\Product\Payment\Model\Customer
      */
     public $shipping_address;
+
+    /**
+     * @var ApplicationContext
+     */
+    public $application_context;
+
+    /**
+     * @var string|null
+     */
+    public $intent;
+
+    /**
+     * @var PaymentLinks
+     */
+    public $payment_links;
+
+    /**
+     * @var BaseDeliveryOptions
+     */
+    public $delivery_options;
 
     /**
      * @return array
@@ -182,5 +199,27 @@ class Transaction extends BaseModel
             'receipt_merchant_print',
             'error'
         ];
+    }
+
+    /**
+     * @param array $payload
+     * @return $this
+     */
+    public function setDeliveryOptions(array $payload)
+    {
+        if (!isset($payload['type'])) {
+            return $this;
+        }
+
+        switch ($payload['type']) {
+            case self::DELIVERY_OPTIONS_SHIPPING:
+                $this->delivery_options = new DeliveryOptionsShipping();
+                break;
+            case self::DELIVERY_OPTIONS_COLLECTION:
+                $this->delivery_options = new DeliveryOptionsCollection();
+                break;
+        }
+
+        return $this;
     }
 }

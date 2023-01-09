@@ -32,4 +32,9 @@ class CrowdFundingDataProject
      * @var CrowdFundingDataProjectAmount
      */
     public $prepay;
+
+    /**
+     * @var CrowdFundingDataProjectAmount
+     */
+    public $sofort;
 }

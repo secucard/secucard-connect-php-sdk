@@ -18,6 +18,159 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
+
+## [1.21.0] - 2021-03-10
+
+### Added
+- Payment.Model.Transaction: added `demo` parameter
+- Payment.Model.CrowdFundingDataProject: added `sofort` parameter
+- Payment.Model.CreateSubContractRequest: added `payout_purpose` parameter
+- Payment.ContractsService.createSubContract: added `contract_id` parameter (optional)
+
+### Changed
+- Smart.TransactionsService.prepare: removed transaction type validation (to support new payment methods)
+
+### Fixed
+- Payment.ContractsService.getPaymentMethods was not working
+
+### Removed
+- removed unused `GetCreditCardDataRequest` class
+
+
+## [1.20.0] - 2020-09-30
+
+### Security
+- Dependency updates (for PHP 7 environments)
+
+
+## [1.19.0] - 2020-09-08
+
+### Added
+- added `src/SecucardConnect/Product/Smart/Model/BaseDeliveryOptions.php ` class
+- added `src/SecucardConnect/Product/Smart/Model/DeliveryOptionsCollection.php` class
+- added `src/SecucardConnect/Product/Smart/Model/DeliveryOptionsShipping.php` class
+- added `src/SecucardConnect/Product/Smart/Model/DeliveryOptionsTimeSlot.php` class
+- `src/SecucardConnect/Product/Smart/Model/Transaction.php` added `delivery_options` property
+- `src/SecucardConnect/Product/Smart/Model/Transaction.php` added `setDeliveryOptions` method
+
+### Changed
+- changed `src/SecucardConnect/Product/Smart/Model/DeliveryOptionsTimeSlot.php` const `ORDER_OPTION_COLLECTION` into `DELIVERY_OPTIONS_COLLECTION`
+- changed `src/SecucardConnect/Product/Smart/Model/DeliveryOptionsTimeSlot.php` const `ORDER_OPTION_SHIPPING` into `DELIVERY_OPTIONS_SHIPPING`
+
+### Removed
+- removed `src/SecucardConnect/Product/General/Model/BaseDeliveryConfiguration.php` class
+- removed `src/SecucardConnect/Product/General/Model/CheckoutOptions.php` class
+- removed `src/SecucardConnect/Product/General/Model/CollectionDeliveryConfiguration.php` class
+- removed `src/SecucardConnect/Product/General/Model/ShippingDeliveryConfiguration.php` class
+- removed `src/SecucardConnect/Product/General/Model/OrderOptions.php` class
+- removed `src/SecucardConnect/Product/Smart/Model/PickupOptions.php` class
+- `src/SecucardConnect/Product/General/Model/Merchant.php` removed `order_options` and `checkout_options` properties
+- `src/SecucardConnect/Product/Smart/Model/Transaction.php` removed `order_option` and `pickup_options` properties
+
+## [1.18.0] - 2020-06-24
+
+### Added
+- Added `MissingParamsError` exception, which extends the `ApiError`
+- Payment.TransactionsService: added `cancel` method
+- Payment.TransactionsService: added `assignPayment` method
+- Payment.TransactionsService: added `capture` method
+- Payment.TransactionsService: added `updateBasket` method
+- Payment.TransactionsService: added `reverseAccrual` method
+- Payment.TransactionsService: added `setShippingInformation` method
+
+### Changed
+- Added small input validation to `Payment.TransactionsService` and `Payment.PaymentService` to avoid API errors.
+
+### Removed
+- Removed unused method `Payment.PaymentService.initSubsequent`
+- Removed unused method `Payment.PaymentService.updateSubscription`
+
+## [1.17.1] - 2020-06-02
+
+### Added
+- Smart.Transaction-Model: added new status constants
+
+## [1.17.0] - 2020-05-08
+
+### Added
+- Twint integration
+
+## [1.16.0] - 2020-04-27
+
+### Changed
+- Moving background image to another location
+
+## [1.15.0] - 2020-03-26
+
+### Removed
+- ContainerService: removed method getCreditCardContainer
+
+## [1.14.1] - 2020-03-13
+
+### Added
+- Payment Links model: added general link
+
+## [1.14.0] - 2020-03-04
+
+### Added
+- General Contracts service: new method getPaymentWizardOptions()
+- New type PaymentWizardContractOptions which contains Payment Wizard options configured in the contract
+- New Type PaymentWizardLocalOptions which contains Payment Wizard options configured in the Smart Transaction
+- Application Context model: new field iframe_opts
+
+## [1.13.11] - 2020-02-14
+
+### Added
+- Smart Transaction Model: added new public field payment_links to have access to them inside Smart Checkout backend
+
+## [1.13.10] - 2020-02-13
+
+### Added
+- General Merchants Model: new field checkout_options
+- New type CheckoutOptions which contains Smart Checkout options for given merchant
+
+## [1.13.9] - 2020-02-11
+
+### Removed
+- Smart Transaction Model: public field payment_links
+
+## [1.13.8] - 2020-01-29
+
+### Added
+- Smart Transaction Model: added new public field payment_links to have access to them inside Smart Checkout backend
+
+## [1.13.7] - 2020-01-16
+
+### Added
+- Smart Transaction Model: added new field application_context which contains values previously held in checkout_links and is_customer_readonly
+
+### Removed
+- Checkout Links Model: removed fields url_success, url_error and url_abort
+- Smart Transaction Model: removed is_customer_readonly field
+
+## [1.13.6] - 2020-01-09
+
+### Added
+- Smart Transaction Model: added new public field (intent) and constants for possible values
+
+## [1.13.5] - 2019-09-18
+
+### Fixed
+- Smart Transaction Service: fixed abort() and cancel() function
+
+## [1.13.4] - 2019-09-17
+
+### Added
+- Smart Transaction Service: added abort() function
+
+## [1.13.3] - 2019-07-30
+
+### Added
+- Smart Transaction Model: added new constant for cancelled status
+
+### Fixed
+- Smart Transaction Service: cancel() function now works correctly
+
 ## [1.13.2] - 2019-07-29
 
 ### Added
@@ -521,3 +674,22 @@ First release
 [1.13.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.12.2...1.13.0
 [1.13.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.0...1.13.1
 [1.13.2]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.1...1.13.2
+[1.13.3]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.2...1.13.3
+[1.13.4]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.3...1.13.4
+[1.13.5]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.4...1.13.5
+[1.13.6]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.5...1.13.6
+[1.13.7]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.6...1.13.7
+[1.13.8]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.7...1.13.8
+[1.13.9]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.8...1.13.9
+[1.13.10]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.9...1.13.10
+[1.13.11]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.10...1.13.11
+[1.14.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.13.11...1.14.0
+[1.14.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.14.0...1.14.1
+[1.15.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.14.1...1.15.0
+[1.16.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.15.0...1.16.0
+[1.17.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.16.0...1.17.0
+[1.17.1]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.17.0...1.17.1
+[1.18.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.17.1...1.18.0
+[1.19.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.18.0...1.19.0
+[1.20.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.19.0...1.20.0
+[1.21.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.20.0...1.21.0
