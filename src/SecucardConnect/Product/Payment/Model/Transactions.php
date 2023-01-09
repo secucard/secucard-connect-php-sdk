@@ -1,8 +1,7 @@
 <?php
+/** @noinspection PhpUnused */
 
 namespace SecucardConnect\Product\Payment\Model;
-
-use SecucardConnect\Product\Common\Model\BaseModel;
 
 /**
  * Class Transactions

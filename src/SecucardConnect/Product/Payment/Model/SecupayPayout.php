@@ -1,4 +1,5 @@
 <?php
+/** @noinspection PhpUnused */
 
 namespace SecucardConnect\Product\Payment\Model;
 
@@ -18,7 +19,7 @@ class SecupayPayout extends BaseModel
     public $demo;
 
     /**
-     * 	Total amount of transaction lit's items
+     * Total amount of transaction lit's items
      *
      * @var int
      */
