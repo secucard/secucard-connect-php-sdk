@@ -1,9 +1,10 @@
 <?php
+/** @noinspection PhpFullyQualifiedNameUsageInspection */
+/** @noinspection PhpUnused */
 
 namespace SecucardConnect\Product\Services\Model;
 
 use SecucardConnect\Product\Common\Model\BaseModel;
-use SecucardConnect\Product\General\Model\Merchant;
 
 /**
  * Identrequests Api Model class
@@ -68,7 +69,7 @@ class IdentRequest extends BaseModel
     public $use_internal_contract;
 
     /**
-     * @var Merchant[]
+     * @var \SecucardConnect\Product\General\Model\Merchant[]
      */
     public $assignment;
 

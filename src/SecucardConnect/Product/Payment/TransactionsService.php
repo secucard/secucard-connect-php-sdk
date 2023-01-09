@@ -1,4 +1,6 @@
 <?php
+/** @noinspection PhpUnused */
+/** @noinspection PhpUnnecessaryFullyQualifiedNameInspection */
 
 namespace SecucardConnect\Product\Payment;
 
@@ -14,6 +16,7 @@ use SecucardConnect\Product\Common\Model\BaseModel;
 use SecucardConnect\Product\Payment\Event\PaymentChanged;
 use SecucardConnect\Product\Payment\Model\AssignedPaymentTransaction;
 use SecucardConnect\Product\Payment\Model\Basket;
+use SecucardConnect\Product\Payment\Model\CheckStatusResponse;
 use SecucardConnect\Product\Payment\Model\CrowdFundingData;
 use SecucardConnect\Product\Payment\Model\Transaction;
 use SecucardConnect\Product\Payment\Model\Transactions;
@@ -85,6 +88,27 @@ class TransactionsService extends ProductService
             null,
             null,
             'SecucardConnect\\Product\\Payment\\Model\\Transaction'
+        );
+    }
+
+    /**
+     * Function to check the live data for the given transaction
+     *
+     * @param string $paymentId The payment transaction id
+     * @return CheckStatusResponse
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
+     * @throws GuzzleException
+     */
+    public function checkStatus($paymentId)
+    {
+        return $this->getWithAction(
+            $paymentId,
+            'checkStatus',
+            null,
+            null,
+            'SecucardConnect\\Product\\Payment\\Model\\CheckStatusResponse'
         );
     }
 

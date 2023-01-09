@@ -1,9 +1,9 @@
 <?php
+/** @noinspection PhpUnused */
 
 namespace SecucardConnect\Product\Services\Model;
 
 use SecucardConnect\Product\Common\Model\BaseModel;
-use SecucardConnect\Product\General\Model\Merchant;
 
 /**
  * Uploadidents Api Model class

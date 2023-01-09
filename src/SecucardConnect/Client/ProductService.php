@@ -160,7 +160,7 @@ abstract class ProductService
      * @param null $expireTime
      * @param null $scrollId
      *
-     * @return BaseCollection
+     * @return BaseCollection|bool
      * @throws ApiError
      * @throws AuthError
      * @throws ClientError
@@ -177,6 +177,11 @@ abstract class ProductService
 
         if ($jsonResponse == false) {
             throw new ClientError('Error retrieving data list.');
+        }
+
+        if ($jsonResponse === true) {
+            $this->postProcess($jsonResponse);
+            return true;
         }
 
         $list = new BaseCollection();
@@ -216,7 +221,7 @@ abstract class ProductService
      * Method to get object identified by id
      *
      * @param string $id
-     * @return BaseModel
+     * @return BaseModel|bool
      * @throws ApiError
      * @throws AuthError
      * @throws ClientError
@@ -234,6 +239,11 @@ abstract class ProductService
 
         if ($jsonResponse == false) {
             throw new Exception('Error retrieving data');
+        }
+
+        if ($jsonResponse === true) {
+            $this->postProcess($jsonResponse);
+            return true;
         }
 
         $inst = $this->createResourceInst($jsonResponse, $this->resourceMetadata->resourceClass);
@@ -297,7 +307,7 @@ abstract class ProductService
      * new object.
      *
      * @param BaseModel $model The object to save.
-     * @return BaseModel The created object, has same type as the given input.
+     * @return BaseModel|bool The created object, has same type as the given input.
      * @throws ApiError
      * @throws AuthError
      * @throws ClientError
@@ -324,6 +334,11 @@ abstract class ProductService
 
         if ($jsonResponse === false) {
             throw new Exception('Error updating model');
+        }
+
+        if ($jsonResponse === true) {
+            $this->postProcess($jsonResponse);
+            return true;
         }
 
         $inst = $this->createResourceInst($jsonResponse, $this->resourceMetadata->resourceClass);
@@ -600,6 +615,11 @@ abstract class ProductService
 
         if ($response->getStatusCode() == 200) {
             return MapperUtil::mapResponse($response);
+        }
+
+        // handle f.e. "202 Accepted" or "204 No Content"
+        if ($response->getStatusCode() > 200 && $response->getStatusCode() < 300) {
+            return true;
         }
 
         return false;

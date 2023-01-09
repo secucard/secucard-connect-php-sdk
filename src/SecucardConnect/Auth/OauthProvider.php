@@ -200,8 +200,6 @@ class OauthProvider extends ProductService
      */
     private function updateToken(RefreshTokenCredentials $refreshToken = null, $deviceCode = null)
     {
-        $tokenData = null;
-
         // array of url parameters that will be sent in auth request
         $params = [];
         if ($refreshToken == null && !empty($deviceCode)) {

@@ -1,9 +1,10 @@
 <?php
+/** @noinspection PhpUnnecessaryFullyQualifiedNameInspection */
+/** @noinspection PhpUnused */
 
 namespace SecucardConnect\Product\Services\Model;
 
 use SecucardConnect\Product\Common\Model\BaseModel;
-use SecucardConnect\Product\Common\Model\Contact;
 
 /**
  * Identcase Api Model class
@@ -100,7 +101,7 @@ class IdentCase extends BaseModel
     public $task;
 
     /**
-     * @var BaseModel
+     * @var \SecucardConnect\Product\Common\Model\BaseModel
      */
     public $owner;
 }
