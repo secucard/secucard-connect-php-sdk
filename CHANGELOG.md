@@ -19,14 +19,25 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Removed
 
 
+## [1.24.0] - 2023-01-09
+
+### Changed
+- support `psr/log` up to version `3.x`
+- support `netresearch/jsonmapper` version `4.x`
+
+### Removed
+- dropped support for PHP `5.6`, `7.0`, `7.1`, `7.2` and `7.3`
+- dropped support `netresearch/jsonmapper` version `1.x` and `2.x`
+
+
 ## [1.23.0] - 2022-12-05
 
 ### Added
 Function to check the live transaction status:
-- \SecucardConnect\Product\Payment\TransactionsService::checkStatus()
+- `\SecucardConnect\Product\Payment\TransactionsService::checkStatus()`
 
 ### Changed
-- New structure of Payment.Model.CrowdFundingData
+- New structure of `Payment.Model.CrowdFundingData`
 
 
 ## [1.22.0] - 2021-06-11
@@ -715,3 +726,4 @@ First release
 [1.21.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.20.0...1.21.0
 [1.22.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.21.0...1.22.0
 [1.23.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.22.0...1.23.0
+[1.24.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.23.0...1.24.0

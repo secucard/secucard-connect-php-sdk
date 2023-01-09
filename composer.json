@@ -3,13 +3,13 @@
     "description": "secucard connect PHP client SDK",
     "license": "Apache-2.0",
     "homepage": "https://github.com/secucard/secucard-connect-php-sdk",
-    "version": "1.23.0",
+    "version": "1.24.0",
     "require": {
-        "php": ">=5.5.0",
-        "guzzlehttp/guzzle": "~6.3|~7.0",
-        "psr/log": "~1.0",
-        "netresearch/jsonmapper": "~1.4|~2.0|~3.0",
-        "ext-json": "*"
+        "php": ">=7.4.0",
+        "ext-json": "*",
+        "guzzlehttp/guzzle": "^6.3|^7",
+        "psr/log": "^1|^2|^3",
+        "netresearch/jsonmapper": "^3|^4"
     },
     "autoload": {
         "psr-4": {
