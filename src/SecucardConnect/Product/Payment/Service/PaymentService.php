@@ -6,11 +6,12 @@ use GuzzleHttp\Exception\GuzzleException;
 use SecucardConnect\Client\ApiError;
 use SecucardConnect\Client\AuthError;
 use SecucardConnect\Client\ClientError;
+use SecucardConnect\Client\MissingParamsError;
 use SecucardConnect\Client\ProductService;
 use SecucardConnect\Product\Payment\Event\PaymentChanged;
 use SecucardConnect\Product\Payment\Model\Basket;
-use SecucardConnect\Product\Payment\Model\Subscription;
 use SecucardConnect\Product\Payment\Model\Transaction;
+use SecucardConnect\Product\Payment\TransactionsService;
 
 /**
  * Class PaymentService
@@ -32,9 +33,14 @@ abstract class PaymentService extends ProductService implements PaymentServiceIn
      * @throws ApiError
      * @throws AuthError
      * @throws ClientError
+     * @throws MissingParamsError
      */
     public function cancel($paymentId, $contractId = null, $amount = null, $reduceStakeholderPayment = false)
     {
+        if (empty($paymentId)) {
+            throw new MissingParamsError('paymentId', __METHOD__);
+        }
+
         $object = [
             'contract' => $contractId,
             'amount' => $amount,
@@ -59,9 +65,14 @@ abstract class PaymentService extends ProductService implements PaymentServiceIn
      * @throws ApiError
      * @throws AuthError
      * @throws ClientError
+     * @throws MissingParamsError
      */
     public function capture($paymentId, $contractId = null)
     {
+        if (empty($paymentId)) {
+            throw new MissingParamsError('paymentId', __METHOD__);
+        }
+
         $class = $this->resourceMetadata->resourceClass;
 
         $object = [
@@ -88,9 +99,18 @@ abstract class PaymentService extends ProductService implements PaymentServiceIn
      * @throws ApiError
      * @throws AuthError
      * @throws ClientError
+     * @throws MissingParamsError
      */
-    public function updateBasket($paymentId, array $basket, $contractId = null)
+    public function updateBasket($paymentId, $basket, $contractId = null)
     {
+        if (empty($paymentId)) {
+            throw new MissingParamsError('paymentId', __METHOD__);
+        }
+
+        if (empty($basket) || !is_array($basket)) {
+            throw new MissingParamsError('basket', __METHOD__);
+        }
+
         $class = $this->resourceMetadata->resourceClass;
         /**
          * @var $object Transaction
@@ -117,9 +137,14 @@ abstract class PaymentService extends ProductService implements PaymentServiceIn
      * @throws ApiError
      * @throws AuthError
      * @throws ClientError
+     * @throws MissingParamsError
      */
     public function reverseAccrual($paymentId)
     {
+        if (empty($paymentId)) {
+            throw new MissingParamsError('paymentId', __METHOD__);
+        }
+
         $class = $this->resourceMetadata->resourceClass;
         /**
          * @var $object Transaction
@@ -128,37 +153,6 @@ abstract class PaymentService extends ProductService implements PaymentServiceIn
         $object->id = $paymentId;
         $object->accrual = false;
         $res = $this->updateWithAction($paymentId, 'accrual', null, $object, $class);
-
-        if ($res) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Subsequent posting to a approved transaction. This can only be executed once per payment transaction.
-     *
-     * @param string $paymentId The payment transaction id
-     * @param int $amount The new total amount (max. 120% of the old amount)
-     * @param Basket[] $basket The new basket items
-     * @return bool TRUE if successful, FALSE otherwise.
-     * @throws GuzzleException
-     * @throws ApiError
-     * @throws AuthError
-     * @throws ClientError
-     */
-    public function initSubsequent($paymentId, $amount, array $basket)
-    {
-        $class = $this->resourceMetadata->resourceClass;
-        /**
-         * @var $object Transaction
-         */
-        $object = new $class();
-        $object->id = $paymentId;
-        $object->amount = $amount;
-        $object->basket = $basket;
-        $res = $this->execute($paymentId, 'subsequent', null, $object, $class);
 
         if ($res) {
             return true;
@@ -180,54 +174,13 @@ abstract class PaymentService extends ProductService implements PaymentServiceIn
      * @throws ApiError
      * @throws AuthError
      * @throws ClientError
+     * @throws MissingParamsError
      */
     public function setShippingInformation($paymentId, $carrier, $tracking_id, $invoice_number = null)
     {
-        $object = [
-            'carrier' => $carrier,
-            'tracking_id' => $tracking_id,
-            'invoice_number' => $invoice_number,
-        ];
-
-        $res = $this->updateWithAction($paymentId, 'shippingInformation', null, $object);
-
-        if ($res) {
-            return true;
-        }
-
-        return false;
+        $service = new TransactionsService();
+        return $service->setShippingInformation($paymentId, $carrier, $tracking_id, $invoice_number);
     }
-
-    /**
-     * Create or update a subscription for a existing transaction
-     *
-     * @param string $paymentId The payment transaction id
-     * @param string $purpose The purpose of the subscription
-     * @return bool TRUE if successful, FALSE otherwise.
-     * @throws GuzzleException
-     * @throws ApiError
-     * @throws AuthError
-     * @throws ClientError
-     */
-    public function updateSubscription($paymentId, $purpose)
-    {
-        $class = $this->resourceMetadata->resourceClass;
-        /**
-         * @var $object Transaction
-         */
-        $object = new $class();
-        $object->id = $paymentId;
-        $object->subscription = new Subscription();
-        $object->subscription->purpose = $purpose;
-        $res = $this->updateWithAction($paymentId, 'subscription', null, $object, $class);
-
-        if ($res) {
-            return true;
-        }
-
-        return false;
-    }
-
 
     /**
      * Set a callback to be notified when a creditcard has changed. Pass null to remove a previous setting.

@@ -9,14 +9,9 @@ namespace SecucardConnect\Product\Payment\Model;
 class CrowdFundingDataProject
 {
     /**
-     * @var int
+     * @var string
      */
-    public $total_amount = 0;
-
-    /**
-     * @var int
-     */
-    public $total_count = 0;
+    public $currency = 'EUR';
 
     /**
      * @var CrowdFundingDataProjectAmount
@@ -32,4 +27,14 @@ class CrowdFundingDataProject
      * @var CrowdFundingDataProjectAmount
      */
     public $prepay;
+
+    /**
+     * @var CrowdFundingDataProjectAmount
+     */
+    public $sofort;
+
+    /**
+     * @var CrowdFundingDataProjectAmount
+     */
+    public $twint;
 }

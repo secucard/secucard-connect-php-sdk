@@ -1,25 +1,26 @@
 <?php
+/** @noinspection PhpUnused */
 
 namespace SecucardConnect\Product\Payment\Model;
 
 /**
- * Class GetCreditCardDataRequest
+ * Class CheckStatusResponse
  * @package SecucardConnect\Product\Payment\Model
  */
-class GetCreditCardDataRequest
+class CheckStatusResponse
 {
     /**
-     * @var Checkin
+     * @var int
      */
-    public $checkin;
+    public $status;
 
     /**
-     * @var Customer
+     * @var int
      */
-    public $customer;
+    public $amount;
 
     /**
      * @var string
      */
-    public $transact_hash;
+    public $currency;
 }

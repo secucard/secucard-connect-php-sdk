@@ -33,7 +33,7 @@ final class SecucardConnect
     /**
      * SDK version
      */
-    const VERSION = '1.13.3';
+    const VERSION = '1.23.0';
 
     /**
      * @var OAuthProvider
@@ -208,7 +208,6 @@ final class SecucardConnect
         }
 
         $rm = new ResourceMetadata($name);
-        $prodInst = null;
         $prodClass = $rm->productClass;
         if (class_exists($prodClass)) {
             // try to create product impl. if there is a class for it

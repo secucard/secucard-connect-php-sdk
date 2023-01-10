@@ -59,19 +59,6 @@ class TransactionsService extends ProductService
      */
     public function prepare($transactionId, $type, $object = null)
     {
-        if (!in_array(
-            $type,
-            [
-                self::TYPE_AUTO,
-                self::TYPE_DIRECT_DEBIT,
-                self::TYPE_CREDIT_CARD,
-                self::TYPE_INVOICE,
-                self::TYPE_PAYPAL,
-            ]
-        )) {
-            throw new \InvalidArgumentException('Wrong transaction type');
-        }
-
         return $this->execute($transactionId, 'prepare', $type, $object, Transaction::class);
     }
 
@@ -86,7 +73,22 @@ class TransactionsService extends ProductService
      */
     public function cancel($transactionId)
     {
-        $res = $this->execute($transactionId, 'cancel', null, 'array');
-        return $res['status'] !== Transaction::STATUS_CANCELLED;
+        $res = $this->execute($transactionId, 'cancel', null, null, Transaction::class);
+        return $res->status === Transaction::STATUS_CANCELLED;
+    }
+
+    /**
+     * Abort an existing loyalty transaction.
+     * @param string $transactionId The transaction id.
+     * @return bool True if successful false else.
+     * @throws GuzzleException
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
+     */
+    public function abort($transactionId)
+    {
+        $res = $this->execute($transactionId, 'abort', null, null, Transaction::class);
+        return $res->status === Transaction::STATUS_ABORTED;
     }
 }

@@ -13,7 +13,6 @@ class Data
      */
     public $owner;
 
-    // account data:
     /**
      * @var string
      */
