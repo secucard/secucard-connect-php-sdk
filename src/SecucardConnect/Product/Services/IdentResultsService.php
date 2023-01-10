@@ -60,7 +60,7 @@ class IdentResultsService extends ProductService
                 if ($value instanceof BaseCollection) {
                     $results = $value->items;
                 } elseif ($value instanceof IdentResult) {
-                    $results[] = $value;
+                    $results = [$value];
                 } else {
                     return;
                 }

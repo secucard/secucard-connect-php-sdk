@@ -19,11 +19,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Removed
 
 
-## [1.24.0] - 2023-01-09
+## [1.24.0] - 2023-01-10
 
 ### Changed
 - support `psr/log` up to version `3.x`
 - support `netresearch/jsonmapper` version `4.x`
+- some autocorrections for possible PHP 8.2 warnings
 
 ### Removed
 - dropped support for PHP `5.6`, `7.0`, `7.1`, `7.2` and `7.3`

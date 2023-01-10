@@ -189,6 +189,7 @@ abstract class ProductService
         if (is_object($jsonResponse)) {
             $jsonResponse = (array)$jsonResponse;
         }
+
         if (isset($jsonResponse['count'])) {
             $list->totalCount = $jsonResponse['count'];
         }
@@ -202,7 +203,7 @@ abstract class ProductService
         }
 
         $items = $jsonResponse['data'];
-        $list->count = count($items);
+        $list->count = is_countable($items) ? count($items) : 0;
 
         foreach ($items as $item) {
             $list->items[] = $this->createResourceInst($item, $this->resourceMetadata->resourceClass);
@@ -692,7 +693,7 @@ abstract class ProductService
                 $json = MapperUtil::mapResponse($e->getResponse());
                 if (isset($json->status) && $json->status == 'error') {
                     // Try to map to known server error response
-                    if (strtolower($json->error) === 'productinternalexception') {
+                    if (strtolower((string) $json->error) === 'productinternalexception') {
                         // Better map this to an internal error, because it's caused by wrong api usage.
                         return new ClientError((string)$json->error_details, $e);
                     }

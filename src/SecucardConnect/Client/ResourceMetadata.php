@@ -76,7 +76,7 @@ class ResourceMetadata
         $lcres = strtolower($resource);
         $files = glob($dir . DIRECTORY_SEPARATOR . '*.php');
         foreach ($files as $file) {
-            $name = basename($file, '.php');
+            $name = basename((string) $file, '.php');
             if (strpos($lcres, strtolower($name)) !== false) {
                 $cls = $classPrefix . 'Model\\' . $name;
                 $rc = new \ReflectionClass($cls);
@@ -112,7 +112,7 @@ class ResourceMetadata
         $lcres = strtolower($resource);
         $files = glob($dir . DIRECTORY_SEPARATOR . '*Service.php');
         foreach ($files as $file) {
-            $name = basename($file, '.php');
+            $name = basename((string) $file, '.php');
             if (strpos(strtolower($name), $lcres) !== false) {
                 $parentClassName = $className = $classPrefix . $name;
 
