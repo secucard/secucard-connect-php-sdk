@@ -47,7 +47,7 @@ class Logger implements LoggerInterface
      * @param array $context
      * @return null|void
      */
-    public function log($level, $message, array $context = [])
+    public function log($level, $message, array $context = []): void
     {
         if (!$this->enabled) {
             return;
