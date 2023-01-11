@@ -2,11 +2,13 @@
 
 namespace SecucardConnect\Product\Common\Model;
 
+use Countable;
+
 /**
  * Collection of BaseModel instances.
  * Provides an iterator and countable interface.
  */
-class BaseCollection implements \Countable
+class BaseCollection implements Countable
 {
     /**
      * Array of typed result objects.
@@ -42,7 +44,7 @@ class BaseCollection implements \Countable
      * Convert collection to string
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return print_r($this->items, true);
     }
@@ -51,7 +53,7 @@ class BaseCollection implements \Countable
     /**
      * {@inheritDoc}
      */
-    public function count()
+    public function count(): int
     {
         return $this->count;
     }

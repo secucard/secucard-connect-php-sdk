@@ -33,7 +33,7 @@ class TransactionsService extends ProductService
     public function __construct(ResourceMetadata $resourceMetadata = null, ClientContext $context = null)
     {
         parent::__construct($resourceMetadata, $context);
-        $this->resourceMetadata->resourceClass = 'SecucardConnect\\Product\\Payment\\Model\\Transactions';
+        $this->resourceMetadata->resourceClass = \SecucardConnect\Product\Payment\Model\Transactions::class;
     }
 
     /**
@@ -43,7 +43,7 @@ class TransactionsService extends ProductService
     public function save(BaseModel $model)
     {
         $oldResourceClass = $this->resourceMetadata->resourceClass;
-        $this->resourceMetadata->resourceClass = 'SecucardConnect\\Product\\Payment\\Model\\Transaction';
+        $this->resourceMetadata->resourceClass = \SecucardConnect\Product\Payment\Model\Transaction::class;
         $res = parent::save($model);
         $this->resourceMetadata->resourceClass = $oldResourceClass;
         return $res;
@@ -60,7 +60,7 @@ class TransactionsService extends ProductService
             throw new MissingParamsError('id', __METHOD__);
         }
 
-        if (substr_compare($id, "PCI_", 0, 4, true) === 0) {
+        if (substr_compare((string) $id, "PCI_", 0, 4, true) === 0) {
             return parent::get($id);
         }
 
@@ -87,7 +87,7 @@ class TransactionsService extends ProductService
             'oldFormat',
             null,
             null,
-            'SecucardConnect\\Product\\Payment\\Model\\Transaction'
+            \SecucardConnect\Product\Payment\Model\Transaction::class
         );
     }
 
@@ -108,7 +108,7 @@ class TransactionsService extends ProductService
             'checkStatus',
             null,
             null,
-            'SecucardConnect\\Product\\Payment\\Model\\CheckStatusResponse'
+            \SecucardConnect\Product\Payment\Model\CheckStatusResponse::class
         );
     }
 
@@ -132,7 +132,7 @@ class TransactionsService extends ProductService
             'crowdfundingdata',
             $merchantId,
             null,
-            'SecucardConnect\\Product\\Payment\\Model\\CrowdFundingData'
+            \SecucardConnect\Product\Payment\Model\CrowdFundingData::class
         );
     }
 
@@ -161,7 +161,7 @@ class TransactionsService extends ProductService
             'assignPayment',
             $accountingId,
             null,
-            'SecucardConnect\\Product\\Payment\\Model\\AssignedPaymentTransaction'
+            \SecucardConnect\Product\Payment\Model\AssignedPaymentTransaction::class
         );
     }
     /**

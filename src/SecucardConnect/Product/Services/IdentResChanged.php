@@ -19,7 +19,7 @@ class IdentResChanged extends DefaultEventHandler
      */
     function onEvent($event)
     {
-        if (empty($event->data) || count($event->data) == 0) {
+        if (empty($event->data) || !is_countable($event->data) || count($event->data) == 0) {
             throw new ClientError('Invalid event data, no ident-request id(s) found.');
         }
 

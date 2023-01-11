@@ -24,7 +24,7 @@ class CustomersService extends ProductService
                 if ($value instanceof BaseCollection) {
                     $results = $value->items;
                 } elseif ($value instanceof Customer) {
-                    $results[] = $value;
+                    $results = [$value];
                 } else {
                     return;
                 }
