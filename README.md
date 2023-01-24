@@ -5,7 +5,7 @@
 
 
 ## Requirements
-- PHP 5.5.0 and later.
+- PHP 7.4.0 and later.
 - Composer.
 - If you are using a bytecode cache, such as APC activate the storage and load of PHPDoc comments. (For more information see f.e.: http://php.net/manual/de/opcache.configuration.php#ini.opcache.save-comments ).
 
@@ -16,7 +16,7 @@ You can install the bindings via [Composer](http://getcomposer.org/). Add this t
 ```json
 {
   "require": {
-    "secucard/secucard-connect":"~v1.0"
+    "secucard/secucard-connect":"^1.25.0"
   }
 }
 ```
