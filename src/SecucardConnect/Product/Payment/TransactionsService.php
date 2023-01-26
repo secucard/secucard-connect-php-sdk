@@ -170,7 +170,7 @@ class TransactionsService extends ProductService
      *
      * @param string $paymentId The payment transaction id.
      * @param string $contractId The id of the contract that was used to create this transaction.
-     * @param int $amount The amount that you want to refund to the payer. Use '0' for a full refund.
+     * @param int $reduceAmountBy The amount that you want to refund to the payer. Use '0' for a full refund.
      * @param bool $reduceStakeholderPayment TRUE if you want to change the amount of the stakeholder positions too (on partial refund)
      *
      * @return array ['result', 'demo', 'new_trans_id', 'remaining_amount', 'refund_waiting_for_payment']
@@ -180,7 +180,7 @@ class TransactionsService extends ProductService
      * @throws ClientError
      * @throws MissingParamsError
      */
-    public function cancel($paymentId, $contractId = null, $amount = null, $reduceStakeholderPayment = false)
+    public function cancel($paymentId, $contractId = null, $reduceAmountBy = null, $reduceStakeholderPayment = false)
     {
         if (empty($paymentId)) {
             throw new MissingParamsError('paymentId', __METHOD__);
@@ -188,7 +188,7 @@ class TransactionsService extends ProductService
 
         $object = [
             'contract' => $contractId,
-            'amount' => $amount,
+            'reduce_amount_by' => $reduceAmountBy,
             'reduce_stakeholder_payment' => $reduceStakeholderPayment,
             'return_old_format' => true
         ];

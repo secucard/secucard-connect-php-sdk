@@ -19,6 +19,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Removed
 
 
+## [1.25.0] - 2023-01-24
+
+### Changed
+- renamed parameter `amount` in `\SecucardConnect\Product\Payment\Service\PaymentService::cancel()` to `reduce_amount_by` (logic unchanged)
+- renamed parameter `amount` in `\SecucardConnect\Product\Payment\TransactionsService::cancel()` to `reduce_amount_by` (*BREAKING* logic for invoice payment transactions changed: The given value in `reduce_amount_by` will deduct the payment by this value (like for other payment methods/endpoints before) and not be the new total amount).
+
+
 ## [1.24.0] - 2023-01-10
 
 ### Changed
@@ -728,3 +735,4 @@ First release
 [1.22.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.21.0...1.22.0
 [1.23.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.22.0...1.23.0
 [1.24.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.23.0...1.24.0
+[1.25.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.24.0...1.25.0
