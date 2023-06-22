@@ -60,6 +60,7 @@ abstract class PaymentService extends ProductService implements PaymentServiceIn
      *
      * @param string $paymentId The payment transaction id
      * @param string $contractId The id of the contract that was used to create this transaction.
+     * @param array $additional_data
      * @return bool TRUE if successful, FALSE otherwise.
      * @throws GuzzleException
      * @throws ApiError
@@ -67,7 +68,7 @@ abstract class PaymentService extends ProductService implements PaymentServiceIn
      * @throws ClientError
      * @throws MissingParamsError
      */
-    public function capture($paymentId, $contractId = null)
+    public function capture($paymentId, $contractId = null, $additional_data = [])
     {
         if (empty($paymentId)) {
             throw new MissingParamsError('paymentId', __METHOD__);
@@ -79,7 +80,7 @@ abstract class PaymentService extends ProductService implements PaymentServiceIn
             'contract' => $contractId,
         ];
 
-        $res = $this->execute($paymentId, 'capture', null, $object, $class);
+        $res = $this->execute($paymentId, 'capture', null, array_merge($additional_data, $object), $class);
 
         if ($res) {
             return true;

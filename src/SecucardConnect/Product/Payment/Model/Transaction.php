@@ -168,4 +168,19 @@ class Transaction extends BaseModel
      * @var string
      */
     public $payment_methods;
+
+    /**
+     * @var string
+     */
+    public $shop;
+
+    /**
+     * @var string
+     */
+    public $shopversion;
+
+    /**
+     * @var string
+     */
+    public $moduleversion;
 }

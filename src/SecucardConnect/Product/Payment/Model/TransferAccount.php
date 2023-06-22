@@ -10,13 +10,20 @@ class TransferAccount
 {
     /**
      * @var string
+     * @deprecated use $owner
      */
     public $account_owner;
 
     /**
      * @var string
+     * @deprecated use $iban
      */
     public $accountnumber;
+
+    /**
+     * @var string
+     */
+    public $owner;
 
     /**
      * @var string
@@ -30,7 +37,13 @@ class TransferAccount
 
     /**
      * @var string
+     * @deprecated use $bic
      */
     public $bankcode;
+
+    /**
+     * @var string
+     */
+    public $bankname;
 
 }

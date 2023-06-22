@@ -19,6 +19,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Removed
 
 
+## [1.26.0] - 2023-06-22
+
+### Deprecated
+- Payment.Model.TransferAccount: deprecated the `account_owner`, `accountnumber` and `bankcode` parameter
+
+### Added
+- Payment.PaymentService.capture(): added `additional_data` parameter (optional)
+- Payment.Model.Transaction: added `shop`, `shopversion` and `moduleversion` parameter
+- Payment.Model.TransferAccount: added `owner` and `bankname` parameter
+
+### Removed
+- removed debug log `'Using config: '`
+
+
 ## [1.25.0] - 2023-01-24
 
 ### Changed
@@ -736,3 +750,4 @@ First release
 [1.23.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.22.0...1.23.0
 [1.24.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.23.0...1.24.0
 [1.25.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.24.0...1.25.0
+[1.26.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.25.0...1.26.0

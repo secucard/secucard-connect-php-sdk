@@ -16,7 +16,7 @@ You can install the bindings via [Composer](http://getcomposer.org/). Add this t
 ```json
 {
   "require": {
-    "secucard/secucard-connect":"^1.25.0"
+    "secucard/secucard-connect":"^1.26.0"
   }
 }
 ```
