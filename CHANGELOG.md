@@ -19,6 +19,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Removed
 
 
+## [1.27.0] - 2024-09-10
+[1.27.0]:https://github.com/secucard/secucard-connect-php-sdk/compare/1.26.0...1.27.0
+
+### Added
+- General.ContractsService: new method `updateBankAccount()`
+
+
 ## [1.26.0] - 2023-06-22
 
 ### Deprecated

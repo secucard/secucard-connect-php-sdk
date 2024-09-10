@@ -8,6 +8,7 @@ use SecucardConnect\Client\AuthError;
 use SecucardConnect\Client\ClientError;
 use SecucardConnect\Client\MissingParamsError;
 use SecucardConnect\Client\ProductService;
+use SecucardConnect\Product\General\Model\BankAccount;
 use SecucardConnect\Product\General\Model\PaymentMethodsRequestParams;
 use SecucardConnect\Product\Smart\Model\PaymentWizardContractOptions;
 
@@ -68,5 +69,45 @@ class ContractsService extends ProductService
         }
 
         return (bool)$this->execute($contractId, 'revokeAccrual');
+    }
+
+    /**
+     * Initiate the update of bank account for the given contract
+     *
+     * @param string $contractId General-Contract-ID, mandatory, f.e. "GCR_..."
+     * @param string $owner bank account owner, mandatory, f.e. "Max Muster"
+     * @param string $iban IBAN, mandatory, f.e. "DE12..."
+     * @param string|null $bic BIC, recommended, depending on the contract settings this param is mandatory or optional
+     * @param string|null $bankname optional
+     * @return bool TRUE if successful, throws ApiError otherwise.
+     * @throws GuzzleException
+     * @throws ApiError
+     * @throws AuthError
+     * @throws ClientError
+     * @throws MissingParamsError
+     */
+    public function updateBankAccount(string $contractId, string $owner, string $iban, ?string $bic = null, ?string $bankname = null)
+    {
+        if (empty($contractId)) {
+            throw new MissingParamsError('contractId', __METHOD__);
+        }
+
+        if (empty($owner)) {
+            throw new MissingParamsError('owner', __METHOD__);
+        }
+
+        if (empty($iban)) {
+            throw new MissingParamsError('iban', __METHOD__);
+        }
+
+        $class = $this->resourceMetadata->resourceClass;
+        $object = new BankAccount(
+            $owner,
+            $iban,
+            $bic,
+            $bankname
+        );
+
+        return (bool)$this->execute($contractId, 'updateBankAccount', null, $object, $class);
     }
 }
